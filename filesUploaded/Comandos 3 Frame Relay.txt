@@ -1,0 +1,93 @@
+------------- Router 1 -----------------
+ena
+configure terminal 
+interface fastEthernet 0/0 
+ip address 1.0.0.1 255.0.0.0 
+no shut
+
+exit
+interface serial 0/0/0
+no ip address 
+encapsulation frame-relay 
+no shutdown 
+
+exit
+interface serial 0/0/0.16 point-to-point 
+ip address 172.168.10.1 255.255.255.252
+frame-relay interface-dlci 16
+
+exit
+interface serial 0/0/0.200 point-to-point
+ip address 172.168.10.5 255.255.255.252
+frame-relay interface-dlci 200
+
+exit
+router rip 
+version 2
+network 1.0.0.0
+network 172.168.0.0
+no auto-summary 
+
+------------- Router 2 -----------------
+ena
+configure terminal 
+interface fastEthernet 0/0 
+ip address 2.0.0.1 255.0.0.0 
+no shut
+
+exit
+interface serial 0/0/0
+no ip address 
+encapsulation frame-relay 
+no shutdown 
+
+exit
+interface serial 0/0/0.16 point-to-point 
+ip address 172.168.10.2 255.255.255.252
+frame-relay interface-dlci 16
+
+exit
+interface serial 0/0/0.17 point-to-point
+ip address 172.168.10.5 255.255.255.252
+frame-relay interface-dlci 18
+
+exit
+router rip 
+version 2
+network 2.0.0.0
+network 172.168.0.0
+no auto-summary
+
+exit
+
+
+------------- Router 3 -----------------
+ena
+configure terminal 
+interface fastEthernet 0/0 
+ip address 3.0.0.1 255.0.0.0 
+no shut
+
+exit
+interface serial 0/0/0
+no ip address 
+encapsulation frame-relay 
+no shutdown 
+
+exit
+interface serial 0/0/0.17 point-to-point 
+ip address 172.168.10.6 255.255.255.252
+frame-relay interface-dlci 17
+
+exit
+interface serial 0/0/0.18 point-to-point
+ip address 172.168.10.10 255.255.255.252
+frame-relay interface-dlci 18
+
+exit
+router rip 
+version 2
+network 3.0.0.0
+network 172.168.0.0
+no auto-summary
+

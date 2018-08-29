@@ -8,7 +8,7 @@ app.controller("fsController", function (Upload, $window, $scope, $http, $filter
     }
     $scope.upload = function (file) {
         Upload.upload({
-            url: 'http://localhost:9000/api/uploadFile', //webAPI exposed to upload the file
+            url: '/api/uploadFile', //webAPI exposed to upload the file
             data: {
                 file: file
             } //pass file as data, should be user ng-model
@@ -20,14 +20,18 @@ app.controller("fsController", function (Upload, $window, $scope, $http, $filter
     };
 
 
+    $scope.data = '';
     $scope.postIt = function () {
-        $rootScope.solicitudPost("/getFiles", {}, function (res) {
-            $scope.data = res;
-            log(res);
+        $rootScope.solicitudPost("/getDirectories", {
+            carpetaActual:'./filesUploaded'
+        }, function (res) {
+            $scope.data = res.data;
         }, function (res) {
             $scope.data = res;
-            log(res);
         });
     }
-    $scope.postIt();
+    $scope.mostrarDirectorios=function(){
+        $scope.postIt();
+    }
+
 });

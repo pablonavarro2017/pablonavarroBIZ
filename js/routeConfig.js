@@ -24,7 +24,7 @@ app.config(function ($stateProvider, $urlRouterProvider) {
     var uploadState = {
         name: 'upload',
         url: '/upload',
-        templateUrl: '/inc/uploadFile.html',
+        templateUrl: '/inc/files.html',
         controller: 'fsController'
     }
     $urlRouterProvider.otherwise('/');

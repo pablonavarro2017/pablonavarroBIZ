@@ -3,47 +3,6 @@ body {
     padding-bottom: 20px;
 }
 
-blockquote {
-    font-family: Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
-    font-size: 120%;
-}
-
-img {
-    padding: 5px;
-    box-shadow: 3px 3px 8px #222;
-    margin-right: 10px;
-    margin-bottom: 10px;
-}
-
-
-
-
-pre {
-    margin-left: 20px;
-}
-
-pre.code {
-    margin-left: 20px;
-    margin-bottom: 20px;
-    background-color: #363446;
-    color: #A0A0A0;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    padding-left: 10px;
-    padding-right: 50px;
-}
-
-pre.terminal {
-    margin-left: 20px;
-    margin-bottom: 20px;
-    background-color: #363446;
-    color: #DAD681;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    padding-left: 10px;
-    padding-right: 50px;
-}
-
 p,
 li {
     font-family: 'PT Serif', Georgia, Times, 'Times New Roman', serif;
@@ -84,4 +43,12 @@ li {
         left: auto;
         bottom: auto;
     }
+}
+
+.formFile{
+    width: 100%;
+}
+
+.formFile input[type="file"] {
+    display: inline;
 }

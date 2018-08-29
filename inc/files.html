@@ -1,0 +1,14 @@
+<div class="container">
+   <h2>Subir Archivo</h2>
+    <form name="upload_form" class="formFile">
+        <input type="file" ngf-select ng-model="file" name="file" ngf-max-size="100MB" />
+        <button type="submit" ng-click="submit()">Subir Archivo</button>
+    </form>
+    <h4>{{message}}</h4>
+</div>
+
+<div class="container">
+    <h2>Sistema de Archivos</h2>
+    <button ng-click="mostrarDirectorios()">Mostrar Archivos</button>
+    <h4>{{data}}</h4>
+</div>

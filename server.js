@@ -2,9 +2,9 @@ var http = require("http"); //Crea servidor
 var fs = require('fs'); //Acceder al file system
 var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
-var port = 9000;
+var port = 80;
 var serverUrl = "127.0.0.1";
-const extensiones = ['mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'other']; //extensiones de archivos permitidos para subir
+const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'other']; //extensiones de archivos permitidos para subir
 
 //Crea el servidor y procesa las solicitudes de archivos o apis
 var server = http.createServer(function (req, res) {
@@ -32,12 +32,17 @@ function procesarApi(req, res) {
         if (req.method === 'POST') {
             processRequestData(req, (data) => { //En data están todos los parámetros del post
                 switch (api) {
-                    case "/getFiles":
-                        var fileSystem = {};
-                        var filesInFolder = getFileSystem('./filesUploaded');
-                        log(filesInFolder);
-                        fileSystem = filesInFolder;
-                        return sendBack(res, 'OK', 'File System', fileSystem);
+                    case "/getDirectories":
+                        var folder = data.carpetaActual;
+                        log('0000000000000000000');
+                        log(folder);
+                        if (folder.substr(0, 15) === './filesUploaded') {
+                            var fileSystem = getFileSystem(folder);
+                            log(fileSystem);
+                            return sendBack(res, 'OK', 'File System', fileSystem);
+                        } else {
+                            return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado', fileSystem);
+                        }
                         break;
                     default:
                         return res.end("ERROR API POST: " + JSON.stringify(data));
