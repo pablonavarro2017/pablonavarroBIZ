@@ -4,17 +4,18 @@ var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
 var port = 9000;
 var serverUrl = "127.0.0.1";
-var counter = 0;
-const extensiones = ['png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'other']; //extensiones de archivos permitidos para subir
+const extensiones = ['mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'other']; //extensiones de archivos permitidos para subir
 
 //Crea el servidor y procesa las solicitudes de archivos o apis
 var server = http.createServer(function (req, res) {
-    counter++;
-    //    console.log("Request: " + req.url + " (" + counter + ")");
-    if (req.url.substring(0, 4) == "/api") {
-        procesarApi(req, res);
-    } else {
-        procesarArchivo(req, res);
+    try {
+        if (req.url.substring(0, 4) == "/api") {
+            procesarApi(req, res);
+        } else {
+            procesarArchivo(req, res);
+        }
+    } catch (err) {
+        return res.end("Ha ocurrido un error: " + err);
     }
 });
 
@@ -25,13 +26,18 @@ server.listen(port);
 
 //Ejecuta el api solicitada
 function procesarApi(req, res) {
-    log("Procesando API");
     var api = req.url.substring(4);
+    log("Procesando API : " + api);
     if (api != '/uploadFile') {
         if (req.method === 'POST') {
-            processRequestData(req, 'multipartData', (data) => { //En data están todos los parámetros del post
+            processRequestData(req, (data) => { //En data están todos los parámetros del post
                 switch (api) {
-                    case "uploadFile":
+                    case "/getFiles":
+                        var fileSystem = {};
+                        var filesInFolder = getFileSystem('./filesUploaded');
+                        log(filesInFolder);
+                        fileSystem = filesInFolder;
+                        return sendBack(res, 'OK', 'File System', fileSystem);
                         break;
                     default:
                         return res.end("ERROR API POST: " + JSON.stringify(data));
@@ -51,13 +57,13 @@ function procesarApi(req, res) {
                 if (extensiones.indexOf(extension) >= 0) {
                     fs.rename(oldpath, newpath, function (err) {
                         if (err) throw err;
-                        return sendBack(res,'OK','Archivo Subido');
+                        return sendBack(res, 'OK', 'Archivo Subido');
                     });
                 } else {
-                    return sendBack(res,'ERROR','Extensión de archivo no permitida');
+                    return sendBack(res, 'ERROR', 'Extensión de archivo no permitida');
                 }
             } else {
-                return sendBack(res,'ERROR','Archivo no se cargó al servidor');
+                return sendBack(res, 'ERROR', 'Archivo no se cargó al servidor');
             }
         });
     }
@@ -107,29 +113,31 @@ function getFile(url, f) {
     });
 }
 
-function limpiarURL(url){
+// Sirve para quitar lo que haya después de que aparece un '?' en la url (solicitudes POST)
+function limpiarURL(url) {
     var indexPreg = url.indexOf("?");
-    url=url.indexOf("?")!=-1?url.substring(0,indexPreg):url;
+    url = url.indexOf("?") != -1 ? url.substring(0, indexPreg) : url;
     return url
 }
 
-function sendBack(res,estado,mensaje,data){
-    var obj ={
-        estado:estado,
-        mensaje:mensaje,
-        data:data
+// envía al cliente un un objeto en formato string
+function sendBack(res, estado, mensaje, data) {
+    var obj = {
+        estado: estado,
+        mensaje: mensaje,
+        data: data
     }
     return res.end(JSON.stringify(obj));
 }
 
 //Procesa los parametros de la solicitud POST
 function processRequestData(request, callback) {
-    let body = [];
+    let data = [];
     request.on('data', (chunk) => {
-        body.push(chunk);
+        data.push(chunk);
     }).on('end', () => {
-        body = JSON.parse(Buffer.concat(body).toString());
-        callback(body);
+        data = JSON.parse(Buffer.concat(data).toString());
+        callback(data);
     });
 }
 
@@ -138,6 +146,26 @@ function getExtension(filename) {
     var ext = path.extname(filename || '').split('.');
     return ext[ext.length - 1];
 }
+
+//Obtiene todos los archivos de un directorio
+function getFileSystem(dir, files_) {
+    files_ = files_ || {
+        files: [],
+        folders: []
+    };
+    var files = fs.readdirSync(dir);
+    for (var i in files) {
+        var name = dir + '/' + files[i];
+        if (fs.statSync(name).isDirectory()) {
+            files_.folders.push(name);
+            getFileSystem(name, files_);
+        } else {
+            files_.files.push(name);
+        }
+    }
+    return files_;
+}
+
 
 //Imprime objeto
 function log(o) {

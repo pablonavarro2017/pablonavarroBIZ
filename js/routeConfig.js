@@ -1,4 +1,4 @@
-app.config(function ($stateProvider) {
+app.config(function ($stateProvider, $urlRouterProvider) {
 
     var homeState = {
         name: 'home',
@@ -25,8 +25,9 @@ app.config(function ($stateProvider) {
         name: 'upload',
         url: '/upload',
         templateUrl: '/inc/uploadFile.html',
-        controller: 'mainController'
+        controller: 'fsController'
     }
+    $urlRouterProvider.otherwise('/');
 
     $stateProvider.state(aboutState);
     $stateProvider.state(blogState);
