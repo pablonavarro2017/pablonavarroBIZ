@@ -34,14 +34,22 @@ function procesarApi(req, res) {
                 switch (api) {
                     case "/getDirectories":
                         var folder = data.carpetaActual;
-                        log('0000000000000000000');
-                        log(folder);
                         if (folder.substr(0, 15) === './filesUploaded') {
                             var fileSystem = getFileSystem(folder);
+                            fileSystem.folders.unshift('./filesUploaded');
                             log(fileSystem);
                             return sendBack(res, 'OK', 'File System', fileSystem);
                         } else {
-                            return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado', fileSystem);
+                            return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado');
+                        }
+                        break;
+                    case "/getFile":
+                        var rutaArchivo = data.rutaArchivo;
+                        log(rutaArchivo);
+                        if (rutaArchivo.substr(0, 15) === './filesUploaded') {
+                            return returnFile(rutaArchivo, res);
+                        } else {
+                            return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
                         }
                         break;
                     default:
@@ -72,6 +80,23 @@ function procesarApi(req, res) {
             }
         });
     }
+}
+
+function returnFile(url, res) {
+    fs.readFile(url, function (err, content) {
+        if (err) {
+            res.writeHead(400, {
+                'Content-type': 'text/html'
+            })
+            console.log(err);
+            return res.end("No such file");
+        } else {
+            //specify Content will be an attachment
+            res.setHeader('Content-disposition', 'attachment; filename=' + getFileNameFromURL(url));
+            res.setHeader('FileName',getFileNameFromURL(url));
+            return res.end(content);
+        }
+    });
 }
 
 //Segun el tipo de archivo solicitado configura el header correspondiente y retorna el contenido del archivo
@@ -171,8 +196,14 @@ function getFileSystem(dir, files_) {
     return files_;
 }
 
+function getFileNameFromURL(fileURL) {
+    return fileURL.substr(fileURL.lastIndexOf('/') + 1)
+}
 
 //Imprime objeto
 function log(o) {
     console.log(o);
 }
+
+
+//https: //www.codexpedia.com/node-js/nodejs-http-file-server-serving-file-for-download/
