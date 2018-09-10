@@ -1,0 +1,636 @@
+* {
+    font-family: verdana, arial;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #303030;
+    font-weight: normal;
+    /* para que los elementos hijos hereden
+    el color de sus padres */
+    color: inherit;
+    font-size: 18px;
+    user-select: none;
+}
+
+*:focus {
+    outline: 0;
+}
+
+
+/* ELEMENTOS GENERALES */
+
+body {
+    width: 100%;
+    background: #fff;
+}
+
+body > div {
+    /*  #body  */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    margin: auto;
+    /* margin izquierdo del tamaño del menu izquierdo */
+    margin-left: 300px;
+    transition: ease margin 250ms;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+select option:hover {
+    background-color: red;
+}
+
+input,
+textarea,
+button,
+select {
+    border-radius: 4px;
+    border: none;
+    padding: 5px 8px;
+}
+
+input[type="submit"],
+input[type="button"],
+button {
+    background: #555;
+    color: #fff;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover,
+button:hover {
+    background: #333;
+}
+
+textarea {
+    resize: vertical;
+}
+
+table input,
+table select,
+table date {
+    width: 100%;
+}
+
+table.oddStyled tr:nth-child(odd) {
+    background: #f7f7f7;
+}
+
+table.evenStyled tr:nth-child(even) {
+    background: #f7f7f7;
+}
+
+.oddStyle > *:nth-child(odd) {
+    background: #f7f7f7;
+}
+
+.evenStyle > *:nth-child(even) {
+    background: #f7f7f7;
+}
+
+/* Tablas */
+
+table {
+    text-align: left;
+    border-collapse: collapse;
+}
+
+table td,
+table th {
+    padding: 8px;
+}
+
+table th {
+    background: rgb(110, 110, 110);
+    color: #fff;
+}
+
+table.conOpciones tr td:nth-last-child(1) {
+    /* Tabla con opciones en la última columna */
+    white-space: nowrap;
+}
+
+/* Estructura principal del panel */
+
+header {
+    padding: 0px;
+    height: 48px;
+    z-index: 5;
+}
+
+#topTools {
+    background: #09b047;
+    background: #303030;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    align-items: stretch;
+}
+
+#topTools label {
+    /* Para centrar los demás elementos verticalmente */
+    vertical-align: middle
+}
+
+#topTools > div:nth-last-child(1) > * {
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    font-size: 22px;
+}
+
+.user > ul {
+    background: #555;
+    display: none;
+    margin-top: 10px;
+}
+
+.user ul li:hover {
+    background: #333;
+}
+
+.user:hover ul {
+    display: block;
+}
+
+#bgOcultarMenu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 30;
+    display: none;
+}
+
+nav {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 300px;
+    max-width: 85%;
+    background: rgb(110, 110, 110);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+    transition: ease transform 250ms;
+    z-index: 40;
+}
+
+nav .encabezado {
+    background: #fff;
+    color: #231f20;
+    font-size: 24px;
+    padding: 5px 20px 8px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+nav img {
+    max-height: 100%;
+}
+
+nav a {
+    display: block;
+    font-size: 22px;
+    padding: 12px 15px;
+    color: #fff;
+    word-wrap: break-word;
+}
+
+nav span {
+    padding: 12px 15px;
+    word-wrap: break-word;
+    font-size: 22px;
+
+}
+
+nav a:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#chkShowMenu {
+    /* Para ocultar el menú cuando está chequeado */
+    display: none;
+}
+
+#chkShowMenu:checked ~ nav {
+    transform: translateX(-88%);
+}
+
+#chkShowMenu:checked ~ nav span {
+    display: none;
+}
+
+#chkShowMenu:checked ~ nav > div {
+    flex-direction: row-reverse;
+    padding-right: 0px;
+}
+
+#chkShowMenu:checked ~ nav a {
+    padding-right: 8px;
+    text-align: right
+}
+
+#chkShowMenu:checked ~ #body {
+    margin-left: 2.1%;
+}
+
+#chkShowMenu:checked ~ * .tools {
+    padding-left: 10px
+}
+#chkShowMenu:checked ~ * .view {
+    padding-left: 0px
+}
+
+
+#chkShowMenu:checked ~ #bgOcultarMenu {
+    transform: translateX(-100%);
+}
+
+/* NGVIEW */
+
+.main {
+    flex-grow: 1;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.view {
+/*    max-height: 100%;*/
+    text-align: center;
+    overflow-y: auto;
+    padding: 0px 5px;
+    flex-grow: 1;
+}
+
+/* showHideContainer */
+
+.showHideContainer {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    background: #000;
+    padding: 5px;
+    border-radius: 5px;
+    ;
+    color: #fff;
+    cursor: pointer;
+}
+
+.showHideContainer i {
+    font-size: 22px;
+}
+
+
+/* ventanas */
+.ventana p {
+    text-align: justify;
+    font-family: open sans,arial;
+    font-size: 18pxñ
+}
+
+.ventana {
+    width: 70%;
+    max-width: 100%;
+    min-height: 80vh;
+    margin: 10px auto;
+    background: #fff;
+    color: #222;
+    display: inline-block;
+}
+
+.ventana .ventana {
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.ventana .ventana > .title {
+    background: #777;
+}
+
+.popup > .fondoPopup {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    text-align: center;
+    padding: 20px;
+    overflow: auto;
+}
+
+.ventana > .title {
+    position: relative;
+    padding: 10px;
+    background: #555;
+    color: #fff;
+    font-size: 20px;
+    padding-right: 50px;
+    text-align: left;
+}
+
+.bgTitleVerde > .title {
+    background: #09b047;
+}
+
+.ventana > .title span {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 8px 12px;
+    background: #e40000;
+    cursor: pointer;
+}
+
+.ventana > .title span:hover {
+    background: #ff0000;
+}
+
+/* FOOTER */
+
+footer {
+    background: #231f20;
+    color: #ffff;
+    padding: 5px 1.5%;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    z-index: 1000;
+}
+
+/* SCROLL BAR */
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #ccc;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444;
+}
+
+/* alerts, prompt y confirm personalizados */
+
+.alertContainer {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    margin-bottom: 10px;
+    color: #fff;
+    max-width: 50%;
+    z-index: 20;
+}
+
+.alertContainer .alert {
+    position: relative;
+    margin-bottom: 15px;
+    text-align: left;
+    padding-left: 10px;
+    max-height: 100px;
+}
+
+.alertContainer .alert div {
+    display: inline-block;
+    padding: 8px;
+    background: #09B047;
+    border-radius: 3px;
+    position: relative;
+    text-align: left;
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+}
+
+.ocultarAlert {
+    overflow: hidden;
+    max-height: 0px !important;
+    transition: ease all 800ms;
+    margin-bottom: 0 !important;
+}
+
+/* Spiner container */
+
+.spinerContainer {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    color: #00accc;
+    max-width: 50%;
+    z-index: 20;
+}
+
+/* Form container */
+
+.formContainer .contenido > div > div,
+.formContainer .contenido .formElement {
+    /* Cada uno de los componentes dentro de
+    .contenido del formulario */
+    margin: 15px;
+    text-align: left;
+    /*    border-left: 1px solid #09b047;*/
+    width: 350px;
+}
+
+.formContainer .contenido > div > div > span,
+.formContainer .contenido .formElement > span {
+    /* Nombre del elemento que contiene el nombre del atributo */
+    font-size: 17px;
+}
+
+.formContainer .contenido > div > div > div,
+.formContainer .contenido .formElement > div {
+    /* contiene el elemento que contiene al elemento
+    que va a recopilar información: input, textarea, etc */
+    margin-top: 5px;
+}
+
+.formContainer .contenido > div > div > div *:not(i),
+.formContainer .contenido .formElement > div *:not(i):not(.panelSeleccion):not(.clean) {
+    /* contiene el elemento que va a recopilar
+    información: input, textarea, etc */
+    width: 100%;
+    background: #f4f4f4;
+    border-left: 2px solid #0075bb;
+    /*     mismas propiedades que los botones */
+    padding: 5px 8px;
+    border-radius: 4px;
+}
+
+.formContainer .contenido {
+    padding: 10px;
+}
+
+.formContainer .botones {
+    text-align: right;
+    padding: 10px;
+    border-top: 2px solid #0075bb;
+    /* quitar espaciado entre botones */
+    font-size: 0;
+}
+
+.formContainer .botones > button {
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+/* panel de selección de jp-input > custom select */
+
+.customSelect > .varValueNull {
+    border-left: 2px solid red !important;
+}
+
+.panelSeleccion {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 1;
+}
+
+.panelSeleccion > div {
+    padding: 0px !important;
+    display: inline-flex;
+    flex-direction: column;
+    overflow: auto;
+    min-width: 40%;
+    width: auto !important;
+    max-height: 100%;
+    text-align: left;
+    background: #f4f4f4;
+}
+
+/* notaPanelSeleccion */
+
+.panelSeleccion > div > p {
+    background: #fff;
+    font-size: 20px;
+    padding: 15px;
+    padding-right: 50px;
+}
+
+/* input filter */
+
+.panelSeleccion > div > input {
+    background: #fff;
+    padding: 8px;
+    margin: 10px 0;
+}
+
+.panelSeleccion > div > div {
+    overflow: auto;
+    margin: 5px;
+}
+
+.panelSeleccion .eSeleccionable {
+    cursor: pointer;
+    background: #fff !important;
+    border-left: 2px solid #000 !important;
+    /*     mismas propiedades que los botones */
+    padding: 5px 8px;
+    margin: 5px;
+}
+
+.panelSeleccion .eSeleccionable:nth-child(1) {
+    margin-top: 0px;
+}
+
+.panelSeleccion .eSeleccionable:hover {
+    background: #777 !important;
+    color: #fff;
+}
+
+.popup .ventana{
+    min-width: 35%;
+    max-width: 70%;
+    display: inline-block;
+    width: auto;
+    height: auto;
+    min-height: auto;
+}
+
+
+/* MEDIA QUERIES */
+
+@media screen and (max-width:1024px) {
+    body > div {
+        margin-left: 0px !important;
+    }
+    #bgOcultarMenu {
+        display: block;
+    }
+    .popup {
+        padding: 5px;
+    }
+    .formContainer .contenido > div > div,
+    .formContainer .contenido .formElement {
+        width: 300px;
+    }
+
+    .alertContainer .alert div {
+        font-size: 16px;
+    }
+
+    table td,
+    table th {
+        word-break: break-all;
+    }
+    #chkShowMenu:checked ~ nav {
+        transform: translateX(-100%)!important;
+    }
+}
+
+@media screen and (max-width:640px) {
+    .hideOnMovil {
+        display: none;
+    }
+    .ventana{
+        width: 99%!important;
+        margin: 0!important;
+    }
+    .title{
+        padding: 10px!important;
+    }
+    input{
+        max-width: 100%!important;
+    }
+}

@@ -1,0 +1,37 @@
+<div ng-switch="eData.eTag">
+    <div ng-switch-when="input" class="formElement">
+        <span ng-if="eData.fieldName!=''">{{eData.fieldName}}</span>
+        <div>
+            <input ng-model="eData.varValue" type="{{eConfig.type}}" ng-required="eData.required || false">
+        </div>
+    </div>
+    <div ng-switch-when="textarea" class="formElement">
+        <span ng-if="eData.fieldName!=''">{{eData.fieldName}}</span>
+        <div>
+            <textarea ng-model="eData.varValue" rows="{{eConfig.rows}}" ng-required="eData.required || false"></textarea>
+        </div>
+    </div>
+    <div ng-switch-when="customSelect" class="formElement">
+        <span ng-if="eData.fieldName!=''">{{eData.fieldName}}</span>
+        <div class="customSelect">
+            <!-- Elemento Seleccionado -->
+            <div ng-click="eConfig.seleccionando = true; eConfig.filtro=''" class="pointer" ng-class="(eData.varValue === null ? 'varValueNull' : '')">{{eConfig.selectedName}}</div>
+            <!-- Panel de selección -->
+            <div class="panelSeleccion" ng-show="eConfig.seleccionando">
+                <div>
+                    <p class="clean relative">{{eConfig.notaPanelSeleccion}} <span class="absolute clean bgrojo fullPadding pointer pT0 pR0 fff f22" ng-click="eConfig.seleccionando = false">X</span></p>
+                    <input type="text" ng-model="eConfig.filtro" class="marginAbajo marginArriba clean" placeholder="Buscar">
+                    <div class="clean">
+                        <div class="eSeleccionable clean" ng-repeat="e in eConfig.dataSet | filter: eConfig.filtro" ng-click="eConfig.seleccionando = false;eConfig.fnElementoSeleccionado(e)">{{e.nombre}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-switch-default class="formElement">
+        <span ng-if="eData.fieldName!=''">{{eData.fieldName}}</span>
+        <div>
+            <input ng-model="eData.varValue" type="text" ng-required="eData.required || false">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="title" ng-if="configForm.titleForm">{{configForm.titleForm}} <span ng-if="configForm.closeButton" ng-click="configForm.closeButton()">X</span></div>
+<div class="formContainer">
+    <form ng-submit="configForm.functionSubmit()">
+        <div class="flexFila jcSAr fWrap contenido">
+            <div>
+                <jp-input ng-repeat="f in configForm.fields" e-data="f"></jp-input>
+            </div>
+        </div>
+        <div class="botones">
+            <button ng-disabled="configForm.buttonsDisabled">{{configForm.buttonSubmitName}}</button>
+            <button ng-disabled="configForm.buttonsDisabled" ng-repeat="b in configForm.extraButtons" class="bgOpaco" type="button" ng-click="b.fn()">{{b.name}}</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,42 @@
+<!-- Popup plantilla -->
+<!--
+<style>
+    input {
+        cursor: default
+    }
+</style>
+-->
+<div class="fondoPopup"></div>
+<div class="ventana">
+    <div class="title">Crear Carpeta<span ng-click="cargarPopup('')">X</span></div>
+    <div class="contenido">
+        <div class="formContainer maxH100pc ofAuto">
+            <form ng-submit="sa.mkDir(sa.nombreCarpeta)">
+                <div class="flexFila jcSAr fWrap contenido">
+                    <div>
+                        <div>
+                            <span>Nombre de Carpeta</span>
+                            <div>
+                                <input type="text" ng-model="sa.nombreCarpeta" required>
+                            </div>
+                        </div>
+                    </div>
+                    <!--
+                    <div>
+                        <div>
+                            <span> Cantidad de defectos: </span>
+                            <div>
+                                <p>asd</p>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                </div>
+                <div class="botones">
+                    <button type="submit">Crear</button>
+                    <button ng-click="cargarPopup('')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -37,7 +37,6 @@ function procesarApi(req, res) {
                         if (folder.substr(0, 15) === './filesUploaded') {
                             var fileSystem = getFileSystem(folder);
                             fileSystem.folders.unshift('./filesUploaded');
-                            log(fileSystem);
                             return sendBack(res, 'OK', 'File System', fileSystem);
                         } else {
                             return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado');
@@ -45,11 +44,25 @@ function procesarApi(req, res) {
                         break;
                     case "/getFile":
                         var rutaArchivo = data.rutaArchivo;
-                        log(rutaArchivo);
+                        log("/getFile " + rutaArchivo);
                         if (rutaArchivo.substr(0, 15) === './filesUploaded') {
                             return returnFile(rutaArchivo, res);
                         } else {
                             return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
+                        }
+                        break;
+                    case "/mkDir":
+                        var rutaCarpeta = data.rutaCarpeta;
+                        log('/mkDir ' + rutaCarpeta);
+                        if (rutaCarpeta.substr(0, 15) === './filesUploaded') {
+                            var s = mkDir(rutaCarpeta, res);
+                            if (s == 'OK') {
+                                return sendBack(res, 'OK', 'Folder Created');
+                            } else {
+                                return sendBack(res, 'ERROR', s);
+                            }
+                        } else {
+                            return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado');
                         }
                         break;
                     default:
@@ -60,12 +73,13 @@ function procesarApi(req, res) {
             return res.end("API GET PROCESADA");
 
         }
-    } else {
+    } else { //To Upload a File
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) {
-            if (files['file']) {
+            log(fields.ruta)
+            if (files['file'] && fields.ruta.substr(0, 15) === './filesUploaded') {
                 var oldpath = files.file.path;
-                var newpath = './filesUploaded/' + files.file.name;
+                var newpath = fields.ruta + '/' + files.file.name; //'./filesUploaded/' + files.file.name;
                 var extension = getExtension(files.file.name);
                 if (extensiones.indexOf(extension) >= 0) {
                     fs.rename(oldpath, newpath, function (err) {
@@ -89,12 +103,23 @@ function returnFile(url, res) {
                 'Content-type': 'text/html'
             })
             console.log(err);
-            return res.end("No such file");
+            return sendBack(res, 'ERROR', 'Extensión de archivo no permitida');
         } else {
             //specify Content will be an attachment
             res.setHeader('Content-disposition', 'attachment; filename=' + getFileNameFromURL(url));
-            res.setHeader('FileName',getFileNameFromURL(url));
+            res.setHeader('FileName', getFileNameFromURL(url));
             return res.end(content);
+        }
+    });
+}
+
+function mkDir(path) {
+    fs.mkdir(path, (err) => {
+        if (err) {
+            log(err);
+            return err.message;
+        } else {
+            return 'OK'
         }
     });
 }
@@ -112,11 +137,20 @@ function procesarArchivo(req, res) {
             return res.end(text);
         });
     } else if (req.url.substring(0, 4) == "/img") {
-        getFile(req.url, function (text) {
+        getFile(req.url, function (text, err) {
+            if (err) {
+                res.setHeader("Content-Type", "text/html");
+                return sendBack(res, 'Error', text);
+            }
             res.setHeader("Content-Type", "image/png");
             return res.end(text);
         });
     } else if (req.url.substring(0, 4) == "/inc") {
+        getFile(req.url, function (text) {
+            res.setHeader("Content-Type", "text/html");
+            return res.end(text);
+        });
+    } else if (req.url.substring(0, 4) == "/pop") {
         getFile(req.url, function (text) {
             res.setHeader("Content-Type", "text/html");
             return res.end(text);
@@ -137,9 +171,11 @@ function getFile(url, f) {
     fs.readFile(url, function (err, text) {
         if (err) {
             log("Error:  " + url);
-            throw err;
+            f("Error:  " + url + '- ENOENT: no such file or directory', err);
+            //            throw err;
+        } else {
+            f(text);
         }
-        f(text);
     });
 }
 

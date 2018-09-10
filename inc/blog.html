@@ -1,1 +1,25 @@
-<h1>BLOG</h1>
+<div class="ventana inline sombra2 aCentro fullPadding"> <h1>BLOG</h1>
+    <div class="flexFila jcSBet fWrap aiCenter">
+        <input class="marginAbajo cNegro bgClaro flexG2" type="text" ng-model="filtro" placeholder="Filtro maquiladores">
+        <div class="marginAbajo aDer flexG1">
+            <input type="button" ng-click="preCrearMaquilador()" value="Agregar Nuevo" class="marginIzq">
+            <button ng-click="cargarMaquiladores()" title="Actualizar lista"><i class="fa fa-refresh"></i></button>
+        </div>
+    </div>
+    <table class="oddStyled cNegro fullWidth conOpciones">
+        <tr>
+            <th>Nombre</th>
+            <th>Cédula</th>
+            <th class="aCentro">Opciones</th>
+        </tr>
+        <tr ng-repeat="i in listaMaquiladores | filter:filtro">
+            <td>{{i.nombre}} ({{i.username}})</td>
+            <td>{{i.cedula}}</td>
+            <td class="aCentro">
+                <i ng-click="preModificarMaquilador(i)" class="iBoton f22 fa fa-pencil-square-o" aria-hidden="true"></i> &nbsp;&nbsp;
+                <i ng-click="eliminarMaquilador(i)" class="iBoton f22 fa fa-trash-o" aria-hidden="true"></i>
+            </td>
+        </tr>
+    </table>
+    <p class="marginArriba" ng-if="listaMaquiladores.length==0">No hay maquiladores</p>
+</div>

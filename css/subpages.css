@@ -1,0 +1,67 @@
+.fa-facebook:hover {
+    color: #3b5998
+}
+
+.fa-instagram:hover {
+    color: #cd486b
+}
+
+.button1 {
+    display: inline-block;
+    padding: 4px 3px;
+    margin-right: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    color: #fff;
+    background-color: #c7d3df;
+    border: 0;
+    border-radius: 3px;
+    box-shadow: 0 1px #b4b4b4;
+    user-select: none;
+}
+
+
+.button1:active {
+    /*    background-color: #b4b4b4;*/
+    box-shadow: 0 2px #b4b4b4;
+    transform: translateY(1px);
+}
+
+.itemUrl {
+    padding: 5px 4px;
+    margin: 2px 4px;
+    box-shadow: 0px 0px 1px 1px grey;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.item {
+    padding: 5px 15px;
+    margin: 2px 5px;
+    box-shadow: 0px 0px 1px 1px grey;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.item:hover {
+    box-shadow: 0px 0px 5px 1px grey;
+    background: #fafafa;
+}
+.carpeta {
+    font-size: 25px;
+    color: #fff8a7;
+    text-shadow: 0px 0px 3px #000;
+}
+
+.nube {
+    color: #c7d3df;
+    font-size: 30px;
+    cursor: pointer
+}
+.archivo {
+    font-size: 20px;
+    color: #000;
+    text-shadow: 0px 0px 1px rgba(0, 255, 78, 0.18);
+}
+

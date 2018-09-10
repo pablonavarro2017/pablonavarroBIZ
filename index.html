@@ -1,80 +1,137 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PabloNavarro.biz">
-    <meta name="author" content="pablonavarrocr@gmail.com">
-
+    <meta charset="UTF-8">
     <title>Pablo Navarro.biz</title>
-
-    <link rel="icon" type="image/png" href="img/favicon.png">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/estilos.css">
-
+    <meta name="description" content="Integración de sistemas de Pablo Navarro.biz">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link href="img/logo.png" rel="shortcut icon">
+    <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="css/master.css">
+    <link rel="stylesheet" href="css/globales.css">
+    <link rel="stylesheet" href="css/subpages.css">
 </head>
 
 <body ng-app="app" ng-controller="mainController">
-
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <li><a class="navbar-brand" ui-sref="home" ui-sref-active="active">Pablo Navarro</a></li>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a ui-sref="home" ui-sref-active="active">Home</a></li>
-                    <li><a ui-sref="about" ui-sref-active="active">About</a></li>
-                    <li><a ui-sref="blog" ui-sref-active="active">Blog</a></li>
-                    <li><a ui-sref="upload" ui-sref-active="active">Files</a></li>
-                </ul>
-            </div>
+    <input type="checkbox" id="chkShowMenu" checked>
+    <label id="bgOcultarMenu" for="chkShowMenu" title="Ocultar Menú"></label>
+    <nav id="navid" style="display: none">
+        <div class="encabezado">
+            <img src="img/logos.png" alt="LOGO"> <span class="paddingIzq">...</span> <!-- Pablonavarro.biz -->
         </div>
-    </div>
+        <div class="ofAuto">
+            <a href="#!"><i class="fa fa-home" title="Inicio"></i> <span>Inicio</span></a>
+            <a href="#!presentacion" title="Presentación"><i class="fa fa-user"></i> <span>Presentación</span></a>
+            <a href="#!archivos" title="Archivos"><i class="fa fa-folder-open"></i> <span>Archivos</span></a>
+            <a href="#!chat" title="Chat"><i class="fa fa-comments"></i> <span>Chat</span></a>
+            <a href="#!blog" title="Blog"><i class="fa fa-bold"></i> <span>Blog</span></a>
+            <a href="#!pan2" title="Pan2"><i class="fa fa-coffee"></i> <span>Pan2</span></a>
+            <a href="#!notas" title="Notas"><i class="fa fa-bar-chart"></i> <span>Notas</span></a>
+            <a href="#!linkstore" title="Link Store"><i class="fa fa-link"></i> <span>Link Store</span></a>
+            <a href="#!bienesraices" title="Bienes Raíces"><i class="fa fa-building"></i> <span>Bienes Raíces</span></a>
+        </div>
+    </nav>
 
-    <ui-view></ui-view>
+    <div id="body" style="display: none">
+        <header ng-if="sesionIniciada">
+            <div id="topTools" class="tools">
+                <div class="fShrink1 tofEllipsis">
+                    <label for="chkShowMenu" title="Mostrar/Ocultar Menú">
+                       <div class="inline pointer fullPadding paddingDer5"><i class="fa fa-bars f28"></i></div>
+                    </label>
+                    <span class="f20 marginIzq" title="Nombre del panel actual">{{nombrePanelActual}}</span>
+                </div>
+                &nbsp;
+                <div class="wSpaceNoWrap">
+                    <div class="relative pointer user"><span><i class="fa fa-user" aria-hidden="true"></i> {{infoSesion.username}} </span>
+                        <ul class="absolute pR0">
+                            <li class="wSpaceNoWrap f20 fullPaddingMini" href="" ng-click="preCambiarPass()"><i class="fa fa-cog" aria-hidden="true"></i><span> Actualizar Datos</span></li>
+                            <li class="wSpaceNoWrap f20 fullPaddingMini" href="" ng-click="cerrarSesion()"><i class="fa fa-sign-out" aria-hidden="true"></i><span> Cerrar Sesión</span></li>
+                        </ul>
+                    </div>
+                    <a ng-if="sesionIniciada" href="#!"><i class="fa fa-home pointer"></i></a>
+                    <div ng-click="fullScreen()" class="pointer"><i class="fa fa-arrows-alt" title="Pantalla completa"></i></div>
+                </div>
+            </div>
+        </header>
+        <div class="main">
+            <div class="popup" ng-include="popupUrl"></div>
+            <div class="popup" ng-if="mostrarPopupPreguntar">
+                <div class="fondoPopup"></div>
+                <div class="ventana">
+                    <div class="title">Confirmar Eliminación<span ng-click="panPreg.cerrar()">X</span></div>
+                    <div class="contenido">
+                        <div class="formContainer">
+                            <div class="flexFila jcSAr fWrap contenido">
+                                <div>
+                                    <div>
+                                        <span>{{panPreg.panPregMsj}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="botones">
+                                <button ng-click="panPreg.panPregFuncSi()">Sí</button>
+                                <button ng-click="panPreg.panPregFuncNo()">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--            <div ng-view class="view"></div>-->
+            <div class="view">
+                <ui-view></ui-view>
+            </div>
 
-    <div class="alertContainer" ng-show="requestCount>0">
-        <i class="fa fa-spinner fa-spin"></i>
-    </div>
-
-    <div class="footer">
-        <p>Pablo Navarro &copy;
-            <script type="text/javascript">
+            <!-- alerts, prompt y confirm personalizados -->
+            <div class="alertContainer">
+                <div class="alert" ng-click="a.ocultarAlerta()" ng-class="a.classAlert" ng-repeat="a in listaAlerts">
+                    <div><i class="fa fa-info-circle" aria-hidden="true"></i> {{a.texto}} </div>
+                </div>
+            </div>
+            <div class="spinerContainer" ng-show="requestCount > 0">
+                <i class="fa f35 fa-spinner fa-spin" aria-hidden="true"></i>
+            </div>
+            <div></div>
+        </div>
+        <footer ng-if="sesionIniciada" class="flexFila jcSBet"><span>Base para Sistemas <!-- pablonavarro.biz -->
+           &copy;<script type="text/javascript">
                 document.write(new Date().getFullYear());
             </script>
             <a href="https://www.facebook.com/Pablo2101" target="_blank"><i class="fa fa-facebook"></i></a>
             <a href="https://www.instagram.com/pablo_nav21/" target="_blank" rel="noopener noreferrer"><i class="fa fa-instagram"></i></a>
-        </p>
+        </span><span>{{fechaHora}}</span></footer>
     </div>
-
-    <!-- -----------------------  -->
+    <!-- --------------------------------------- -->
     <script src="js/FileSaver.js"></script>
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="js/angular/angular.js"></script>
     <script src="js/angular/angular-ui-router.min.js"></script>
-    <!--   -->
     <script src="js/angular/angular-cookies.js"></script>
     <script src="js/angular/ng-file-upload.min.js" type="text/javascript"></script>
     <script src="js/angular/ng-file-upload-shim.min.js" type="text/javascript"></script>
-    <!-- -----------------------  -->
-
-    <!--    Controllers   -->
-    <script src="js/scripts.js"></script>
     <script src="js/controllers/mainController.js"></script>
-    <script src="js/controllers/fsController.js"></script>
+    <script src="js/controllers/inicio.js"></script>
+    <script src="js/controllers/archivos.js"></script>
+    <script src="js/controllers/login.js"></script>
+    <script src="js/appConfig.js"></script>
+    <script src="js/appDirectivas.js"></script>
+    <script src="js/funcionesPersonalizadas.js"></script>
+    <script src="js/scripts.js"></script>
 
-    <script src="js/routeConfig.js"></script>
+    <!--    <script src="js/angular/angular-route.js"></script>-->
+    <!--    <script src="js/xlsx.full.min.js"></script>-->
+    <!--    <script src="js/routeConfig.js"></script>-->
+
+    <!-- Para Gráficos    -->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>-->
+
+    <!-- -------------Controllers--------------- -->
+    <!--    <script src="js/controllers/revisionCalidad.js"></script>-->
+    <!--    <script src="js/controllers/articulos.js"></script>-->
+    <!--    <script src="js/controllers/inspectores.js"></script>-->
+    <!--    <script src="js/controllers/maquiladores.js"></script>-->
+    <!--    <script src="js/controllers/defectos.js"></script>-->
+    <!--    <script src="js/controllers/reportes.js"></script>-->
 </body>
 
 </html>
