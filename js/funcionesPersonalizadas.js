@@ -1,4 +1,4 @@
-_.forEach = (a,f) => {
+forEach = (a,f) => {
 	for (var e in a){
 		f(e,a[e]);
 	}

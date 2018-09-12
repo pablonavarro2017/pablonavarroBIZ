@@ -332,6 +332,9 @@ app.controller("mainController", function (Upload, $window, $scope, $http, $filt
     rs.formatearFecha = function (fecha) {
         return $filter('date')(new Date(fecha), "dd/MM/yyyy hh:mm:ss a", "-0600")
     }
+    if (isBlog()){
+        $location.path("blog");
+    }
     document.getElementById('body').style.display='flex';
     document.getElementById('navid').style.display='flex';
 });

@@ -429,7 +429,7 @@ footer {
 .alertContainer .alert div {
     display: inline-block;
     padding: 8px;
-    background: #09B047;
+    background: rgb(110, 110, 110);
     border-radius: 3px;
     position: relative;
     text-align: left;

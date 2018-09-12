@@ -126,12 +126,13 @@ app.controller("archivosController", function (Upload, $window, $scope, $http, $
 
 
     $scope.preMKDir = function () {
-        s.nombreCarpeta = "CARPETiNHA"
+        s.nombreCarpeta = ""
         rs.cargarPopup('crearCarpeta');
+        focus('mkDir');
     }
 
     $scope.mkDir = function (folderName) {
-        if (folderName != undefined && validarNombre(folderName)) {
+        if (validarNombre(folderName)) {
             $rootScope.solicitudPost("/mkDir", {
                 rutaCarpeta: $scope.carpetaActual.urlActual + '/' + folderName
             }, function (data) {
@@ -178,6 +179,9 @@ app.controller("archivosController", function (Upload, $window, $scope, $http, $
     }
 
     function validarNombre(nombre) {
+        if (nombre == undefined || nombre == "") {
+            return false;
+        }
         for (var i = 0; i < nombre.length; i++) {
             if (!nombre.charAt(i).match(/^[a-zA-Z].*/)) {
                 return false;

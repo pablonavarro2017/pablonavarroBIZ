@@ -4,7 +4,7 @@ JSON.clone = function (obj) {
 };
 
 function focus(eName) {
-    window.setTimeout('document.getElementById("' + eName + '").focus()', 150);
+    window.setTimeout('document.getElementById("' + eName + '").focus()', 200);
 }
 //alias enfocar para llamar a focus desde el html ya que al hacer onclick='focus("txtBarCode")' da error
 var enfocar = focus;
@@ -91,52 +91,14 @@ document.oncontextmenu = function () {
     return false;
 }
 
+function isBlog(){
+    if(location.hostname.includes('blog')){
+        log('Its the blog')
+        return true;
+    }else{
+        log('Its NOT the blog')
+        return false;
 
-
-
-/* Parser archivos Excel XLSX */
-
-/* variable global que contiene el archivo excel parseado a JSON,
-la carga la funcion handleExcelFile(e) cuando se usa in input file como el siguiente
-    <input type="file" onchange="handleExcelFile(event)">
-
-Se debe cargar la librería xlsx.full.min.js
-    <script src="js/xlsx.full.min.js"></script>
-*/
-var ExcelFileContentInJSON = null;
-
-function handleExcelFile(e) {
-    var rABS = true; // true: readAsBinaryString ; false: readAsArrayBuffer
-    var files = e.target.files,
-        f = files[0];
-    var reader = new FileReader();
-    reader.onload = function (e) {
-        var data = e.target.result;
-        if (!rABS) data = new Uint8Array(data);
-        var workbook = XLSX.read(data, {
-            type: rABS ? 'binary' : 'array'
-        });
-
-        /* DO SOMETHING WITH workbook HERE */
-
-        var result = [];
-        workbook.SheetNames.forEach(function (sheetName) {
-            var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
-                header: 1
-            });
-            if (roa.length) result.push({
-                sheetName: sheetName,
-                data: roa
-            });
-        });
-
-        /* suponiendo que solo existe una hoja, eliminamos el
-        primer elemento que contienene el header de la tabla */
-        result[0].data.splice(0, 1);
-
-        ExcelFileContentInJSON = result;
-    };
-    if (rABS) reader.readAsBinaryString(f);
-    else reader.readAsArrayBuffer(f);
+    }
 }
 /* ---------------------------------------- */
