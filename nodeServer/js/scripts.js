@@ -91,7 +91,7 @@ document.oncontextmenu = function () {
     return false;
 }
 
-function isBlog(){
+function isBlog(a){
     if(location.hostname.includes('blog')){
         log('Its the blog')
         return true;

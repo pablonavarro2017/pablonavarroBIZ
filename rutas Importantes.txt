@@ -1,0 +1,8 @@
+/etc/nginx/sites-available
+ - Cambiar el archivo default
+
+/var/www/ghost/ 
+ - npm start : Ghost service
+
+/home/nodeServer/
+ - node server.js : inicia la página web

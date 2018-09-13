@@ -9,6 +9,9 @@ const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jp
 //Crea el servidor y procesa las solicitudes de archivos o apis
 var server = http.createServer(function (req, res) {
     try {
+        if(isBlog(req.headers.host)){
+            return res.end("<h1>EL BLOG</h1>");
+        }
         if (req.url.substring(0, 4) == "/api") {
             procesarApi(req, res);
         } else {
@@ -234,6 +237,15 @@ function getFileSystem(dir, files_) {
 
 function getFileNameFromURL(fileURL) {
     return fileURL.substr(fileURL.lastIndexOf('/') + 1)
+}
+
+function isBlog(hostName) {
+    if (hostName.includes('blog.')) {
+        log('Its the blog')
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //Imprime objeto

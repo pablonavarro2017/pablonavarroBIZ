@@ -1,0 +1,16 @@
+server {
+    listen 80;
+}
+server {
+    server_name pablonavarro.biz;
+    location / {
+        proxy_pass http://172.31.21.77:8081;
+    }
+}
+
+server {
+    server_name blog.pablonavarro.biz;
+    location / {
+        proxy_pass http://172.31.21.77:2368;
+    }
+}
