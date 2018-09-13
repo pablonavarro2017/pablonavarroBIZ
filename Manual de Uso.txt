@@ -1,0 +1,84 @@
+Pasos para montar el sistema:
+- Crear la Intancia de Linux Server
+- En el security Group permitir el protocolo HTTP(s) puerto 80
+- Conectarse al servidor remoto con ssh -i 'C:\Users\Pablo Navarro\Google Drive\AWS\PAIRLINUX.pem' ubuntu@54.189.142.219
+- Comandos:
+    sudo su
+    sudo apt-get update
+    sudo apt-get upgrade
+- Intalar NodeJs
+    sudo curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash 
+    sudo apt-get install -y nodejs
+- Descargar Ghost
+    sudo wget https://github.com/TryGhost/Ghost/releases/download/2.1.2/Ghost-2.1.2.zip
+- Descomprimir Ghost
+    mkdir /var/www
+    mkdir /var/www/ghost
+    sudo apt-get install unzip
+    unzip Ghost-2.1.2.zip -d /var/www/ghost
+- Instalar Ghost
+    cd /var/www/ghost
+    sudo npm install
+    sudo npm install
+- Instalar y correr knex-migrator (crear BD)
+    npm install -g knex-migrator
+    knex-migrator init
+- Modificar el puerto y Url de Ghost al puerto 2368
+    cd /var/www/ghost/core/server/config
+    sudo nano defaults.json
+- Modificar las siguiente lineas:
+    "url": "http://blog.pablonavarro.biz",
+    "server": {
+        "host": "0.0.0.0",
+        "port": 2368
+    }
+- Iniciar el servicio de ghost
+    cd /var/www/ghost
+    sudo nohup node index.js & ó sudo npm start
+    
+- Iniciar el servicio de NodeJs para la página principal (asegurarse de iniciarlo en el puerto 8081)
+    sudo rm -Rf /var/www/pablonavarroBIZ
+    cd /var/www/
+    git clone https://github.com/pablonavarro2017/pablonavarroBIZ.git
+    cd /var/www/pablonavarroBIZ/nodeServer
+    sudo nohup node server.js &
+    rm nohup.out
+- Instalar NGINX para Configurar el Proxy
+    sudo apt-get install nginx -y
+    cd /etc/nginx/sites-available/
+    sudo rm default
+    sudo nano default
+- Pegar la siguiente configuración (cambiar la ip privada del servidor aws) y guardar:
+    server {
+        listen 80;
+    }
+    server {
+        server_name pablonavarro.biz www.pablonavarro.biz;
+        location / {
+            proxy_pass http://172.31.30.204:8081;
+        }
+    }
+
+    server {
+        server_name blog.pablonavarro.biz www.blog.pablonavarro.biz;
+        location / {
+            proxy_pass http://172.31.30.204:2368;
+        }
+    }
+- Correr el servidor de NGINX 
+    service nginx restart
+- Ver que todo está corriendo
+    lsof -i -P -n | grep LISTEN
+
+
+ 
+ Rutas Importantes:
+ 
+ /etc/nginx/sites-available
+ - Cambiar el archivo default
+
+/var/www/ghost/ 
+ - npm start : Ghost service
+
+/home/nodeServer/
+ - node server.js : inicia la página web
