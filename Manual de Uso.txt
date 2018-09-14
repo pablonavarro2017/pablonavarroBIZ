@@ -31,7 +31,7 @@ Pasos para montar el sistema:
 - Modificar el puerto y Url de Ghost al puerto 2368
     cd /var/www/ghost/core/server/config
     sudo rm defaults.json
-    sudo cp /var/www/pablonavarroBIZ/nginx/default.json /var/www/ghost/core/server/config
+    sudo cp /var/www/pablonavarroBIZ/ghost/default.json /var/www/ghost/core/server/config/
 - Iniciar el servicio de ghost
     cd /var/www/ghost
     sudo nohup node index.js & ó sudo npm start
