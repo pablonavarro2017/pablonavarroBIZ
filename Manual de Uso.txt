@@ -41,7 +41,7 @@ Pasos para montar el sistema:
 - Iniciar el servicio de NodeJs para la página principal (asegurarse de iniciarlo en el puerto 8081)
     cd /var/www/pablonavarroBIZ/nodeServer
     sudo nohup node server.js &
-    sudo rm nohup.out
+    sudo rm nohup.out 
 - Instalar NGINX para Configurar el Proxy (Configurar la IP PRIVADA del server)
     sudo apt-get install nginx -y
     cd /etc/nginx/sites-available/
@@ -64,6 +64,15 @@ Pasos para montar el sistema:
 /var/www/pablonavarroBIZ
  - node server.js : inicia la página web
  
+** Actualizar sitio principal
+    sudo lsof -i -P -n | grep LISTEN
+    kill pid-8081
+    sudo rm -Rf /var/www/pablonavarroBIZ
+    cd /var/www/
+    sudo git clone https://github.com/pablonavarro2017/pablonavarroBIZ.git
+    cd /var/www/pablonavarroBIZ/nodeServer
+    sudo nohup node server.js &
+    sudo rm nohup.out 
  
 ** Confiración de Google Analitycs  (pablonavarro2015114121@gmail.com)
 
