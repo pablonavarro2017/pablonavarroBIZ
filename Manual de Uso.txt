@@ -18,6 +18,7 @@ Pasos para montar el sistema:
 - Descargar Ghost
     sudo wget https://github.com/TryGhost/Ghost/releases/download/2.1.2/Ghost-2.1.2.zip
 - Descomprimir Ghost
+    cd /home/ubuntu/   
     sudo apt-get install unzip
     sudo unzip Ghost-2.1.2.zip -d /var/www/ghost
 - Instalar Ghost
