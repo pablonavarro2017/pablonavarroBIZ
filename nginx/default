@@ -4,13 +4,13 @@ server {
 server {
     server_name pablonavarro.biz www.pablonavarro.biz;
     location / {
-        proxy_pass http://127.0.0.1:8081;
+        proxy_pass http://172.31.20.65:8081;
     }
 }
 
 server {
     server_name blog.pablonavarro.biz www.blog.pablonavarro.biz;
     location / {
-        proxy_pass http://127.0.0.1:2368;
+        proxy_pass http://172.31.20.65:2368;
     }
 }
