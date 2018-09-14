@@ -1,7 +1,5 @@
 server {
     listen 80;
-}
-server {
     server_name pablonavarro.biz www.pablonavarro.biz;
     location / {
         proxy_pass http://172.31.20.65:8081;
@@ -9,6 +7,7 @@ server {
 }
 
 server {
+    listen 80;
     server_name blog.pablonavarro.biz www.blog.pablonavarro.biz;
     location / {
         proxy_pass http://172.31.20.65:2368;
