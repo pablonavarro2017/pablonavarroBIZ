@@ -1,12 +1,14 @@
 Pasos para montar el sistema:
 - Crear la Intancia de Linux Server
 - En el security Group permitir el protocolo HTTP(s) puerto 80
-- Conectarse al servidor remoto con ssh -i 'C:\Users\Pablo Navarro\Google Drive\AWS\PAIRLINUX.pem' ubuntu@54.189.142.219
+- Conectarse al servidor remoto con ssh -i 'C:\Users\Pablo Navarro\Google Drive\AWS\PAIRLINUX.pem' ubuntu@34.220.227.220
 - Comandos:
     sudo su
     sudo apt-get update
-    sudo apt-get upgrade
+    sudo apt-get upgrade -y
     sudo rm -Rf /var/www/pablonavarroBIZ
+    sudo mkdir /var/www
+    sudo mkdir /var/www/ghost
     cd /var/www/
     sudo git clone https://github.com/pablonavarro2017/pablonavarroBIZ.git
 - Intalar NodeJs
@@ -16,16 +18,14 @@ Pasos para montar el sistema:
 - Descargar Ghost
     sudo wget https://github.com/TryGhost/Ghost/releases/download/2.1.2/Ghost-2.1.2.zip
 - Descomprimir Ghost
-    mkdir /var/www
-    mkdir /var/www/ghost
     sudo apt-get install unzip
-    unzip Ghost-2.1.2.zip -d /var/www/ghost
+    sudo unzip Ghost-2.1.2.zip -d /var/www/ghost
 - Instalar Ghost
     cd /var/www/ghost
     sudo npm install
     sudo npm install
 - Instalar y correr knex-migrator (crear BD)
-    npm install -g knex-migrator
+    sudo npm install -g knex-migrator
     sudo knex-migrator init
 - Modificar el puerto y Url de Ghost al puerto 2368
     cd /var/www/ghost/core/server/config
@@ -37,16 +37,16 @@ Pasos para montar el sistema:
 - Iniciar el servicio de NodeJs para la página principal (asegurarse de iniciarlo en el puerto 8081)
     cd /var/www/pablonavarroBIZ/nodeServer
     sudo nohup node server.js &
-    rm nohup.out
+    sudo rm nohup.out
 - Instalar NGINX para Configurar el Proxy
     sudo apt-get install nginx -y
     cd /etc/nginx/sites-available/
     sudo rm default
     sudo cp /var/www/pablonavarroBIZ/nginx/default /etc/nginx/sites-available/
 - Correr el servidor de NGINX 
-    service nginx restart
+    sudo service nginx restart
 - Ver que todo está corriendo
-    lsof -i -P -n | grep LISTEN
+    sudo lsof -i -P -n | grep LISTEN
 
 
  Rutas Importantes:
