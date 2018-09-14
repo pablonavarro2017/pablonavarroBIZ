@@ -225,11 +225,14 @@ function getFileSystem(dir, files_) {
     var files = fs.readdirSync(dir);
     for (var i in files) {
         var name = dir + '/' + files[i];
-        if (fs.statSync(name).isDirectory()) {
+        elem = fs.statSync(name);
+        if (elem.isDirectory()) {
             files_.folders.push(name);
             getFileSystem(name, files_);
         } else {
-            files_.files.push(name);
+            var fileSize = elem.size;
+            fileSize /= 1048576;
+            files_.files.push({name:name,size:formatearFloat(fileSize)});
         }
     }
     return files_;
@@ -246,6 +249,11 @@ function isBlog(hostName) {
     } else {
         return false;
     }
+}
+
+function formatearFloat(n,d) {
+    // parsea el string n a float y lo limita a 2 decimales
+    return parseFloat(parseFloat(n).toFixed(d?d:2));
 }
 
 //Imprime objeto

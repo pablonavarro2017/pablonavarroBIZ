@@ -96,15 +96,16 @@ app.controller("archivosController", function (Upload, $window, $scope, $http, $
         });
 
         $scope.fs.files.forEach((fileName) => {
-            carpetaArchivo = fileName.substr(0, fileName.lastIndexOf('/'));
+            carpetaArchivo = fileName.name.substr(0, fileName.name.lastIndexOf('/'));
             $scope.fs.folders.forEach((folderName) => {
                 if (folderName == currentFolderName && currentFolderName == carpetaArchivo) {
-                    nombre = fileName.substr(fileName.lastIndexOf('/'));
+                    nombre = fileName.name.substr(fileName.name.lastIndexOf('/'));
                     ext = nombre.slice((nombre.lastIndexOf(".") - 1 >>> 0) + 2);
                     var arch = {
                         nombre: nombre.substr(nombre.lastIndexOf('/') + 1),
                         index: cont++,
-                        ext: ext
+                        ext: ext,
+                        size:fileName.size
                     }
                     $scope.carpetaActual.nombresArchivosAMostrar.push(arch);
                 }
@@ -137,7 +138,7 @@ app.controller("archivosController", function (Upload, $window, $scope, $http, $
                 rutaCarpeta: $scope.carpetaActual.urlActual + '/' + folderName
             }, function (data) {
                 rs.cargarPopup('');
-                s.mostrarDirectorios();
+                s.carpetaActual.nombresFoldersAMostrar.push({nombre: folderName,index: s.carpetaActual.nombresFoldersAMostrar.length+1});
                 rs.agregarAlerta('Carpeta Creada');
             }, function (res) {
                 rs.agregarAlerta('Error Al Crear Carpeta');

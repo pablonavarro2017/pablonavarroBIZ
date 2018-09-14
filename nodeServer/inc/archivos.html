@@ -29,8 +29,14 @@
                 <i class="fa fa-folder marginIzq carpeta"></i> <span class="marginIzq">{{c.nombre}}</span>
             </div>
             <div ng-repeat="a in carpetaActual.nombresArchivosAMostrar" ng-class="a.index%2==0?'bgBlanco':''" class="item paddinIzq" ng-click='openFile(a.nombre)'>
-                <i class="fa fa-circle f10"></i>
-                <i class="fa marginIzq archivo" ng-class="'fa-'+a.icon"></i> <span class="marginIzq">{{a.nombre}}</span>
+                <div class="flexFila">
+                    <i class="fa fa-circle f10"></i>
+                    <i class="fa marginIzq archivo" ng-class="'fa-'+a.icon"></i>
+                    <div class="flexFila jcSBet fg1">
+                        <span class="marginIzq">{{a.nombre}}</span>
+                        <span class="paddingIzq noWBreak">{{a.size}}MB</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -61,7 +61,7 @@ Pasos para montar el sistema:
 /var/www/ghost/ 
  - npm start : Ghost service
 
-/home/nodeServer/
+/var/www/pablonavarroBIZ
  - node server.js : inicia la página web
  
  
