@@ -6,7 +6,11 @@ Pasos para montar el sistema:
     sudo su
     sudo apt-get update
     sudo apt-get upgrade
+    sudo rm -Rf /var/www/pablonavarroBIZ
+    cd /var/www/
+    sudo git clone https://github.com/pablonavarro2017/pablonavarroBIZ.git
 - Intalar NodeJs
+    cd /home/ubuntu/   
     sudo curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash 
     sudo apt-get install -y nodejs
 - Descargar Ghost
@@ -22,25 +26,16 @@ Pasos para montar el sistema:
     sudo npm install
 - Instalar y correr knex-migrator (crear BD)
     npm install -g knex-migrator
-    knex-migrator init
+    sudo knex-migrator init
 - Modificar el puerto y Url de Ghost al puerto 2368
     cd /var/www/ghost/core/server/config
-    sudo nano defaults.json
-- Modificar las siguiente lineas:
-    "url": "http://blog.pablonavarro.biz",
-    "server": {
-        "host": "0.0.0.0",
-        "port": 2368
-    }
+    sudo rm defaults.json
+    
 - Iniciar el servicio de ghost
     cd /var/www/ghost
     sudo nohup node index.js & ó sudo npm start
     
 - Iniciar el servicio de NodeJs para la página principal (asegurarse de iniciarlo en el puerto 8081)
-    cd
-    sudo rm -Rf /var/www/pablonavarroBIZ
-    cd /var/www/
-    git clone https://github.com/pablonavarro2017/pablonavarroBIZ.git
     cd /var/www/pablonavarroBIZ/nodeServer
     sudo nohup node server.js &
     rm nohup.out
