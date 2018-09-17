@@ -108,7 +108,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                         index: cont++,
                         ext: ext,
                         size: fileName.size,
-                        playingVideo: false;
+                        playingVideo: false
                     }
                     $scope.carpetaActual.nombresArchivosAMostrar.push(arch);
                 }
