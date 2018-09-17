@@ -241,8 +241,6 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             }
         };
         a.playingVideo = true;
-        $scope.currentVideo.playingVideo = false;
-        $scope.currentVideo = a;
         $scope.playingVideo = true;
     }
     $scope.stopVideo = function (a) {
