@@ -94,3 +94,8 @@ ga('send', 'pageview');
 
     // UA-73408871-1
 </script>
+
+Para realizar el commit desde linea de comandos:
+git add .
+git commit -m "Descripción"
+git push origin master
