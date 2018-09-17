@@ -38,7 +38,7 @@
                             <span class="paddingIzq noWBreak">{{a.size}}MB</span>
                         </div>
                     </div>
-                    <div ng-show="a.ext=='mp3'">
+                    <div ng-show="a.ext=='mp3'" class="flexFila fNoWrap">
                         <i class="fa fa-play f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack!=a.nombre || audio.paused" title="Reproducir" ng-click="player(a.nombre,'play')"></i>
                         <i class="fa fa-pause f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack==a.nombre && !audio.paused" title="Pausar" ng-click="player(a.nombre,'pause')"></i>
                         <i class="fa fa-stop f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack==a.nombre" title="Parar" ng-click="player(a.nombre,'stop')"></i>

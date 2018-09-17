@@ -44,7 +44,7 @@ Pasos para montar el sistema:
     cd /var/www/pablonavarroBIZ/nodeServer
     sudo nohup node server.js &
     sudo rm nohup.out 
-- Instalar NGINX para Configurar el Proxy (Configurar la IP PRIVADA del server)
+- Instalar NGINX para Configurar el Proxy (Configurar la IP PRIVADA del server) (Files Larger *L)
     sudo apt-get install nginx -y
     cd /etc/nginx/sites-available/
     sudo rm default
@@ -54,6 +54,10 @@ Pasos para montar el sistema:
 - Ver que todo está corriendo
     sudo lsof -i -P -n | grep LISTEN
 
+*L
+sudo nano /etc/nginx/nginx.conf
+client_max_body_size 50M;
+sudo service nginx restart
 
 ** Rutas Importantes:
 
