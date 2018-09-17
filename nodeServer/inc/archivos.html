@@ -42,8 +42,8 @@
                         <!--                        <i class="fa fa-eye f14 paddingIzqDer8 pointer" title="Ver" ng-click="seeFile(a.nombre)"></i>-->
                     </div>
 
-                    <i ng-show="a.ext=='mp4' && !a.playingVideo" class="fa fa-play-circle f14 paddingDer pointer" title="Reproducir" ng-click='playVideo(a)'></i>
-                    <i ng-show="a.ext=='mp4' && a.playingVideo" class="fa fa-stop-circle f14 paddingDer pointer" title="Reproducir" ng-click='stopVideo(a)'></i>
+                    <i ng-show="a.ext=='mp4' && a.playingVideo===false" class="fa fa-play-circle f14 paddingDer pointer" title="Reproducir" ng-click='playVideo(a)'></i>
+                    <i ng-show="a.ext=='mp4' && a.playingVideo===true" class="fa fa-stop-circle f14 paddingDer pointer" title="Parar Video" ng-click='stopVideo(a)'></i>
                     <i class="fa fa-download f14 paddingDer pointer" title="Descargar" ng-click='openFile(a.nombre)'></i>
                     <div>
                         <span class="noWBreak">{{a.size}}MB</span>
