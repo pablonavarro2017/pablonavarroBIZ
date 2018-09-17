@@ -105,7 +105,7 @@ app.controller("archivosController", function (Upload, $window, $scope, $http, $
                         nombre: nombre.substr(nombre.lastIndexOf('/') + 1),
                         index: cont++,
                         ext: ext,
-                        size:fileName.size
+                        size: fileName.size
                     }
                     $scope.carpetaActual.nombresArchivosAMostrar.push(arch);
                 }
@@ -138,7 +138,10 @@ app.controller("archivosController", function (Upload, $window, $scope, $http, $
                 rutaCarpeta: $scope.carpetaActual.urlActual + '/' + folderName
             }, function (data) {
                 rs.cargarPopup('');
-                s.carpetaActual.nombresFoldersAMostrar.push({nombre: folderName,index: s.carpetaActual.nombresFoldersAMostrar.length+1});
+                s.carpetaActual.nombresFoldersAMostrar.push({
+                    nombre: folderName,
+                    index: s.carpetaActual.nombresFoldersAMostrar.length + 1
+                });
                 rs.agregarAlerta('Carpeta Creada');
             }, function (res) {
                 rs.agregarAlerta('Error Al Crear Carpeta');
@@ -146,6 +149,35 @@ app.controller("archivosController", function (Upload, $window, $scope, $http, $
             });
         } else {
             rs.agregarAlerta('Nombre Inválido');
+        }
+    }
+    $scope.player = function (audioName, mode) {
+        log(mode)
+        if (mode == 'stop') {
+            $scope.audio.src = undefined;
+            $scope.audio.currentTrack = '';
+        } else if (mode == 'pause') {
+            $scope.audio.pause();
+        } else if (mode == 'play') {
+            if (!$scope.audio) {
+                log("1")
+                $scope.audio = new Audio('./filesUploaded/' + audioName);
+                $scope.audio.play();
+            } else if ($scope.audio.src.search('undefined')>0) {
+                log("2")
+                log($scope.audio.src)
+                $scope.audio = new Audio('./filesUploaded/' + audioName);
+                $scope.audio.play();
+            } else if ($scope.audio.src.search(audioName)<0) {
+                log("3")
+                $scope.audio.src = undefined;
+                $scope.audio = new Audio('./filesUploaded/' + audioName);
+                $scope.audio.play();
+            }else{
+                log("4")
+                $scope.audio.play();
+            }
+            $scope.audio.currentTrack = audioName;
         }
     }
 

@@ -2,14 +2,14 @@ var http = require("http"); //Crea servidor
 var fs = require('fs'); //Acceder al file system
 var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
-var port = 8081;
+var port = 80; // 8081;
 var serverUrl = "127.0.0.1";
 const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'other']; //extensiones de archivos permitidos para subir
 
 //Crea el servidor y procesa las solicitudes de archivos o apis
 var server = http.createServer(function (req, res) {
     try {
-        if(isBlog(req.headers.host)){
+        if (isBlog(req.headers.host)) {
             return res.end("<h1>EL BLOG</h1>");
         }
         if (req.url.substring(0, 4) == "/api") {
@@ -158,6 +158,9 @@ function procesarArchivo(req, res) {
             res.setHeader("Content-Type", "text/html");
             return res.end(text);
         });
+    } else if (getExtension(req.url) == "mp3") {
+        log('.'+req.url);
+        return returnFile('.'+req.url, res);
     } else {
         getFile('index.html', function (text) {
             res.setHeader("Content-Type", "text/html");
@@ -232,7 +235,10 @@ function getFileSystem(dir, files_) {
         } else {
             var fileSize = elem.size;
             fileSize /= 1048576;
-            files_.files.push({name:name,size:formatearFloat(fileSize)});
+            files_.files.push({
+                name: name,
+                size: formatearFloat(fileSize)
+            });
         }
     }
     return files_;
@@ -251,15 +257,12 @@ function isBlog(hostName) {
     }
 }
 
-function formatearFloat(n,d) {
+function formatearFloat(n, d) {
     // parsea el string n a float y lo limita a 2 decimales
-    return parseFloat(parseFloat(n).toFixed(d?d:2));
+    return parseFloat(parseFloat(n).toFixed(d ? d : 2));
 }
 
 //Imprime objeto
 function log(o) {
     console.log(o);
 }
-
-
-//https: //www.codexpedia.com/node-js/nodejs-http-file-server-serving-file-for-download/
