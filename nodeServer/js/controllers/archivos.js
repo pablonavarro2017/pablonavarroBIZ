@@ -240,11 +240,13 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                 url: "https://unpkg.com/videogular@2.1.2/dist/themes/default/videogular.css"
             }
         };
+        $scope.currentVideo = a;
         a.playingVideo = true;
         $scope.playingVideo = true;
     }
     $scope.stopVideo = function (a) {
         $scope.config = {};
+        $scope.currentVideo.playingVideo = false;
         a.playingVideo = false;
         $scope.playingVideo = false;
     }
