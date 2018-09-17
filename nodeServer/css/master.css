@@ -385,12 +385,14 @@ nav a:hover {
 
 footer {
     background: #231f20;
-    color: #ffff;
     padding: 5px 1.5%;
     display: flex;
     flex-wrap: nowrap;
     flex-shrink: 0;
     z-index: 1000;
+}
+footer *{
+    color: #ffff!important;
 }
 
 /* SCROLL BAR */
@@ -637,5 +639,8 @@ footer {
     }
     .ruta * {
         font-size: 12px !important;
+    }
+    .popup .ventana {
+    max-width: 100%;
     }
 }
