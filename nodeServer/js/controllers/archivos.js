@@ -1,12 +1,14 @@
-app.controller("archivosController", function (Upload, $window, $scope, $http, $filter, $rootScope, $interval, $location) {
+app.controller("archivosController", function (Upload, $sce, $window, $scope, $http, $filter, $rootScope, $interval, $location) {
     s = $scope;
     rs = $rootScope;
     rs.sa = s;
     /**/
     $scope.message = "Ningún archivo";
-    $scope.submit = function () { //function to call on form submit
-        if ($scope.upload_form.file.$valid) { //check if from is valid
+    $scope.subirArchivo = function () { //function to call on form submit
+        if ($scope.upload_form.file.$valid && $scope.file) { //check if from is valid
             $scope.upload($scope.file); //call upload function
+        } else {
+            rs.agregarAlerta('Archivo Inválido');
         }
     }
     $scope.upload = function (file) {
@@ -159,24 +161,15 @@ app.controller("archivosController", function (Upload, $window, $scope, $http, $
         } else if (mode == 'pause') {
             $scope.audio.pause();
         } else if (mode == 'play') {
-            if (!$scope.audio) {
+            if (!$scope.audio || $scope.audio.src.search('undefined') > 0) {
                 log("1")
                 $scope.audio = new Audio('./filesUploaded/' + audioName);
-                $scope.audio.play();
-            } else if ($scope.audio.src.search('undefined')>0) {
-                log("2")
-                log($scope.audio.src)
-                $scope.audio = new Audio('./filesUploaded/' + audioName);
-                $scope.audio.play();
-            } else if ($scope.audio.src.search(audioName)<0) {
+            } else if ($scope.audio.src.search(audioName) < 0) {
                 log("3")
                 $scope.audio.src = undefined;
                 $scope.audio = new Audio('./filesUploaded/' + audioName);
-                $scope.audio.play();
-            }else{
-                log("4")
-                $scope.audio.play();
             }
+            $scope.audio.play();
             $scope.audio.currentTrack = audioName;
         }
     }
@@ -223,6 +216,38 @@ app.controller("archivosController", function (Upload, $window, $scope, $http, $
         return true;
     }
 
+    $scope.playVideo = function (a) {
+        $scope.config = {
+            preload: "none",
+            sources: [
+
+                {
+                    src: $sce.trustAsResourceUrl("./filesUploaded/" + a.nombre),
+                    type: "video/mp4"
+                },
+
+				],
+            tracks: [
+                {
+                    src: "http://www.videogular.com/assets/subs/pale-blue-dot.vtt",
+                    kind: "subtitles",
+                    srclang: "en",
+                    label: "English",
+                    default: ""
+					}
+				],
+            theme: {
+                url: "https://unpkg.com/videogular@2.1.2/dist/themes/default/videogular.css"
+            }
+        };
+        a.playingVideo = true;
+        $scope.playingVideo = true;
+    }
+    $scope.stopVideo = function (a) {
+        $scope.config = {};
+        a.playingVideo = false;
+        $scope.playingVideo = false;
+    }
     /**/
     $scope.$on("$destroy", function () {
         $rootScope.controllerDestruido();

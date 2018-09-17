@@ -1,6 +1,6 @@
 /* CONTROLADOR PRINCIPAL */
-var app = angular.module('app', ['ngFileUpload', 'ui.router']);
-app.controller("mainController", function (Upload, $window, $scope, $http, $filter, $rootScope, $interval, $location) {
+var app = angular.module('app', ['ngFileUpload', 'ui.router', 'ngSanitize','com.2fdevs.videogular']);
+app.controller("mainController", function (Upload, $sce,$window, $scope, $http, $filter, $rootScope, $interval, $location) {
     //app.controller("mainController", function (Upload, $window, $scope, $rootScope, $location, $http, $filter, $interval) {
     var rs = $rootScope;
     var s = $scope;

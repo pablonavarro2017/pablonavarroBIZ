@@ -4,7 +4,7 @@
         <div class="">Subir Archivo (Max 100MB)</div>
         <form name="upload_form" class="formFile">
             <input type="file" ngf-select ng-model="file" name="file" ngf-max-size="100MB" />
-            <button type="submit" ng-click="submit()">Subir Archivo</button>
+            <button type="submit" ng-click="subirArchivo()">Subir Archivo</button>
             <span>{{(file.size?"Tamaño: "+(file.size/1024/1024).toFixed(1)+"MB":message)}}</span>
         </form>
 
@@ -34,19 +34,28 @@
                     <i class="fa marginIzq archivo" ng-class="'fa-'+a.icon"></i>
                     <div class="flexFila jcSBet fg1">
                         <span class="marginIzq">{{a.nombre}}</span>
-                        <div>
-                            <span class="paddingIzq noWBreak">{{a.size}}MB</span>
-                        </div>
                     </div>
                     <div ng-show="a.ext=='mp3'" class="flexFila fNoWrap">
                         <i class="fa fa-play f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack!=a.nombre || audio.paused" title="Reproducir" ng-click="player(a.nombre,'play')"></i>
                         <i class="fa fa-pause f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack==a.nombre && !audio.paused" title="Pausar" ng-click="player(a.nombre,'pause')"></i>
                         <i class="fa fa-stop f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack==a.nombre" title="Parar" ng-click="player(a.nombre,'stop')"></i>
-                        <i class="fa fa-download f14 paddingDer pointer" title="Descargar" ng-click='openFile(a.nombre)'></i>
-<!--                        <i class="fa fa-eye f14 paddingIzqDer8 pointer" title="Ver" ng-click="seeFile(a.nombre)"></i>-->
+                        <!--                        <i class="fa fa-eye f14 paddingIzqDer8 pointer" title="Ver" ng-click="seeFile(a.nombre)"></i>-->
+                    </div>
+
+                    <i ng-show="a.ext=='mp4' && !a.playingVideo" class="fa fa-play-circle f14 paddingDer pointer" title="Reproducir" ng-click='playVideo(a)'></i>
+                    <i ng-show="a.ext=='mp4' && a.playingVideo" class="fa fa-stop-circle f14 paddingDer pointer" title="Reproducir" ng-click='stopVideo(a)'></i>
+                    <i class="fa fa-download f14 paddingDer pointer" title="Descargar" ng-click='openFile(a.nombre)'></i>
+                    <div>
+                        <span class="noWBreak">{{a.size}}MB</span>
                     </div>
                 </div>
             </div>
+
+                    <videogular ng-if="playingVideo" vg-theme="config.theme.url">
+                        <vg-media vg-src="config.sources" vg-tracks="config.tracks" vg-native-controls="true">
+                        </vg-media>
+                    </videogular>
+
         </div>
     </div>
 </div>

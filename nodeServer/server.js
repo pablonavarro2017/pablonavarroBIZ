@@ -2,7 +2,7 @@ var http = require("http"); //Crea servidor
 var fs = require('fs'); //Acceder al file system
 var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
-var port = 8081; // 80;
+var port = 80; // 80;
 var serverUrl = "127.0.0.1";
 const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'other']; //extensiones de archivos permitidos para subir
 
@@ -90,7 +90,7 @@ function procesarApi(req, res) {
                         return sendBack(res, 'OK', 'Archivo Subido');
                     });
                 } else {
-                    return sendBack(res, 'ERROR', 'Extensión de archivo no permitida');
+                    return sendBack(res, 'ERROR', 'Extensión de archivo no permitida: ' + extension);
                 }
             } else {
                 return sendBack(res, 'ERROR', 'Archivo no se cargó al servidor');
@@ -106,7 +106,7 @@ function returnFile(url, res) {
                 'Content-type': 'text/html'
             })
             console.log(err);
-            return sendBack(res, 'ERROR', 'Extensión de archivo no permitida');
+            return sendBack(res, 'ERROR', 'Error al retornar el archivo'  );
         } else {
             //specify Content will be an attachment
             res.setHeader('Content-disposition', 'attachment; filename=' + getFileNameFromURL(url));
@@ -158,7 +158,7 @@ function procesarArchivo(req, res) {
             res.setHeader("Content-Type", "text/html");
             return res.end(text);
         });
-    } else if (getExtension(req.url) == "mp3") {
+    } else if (getExtension(req.url) == "mp3" || getExtension(req.url) == "mp4"|| getExtension(req.url) == "avi") {
         log('.'+req.url);
         return returnFile('.'+req.url, res);
     } else {
