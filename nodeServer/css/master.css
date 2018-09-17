@@ -393,6 +393,7 @@ footer {
 }
 footer *{
     color: #ffff!important;
+    z-index: 1000;
 }
 
 /* SCROLL BAR */
