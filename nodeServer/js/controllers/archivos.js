@@ -244,7 +244,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             if(fileName.playingVideo){
                 fileName.playingVideo = false;
             }
-        }
+        });
         a.playingVideo = true;
         $scope.playingVideo = true;
     }
