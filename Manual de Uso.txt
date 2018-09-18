@@ -58,21 +58,20 @@ Pasos para montar el sistema:
 - Ver que todo está corriendo
     sudo lsof -i -P -n | grep LISTEN
 
-*L
-sudo nano /etc/nginx/nginx.conf
-client_max_body_size 50M;
-sudo service nginx restart
+*Cambiar el tamaño máximo permitido del request body
+    sudo nano /etc/nginx/nginx.conf
+    Set:    client_max_body_size 50M;
+    sudo service nginx restart
 
 ** Rutas Importantes:
+     /etc/nginx/sites-available
+     - Cambiar el archivo default
 
- /etc/nginx/sites-available
- - Cambiar el archivo default
+    /var/www/ghost/ 
+     - npm start : Ghost service
 
-/var/www/ghost/ 
- - npm start : Ghost service
-
-/var/www/pablonavarroBIZ
- - node server.js : inicia la página web
+    /var/www/pablonavarroBIZ
+     - node server.js : inicia la página web
  
 ** Actualizar sitio principal
     sudo kill `sudo lsof -t -i:8081`
@@ -83,7 +82,7 @@ sudo service nginx restart
     sudo nohup node server.js &
     sudo rm nohup.out 
  
- ** Actualizar sitio de virtual host denegado y Proxy Pass
+ ** Actualizar sitio de virtual host denegado y Proxy Pass (Actualizar sitio principal después de hacer esto)
     sudo rm -Rf /var/www/pablonavarroBIZ
     cd /var/www/
     sudo git clone https://github.com/pablonavarro2017/pablonavarroBIZ.git
@@ -95,26 +94,7 @@ sudo service nginx restart
     sudo cp /var/www/pablonavarroBIZ/nginx/index.html /usr/share/empty/
     sudo service nginx restart
 
-** Confiración de Google Analitycs  (pablonavarro2015114121@gmail.com)
 
-<script>
-(function (i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r;
-    i[r] = i[r] || function () {
-        (i[r].q = i[r].q || []).push(arguments)
-    }, i[r].l = 1 * new Date();
-    a = s.createElement(o), m = s.getElementsByTagName(o)[0];
-    a.async = 1;
-    a.src = g;
-    m.parentNode.insertBefore(a, m)
-})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-ga('create', 'UA-117907219-1', 'auto');
-ga('require', 'displayfeatures');
-ga('require', 'linkid', 'linkid.js');
-ga('send', 'pageview');
-
-    // UA-73408871-1
-</script>
 
 ** Configurar Certificado SSL Certificate (HTTPS) https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx
     sudo apt-get update
@@ -123,8 +103,27 @@ ga('send', 'pageview');
     sudo apt-get update
     sudo apt-get install python-certbot-nginx
 
+** Confiración de Google Analitycs  (pablonavarro2015114121@gmail.com)
+    <script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-117907219-1', 'auto');
+    ga('require', 'displayfeatures');
+    ga('require', 'linkid', 'linkid.js');
+    ga('send', 'pageview');
 
-Para realizar el commit desde linea de comandos:
-git add .
-git commit -m "Descripción"
-git push origin master
+    // UA-73408871-1
+</script>
+
+** Para realizar el commit desde linea de comandos:
+    git add .
+    git commit -m "Descripción"
+    git push origin master
