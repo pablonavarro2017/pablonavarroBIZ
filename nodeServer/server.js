@@ -9,9 +9,7 @@ const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jp
 //Crea el servidor y procesa las solicitudes de archivos o apis
 var server = http.createServer(function (req, res) {
     try {
-        if (isBlog(req.headers.host)) {
-            return res.end("<h1>EL BLOG</h1>");
-        }
+        log(req.url);
         if (req.url.substring(0, 4) == "/api") {
             procesarApi(req, res);
         } else {
@@ -106,7 +104,7 @@ function returnFile(url, res) {
                 'Content-type': 'text/html'
             })
             console.log(err);
-            return sendBack(res, 'ERROR', 'Error al retornar el archivo'  );
+            return sendBack(res, 'ERROR', 'Error al retornar el archivo');
         } else {
             //specify Content will be an attachment
             res.setHeader('Content-disposition', 'attachment; filename=' + getFileNameFromURL(url));
@@ -158,11 +156,16 @@ function procesarArchivo(req, res) {
             res.setHeader("Content-Type", "text/html");
             return res.end(text);
         });
-    } else if (getExtension(req.url) == "mp3" || getExtension(req.url) == "mp4"|| getExtension(req.url) == "avi"|| getExtension(req.url) == "jpg") {
-        log('.'+req.url);
-        return returnFile('.'+req.url, res);
-    } else {
+    } else if (getExtension(req.url) == "mp3" || getExtension(req.url) == "mp4" || getExtension(req.url) == "avi" || getExtension(req.url) == "jpg") {
+        log('.' + req.url);
+        return returnFile('.' + req.url, res);
+    } else if (req.url == "/") {
         getFile('index.html', function (text) {
+            res.setHeader("Content-Type", "text/html");
+            return res.end(text);
+        });
+    } else {
+        getFile('/inc/404-Not-Found.html', function (text) {
             res.setHeader("Content-Type", "text/html");
             return res.end(text);
         });
