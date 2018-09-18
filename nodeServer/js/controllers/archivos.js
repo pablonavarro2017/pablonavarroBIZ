@@ -261,6 +261,10 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         }
         $scope.playingVideo = false;
     }
+    $scope.abrirImagen = function (nombre) {
+        s.currentImage = $scope.carpetaActual.urlActual + '/' + nombre;
+        rs.cargarPopup('verImagen');
+    }
     /**/
     $scope.$on("$destroy", function () {
         $rootScope.controllerDestruido();
