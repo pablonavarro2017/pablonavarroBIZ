@@ -83,6 +83,18 @@ sudo service nginx restart
     sudo nohup node server.js &
     sudo rm nohup.out 
  
+ ** Actualizar sitio devirtual host denegado y Proxy Pass
+    sudo rm -Rf /var/www/pablonavarroBIZ
+    cd /var/www/
+    sudo git clone https://github.com/pablonavarro2017/pablonavarroBIZ.git
+    cd /etc/nginx/sites-available/
+    sudo rm default
+    sudo cp /var/www/pablonavarroBIZ/nginx/default /etc/nginx/sites-available/
+    sudo rm -Rf /usr/share/empty
+    sudo mkdir /usr/share/empty/
+    sudo cp /var/www/pablonavarroBIZ/nginx/index.html /usr/share/empty/
+    sudo service nginx restart
+
 ** Confiración de Google Analitycs  (pablonavarro2015114121@gmail.com)
 
 <script>
