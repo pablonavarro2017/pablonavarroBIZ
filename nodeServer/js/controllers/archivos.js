@@ -115,6 +115,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             })
         });
         setIcon();
+        s.playingVideo = false;
     }
 
     $scope.openFile = function (fileName) {
@@ -155,18 +156,18 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         }
     }
     $scope.player = function (audioName, mode) {
-        log(mode)
         if (mode == 'stop') {
             $scope.audio.src = undefined;
             $scope.audio.currentTrack = '';
         } else if (mode == 'pause') {
-            $scope.audio.pause();
+            if ($scope.audio) {
+                $scope.audio.pause();
+            }
         } else if (mode == 'play') {
-            if (!$scope.audio || $scope.audio.src.search('undefined') > 0) {
-                log("1")
+            $scope.stopVideo();
+            if (!$scope.audio || $scope.audio.src.search('undefined') > 0) { // primera vez reproduciendo o se había parado(stop) la canción anterior
                 $scope.audio = new Audio('./filesUploaded/' + audioName);
-            } else if ($scope.audio.src.search(audioName) < 0) {
-                log("3")
+            } else if ($scope.audio.src.search(audioName) < 0) { // Si se va a reproducir una canción en Pausa
                 $scope.audio.src = undefined;
                 $scope.audio = new Audio('./filesUploaded/' + audioName);
             }
@@ -241,17 +242,23 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                 url: "https://unpkg.com/videogular@2.1.2/dist/themes/default/videogular.css"
             }
         };
-        $scope.fs.files.forEach((fileName) => {
-            if(fileName.playingVideo){
-                fileName.playingVideo = false;
-            }
+        $scope.carpetaActual.nombresArchivosAMostrar.forEach((ar) => {
+            ar.playingVideo = false;
         });
+        $scope.player('', 'pause'); //Pausar una canción si se estaba reproduciendo
         a.playingVideo = true;
         $scope.playingVideo = true;
     }
     $scope.stopVideo = function (a) {
         $scope.config = {};
-        a.playingVideo = false;
+        if (a) {
+            a.playingVideo = false;
+
+        } else {
+            $scope.carpetaActual.nombresArchivosAMostrar.forEach((ar) => {
+                ar.playingVideo = false;
+            });
+        }
         $scope.playingVideo = false;
     }
     /**/

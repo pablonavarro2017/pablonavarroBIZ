@@ -41,7 +41,6 @@
                         <i class="fa fa-stop f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack==a.nombre" title="Parar" ng-click="player(a.nombre,'stop')"></i>
                         <!--                        <i class="fa fa-eye f14 paddingIzqDer8 pointer" title="Ver" ng-click="seeFile(a.nombre)"></i>-->
                     </div>
-
                     <i ng-show="a.ext=='mp4' && a.playingVideo===false" class="fa fa-play-circle f14 paddingDer pointer" title="Reproducir" ng-click='playVideo(a)'></i>
                     <i ng-show="a.ext=='mp4' && a.playingVideo===true" class="fa fa-stop-circle f14 paddingDer pointer" title="Parar Video" ng-click='stopVideo(a)'></i>
                     <i class="fa fa-download f14 paddingDer pointer" title="Descargar" ng-click='openFile(a.nombre)'></i>
@@ -50,12 +49,10 @@
                     </div>
                 </div>
             </div>
-
-                    <videogular ng-if="playingVideo" vg-theme="config.theme.url">
-                        <vg-media vg-src="config.sources" vg-tracks="config.tracks" vg-native-controls="true">
-                        </vg-media>
-                    </videogular>
-
+            <videogular ng-if="playingVideo" vg-theme="config.theme.url">
+                <vg-media vg-src="config.sources" vg-tracks="config.tracks" vg-native-controls="true">
+                </vg-media>
+            </videogular>
         </div>
     </div>
 </div>

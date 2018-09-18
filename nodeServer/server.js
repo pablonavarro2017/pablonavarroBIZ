@@ -2,7 +2,7 @@ var http = require("http"); //Crea servidor
 var fs = require('fs'); //Acceder al file system
 var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
-var port = 8081; // 80;
+var port = 80; // 80;
 var serverUrl = "127.0.0.1";
 const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'other']; //extensiones de archivos permitidos para subir
 
