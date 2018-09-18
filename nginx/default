@@ -13,11 +13,7 @@ server {
         proxy_pass http://172.31.20.65:2368;
     }
 }
-
 server {
-    listen 80;
-    server_name ec2-34-220-227-220.us-west-2.compute.amazonaws.com;
-    location / {
-        proxy_pass http://0.0.0.0;
-    }
+  listen 80 default_server;
+  root /usr/share/empty;
 }

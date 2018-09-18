@@ -49,6 +49,10 @@ Pasos para montar el sistema:
     cd /etc/nginx/sites-available/
     sudo rm default
     sudo cp /var/www/pablonavarroBIZ/nginx/default /etc/nginx/sites-available/
+    sudo rm -Rf /usr/share/empty
+    sudo mkdir /usr/share/empty/
+    sudo cp /var/www/pablonavarroBIZ/nginx/index.html /usr/share/empty/
+    
 - Correr el servidor de NGINX 
     sudo service nginx restart
 - Ver que todo está corriendo
