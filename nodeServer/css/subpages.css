@@ -73,3 +73,14 @@
     color: #000;
     text-shadow: 0px 0px 1px rgba(0, 255, 78, 0.18);
 }
+
+.imgView {
+    width: 100%; max-height: 80vh
+}
+
+
+@media screen and (max-width:640px) {
+    .imgView{
+        max-height: 75vh!important;
+    }
+}
