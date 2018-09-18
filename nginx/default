@@ -1,19 +1,75 @@
 server {
-    listen 80;
     server_name pablonavarro.biz www.pablonavarro.biz;
     location / {
         proxy_pass http://172.31.20.65:8081;
     }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/pablonavarro.biz/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/pablonavarro.biz/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
 }
 
 server {
-    listen 80;
     server_name blog.pablonavarro.biz www.blog.pablonavarro.biz;
+    
+    location /error {
+       root /usr/share/empty;
+    }
+    
     location / {
         proxy_pass http://172.31.20.65:2368;
     }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/pablonavarro.biz/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/pablonavarro.biz/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
 }
+
 server {
   listen 80 default_server;
   root /usr/share/empty;
+}
+
+server {
+    if ($host = www.pablonavarro.biz) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = pablonavarro.biz) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name pablonavarro.biz www.pablonavarro.biz;
+    return 404; # managed by Certbot
+
+
+
+
+}
+
+server {
+    if ($host = www.blog.pablonavarro.biz) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = blog.pablonavarro.biz) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name blog.pablonavarro.biz www.blog.pablonavarro.biz;
+    return 404; # managed by Certbot
 }
