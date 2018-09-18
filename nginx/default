@@ -17,7 +17,8 @@ server {
     server_name blog.pablonavarro.biz www.blog.pablonavarro.biz;
     
     location /error {
-       root /usr/share/empty;
+       root /usr/share/empty/html;
+        internal;
     }
     
     location / {
