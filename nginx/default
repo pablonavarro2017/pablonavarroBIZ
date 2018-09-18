@@ -9,17 +9,10 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/pablonavarro.biz/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-
-
 }
 
 server {
     server_name blog.pablonavarro.biz www.blog.pablonavarro.biz;
-    
-    location /error {
-       root /usr/share/empty/html;
-        internal;
-    }
     
     location / {
         proxy_pass http://172.31.20.65:2368;
@@ -30,8 +23,6 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/pablonavarro.biz/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-
-
 }
 
 server {
@@ -44,19 +35,13 @@ server {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
-
     if ($host = pablonavarro.biz) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
-
     listen 80;
     server_name pablonavarro.biz www.pablonavarro.biz;
     return 404; # managed by Certbot
-
-
-
-
 }
 
 server {
@@ -64,11 +49,9 @@ server {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
-
     if ($host = blog.pablonavarro.biz) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
-
 
     listen 80;
     server_name blog.pablonavarro.biz www.blog.pablonavarro.biz;
