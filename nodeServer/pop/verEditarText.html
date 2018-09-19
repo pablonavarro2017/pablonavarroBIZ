@@ -1,0 +1,23 @@
+<!-- Popup plantilla -->
+<style>
+    input {
+        user-select: text;
+    }
+</style>
+<div class="fondoPopup" ng-click="cargarPopup('')"></div>
+<div class="areaEdicion ventana">
+    <div class="title">Contenido del archivo: {{sa.editingFile}}
+        <div ng-click="cargarPopup('')"><span>X</span></div>
+    </div>
+    <div class="contenido">
+        <div class="formContainer maxH100pc ofAuto">
+            <div class="flexFila jcSAr fWrap contenido">
+                <textarea class="areaEdicionTexto" rows="10" ng-model="sa.fileContent"></textarea>
+            </div>
+            <div class="botones">
+                <button type="submit" title="Guarda los cambios">Guardar</button>
+                <button ng-click="cargarPopup('')" title="Salir sin guardar">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

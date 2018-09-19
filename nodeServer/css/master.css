@@ -365,16 +365,22 @@ nav a:hover {
     background: #09b047;
 }
 
-.ventana > .title span {
+.ventana > .title div *{
+    font-size: 20px;
+    font-weight: bold;
+}
+.ventana > .title div {
     position: absolute;
     top: 0;
     right: 0;
     height: 100%;
-    font-size: 20px;
-    font-weight: bold;
     padding: 8px 12px;
     background: #e40000;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
 }
 
 .ventana > .title span:hover {
@@ -592,6 +598,7 @@ footer *{
     height: auto;
     min-height: auto;
 }
+
 
 
 /* MEDIA QUERIES */

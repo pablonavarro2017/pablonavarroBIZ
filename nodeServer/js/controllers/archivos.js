@@ -3,7 +3,6 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     rs = $rootScope;
     rs.sa = s;
     /**/
-    $scope.message = "Ningún archivo";
     $scope.subirArchivo = function () { //function to call on form submit
         if ($scope.upload_form.file.$valid && $scope.file) { //check if from is valid
             $scope.upload($scope.file); //call upload function
@@ -13,7 +12,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
     $scope.upload = function (file) {
         $rootScope.requestCount++;
-        $scope.message = 'Subiendo Archivo';
+        rs.agregarAlerta('Subiendo Archivo: ' + file.name+" - "+(file.size/1024/1024).toFixed(1)+" MB");
         Upload.upload({
             url: '/api/uploadFile', //webAPI exposed to upload the file
             data: {
@@ -21,12 +20,12 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                 ruta: $scope.carpetaActual.urlActual
             } //pass file as data, should be user ng-model
         }).then(function (resp) { //upload function returns a promise
-            $scope.message = resp.data.mensaje;
+            rs.agregarAlerta(resp.data.mensaje);
             $scope.file = null;
             $scope.mostrarDirectorios();
             $scope.urlDirecta($scope.carpetaActual.urlActual);
         }, function (resp) { //catch error
-            $scope.message = 'Error status: ' + resp.status;
+            rs.agregarAlerta('Error status: ' + resp.status);
         }).finally(function () {
             $rootScope.requestCount--;
         });
@@ -157,7 +156,8 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
     $scope.player = function (audioName, mode) {
         if (mode == 'stop') {
-            $scope.audio.src = undefined;
+            $scope.audio.pause();
+            $scope.audio.currentTime = 0;
             $scope.audio.currentTrack = '';
         } else if (mode == 'pause') {
             if ($scope.audio) {
@@ -168,7 +168,8 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             if (!$scope.audio || $scope.audio.src.search('undefined') > 0) { // primera vez reproduciendo o se había parado(stop) la canción anterior
                 $scope.audio = new Audio('./filesUploaded/' + audioName);
             } else if ($scope.audio.src.search(audioName) < 0) { // Si se va a reproducir una canción en Pausa
-                $scope.audio.src = undefined;
+                $scope.audio.pause();
+                $scope.audio.currentTime = 0;
                 $scope.audio = new Audio('./filesUploaded/' + audioName);
             }
             $scope.audio.play();
@@ -194,6 +195,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         css: 'file-text-o',
         js: 'file-text-o',
         txt: 'file-text-o',
+        apk: 'android',
     }
 
     function setIcon() {
@@ -264,6 +266,22 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     $scope.abrirImagen = function (nombre) {
         s.currentImage = $scope.carpetaActual.urlActual + '/' + nombre;
         rs.cargarPopup('verImagen');
+    }
+
+    $scope.abrirTexto = function (nombreArchivo) {
+        $rootScope.solicitudPost("/getPlainText", {
+            rutaArchivo: $scope.carpetaActual.urlActual + '/' + nombreArchivo
+        }, function (data) {
+            s.editingFile = nombreArchivo;
+            s.fileContent = data;
+            rs.cargarPopup("verEditarText");
+        }, function (res) {
+            rs.agregarAlerta('Error Al Crear Carpeta');
+            log(res);
+        });
+    }
+    s.parseInt = function(n){
+        return parseInt(n);
     }
     /**/
     $scope.$on("$destroy", function () {

@@ -4,12 +4,12 @@ var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
 var port = 8081; // 80;
 var serverUrl = "127.0.0.1";
-const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'other']; //extensiones de archivos permitidos para subir
+const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'php', 'apk', 'conf', 'other']; //extensiones de archivos permitidos para subir
 
 //Crea el servidor y procesa las solicitudes de archivos o apis
 var server = http.createServer(function (req, res) {
     try {
-        log(req.url);
+        req.url = decodeURIComponent(req.url);
         if (req.url.substring(0, 4) == "/api") {
             procesarApi(req, res);
         } else {
@@ -48,6 +48,15 @@ function procesarApi(req, res) {
                         log("/getFile " + rutaArchivo);
                         if (rutaArchivo.substr(0, 15) === './filesUploaded') {
                             return returnFile(rutaArchivo, res);
+                        } else {
+                            return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
+                        }
+                        break;
+                    case "/getPlainText":
+                        var rutaArchivo = data.rutaArchivo;
+                        log("/getFile " + rutaArchivo);
+                        if (rutaArchivo.substr(0, 15) === './filesUploaded') {
+                            return returnPlainText(req, res,rutaArchivo);
                         } else {
                             return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
                         }
@@ -97,6 +106,13 @@ function procesarApi(req, res) {
     }
 }
 
+function returnPlainText(req, res,rutaArchivo) {
+    getFile(rutaArchivo, function (text) {
+        res.setHeader("Content-Type", "text/plain");
+        return res.end(text);
+    });
+}
+
 function returnFile(url, res) {
     fs.readFile(url, function (err, content) {
         if (err) {
@@ -107,7 +123,7 @@ function returnFile(url, res) {
             return sendBack(res, 'ERROR', 'Error al retornar el archivo');
         } else {
             //specify Content will be an attachment
-            res.setHeader('Content-disposition', 'attachment; filename=' + getFileNameFromURL(url));
+            res.setHeader('Content-disposition', 'attachment; filename=' + getFileNameFromURL(url).replace(/,/g , "_"));
             res.setHeader('FileName', getFileNameFromURL(url));
             return res.end(content);
         }
@@ -156,7 +172,7 @@ function procesarArchivo(req, res) {
             res.setHeader("Content-Type", "text/html");
             return res.end(text);
         });
-    } else if (getExtension(req.url) == "mp3" || getExtension(req.url) == "mp4" || getExtension(req.url) == "avi" || getExtension(req.url) == "jpg") {
+    } else if (["mp3","mp4","avi","jpg","png"].indexOf(getExtension(req.url))>=0) {
         log('.' + req.url);
         return returnFile('.' + req.url, res);
     } else if (req.url == "/") {

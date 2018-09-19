@@ -1,26 +1,19 @@
 <div class="ventana inline sombra2 aCentro">
     <div class="title">Sistema de Archivos</div>
     <div class="fullPadding aIzq">
-        <div class="">Subir Archivo (Max 100MB)</div>
-        <form name="upload_form" class="formFile">
-            <input type="file" ngf-select ng-model="file" name="file" ngf-max-size="100MB" />
-            <button type="submit" ng-click="subirArchivo()">Subir Archivo</button>
-            <span>{{(file.size?"Tamaño: "+(file.size/1024/1024).toFixed(1)+"MB":message)}}</span>
-        </form>
-
-        <br>
-        <h2>Sistema de Archivos</h2>
-
-        <div class="flexFila jcSBet">
-            <button ng-click="mostrarDirectorios()">Mostrar Archivos</button>
-            <button ng-click="preMKDir()">Crear Carpeta</button>
+        <div class="paddingDer marginArriba sombra1 aDer">
+            <form name="upload_form" class="formFile">
+                <label for="file" title="Subir Archivo" class="pointer"><i class="fa fa-upload f16" ></i></label>
+                <input id="file" style="display: none" type="file" ngf-select ng-model="file" name="file" ngf-max-size="100MB" ng-change="subirArchivo()" />
+                <span ng-click="preMKDir()" title="Crear Carpeta" class="pointer"><i class="fa fa-folder"></i><i class="fa fa-plus plus"></i></span>
+            </form>
         </div>
-        <br>
-        <div class="fullPadding marginArriba sombra1">
-            Ruta: <i class="fa fa-cloud nube paddinIzq" ng-click="mostrarDirectorios()"></i> <i class="fa fa-caret-right"></i>
-            <div class="inline ruta" ng-repeat="r in URLs">
+        <div class="sombra3 fullPaddingMini flexFila aiCenter">
+            <span class="f12">Ruta: </span><i class="fa fa-cloud nube" ng-click="mostrarDirectorios()"></i> <i class="fa fa-caret-right"></i>
+            <div class="inline" ng-repeat="r in URLs">
                 <span ng-click="urlDirecta(r)" class="itemUrl"> {{r.nombreFolder}}</span>
-                <i class="fa fa-caret-right"></i></div>
+                <i class="fa fa-caret-right" style="margin-left: -5px;"></i>
+            </div>
         </div>
 
         <div class="fullmargin flexColumna">
@@ -28,13 +21,14 @@
                 <i class="fa fa-circle f10"></i>
                 <i class="fa fa-folder marginIzq carpeta"></i> <span class="marginIzq">{{c.nombre}}</span>
             </div>
-            <div ng-repeat="a in carpetaActual.nombresArchivosAMostrar" ng-class="a.index%2==0?'bgBlanco':''" class="item paddinIzq">
+            <div ng-repeat="a in carpetaActual.nombresArchivosAMostrar" ng-class="a.index%2==0?'bgBlanco':''" class="item paddinIzq" ng-attr-title="{{a.size+' MB'}}">
                 <div class="flexFila">
                     <i class="fa fa-circle f10"></i>
                     <i class="fa marginIzq archivo" ng-class="'fa-'+a.icon"></i>
                     <div class="flexFila jcSBet fg1">
                         <span class="marginIzq">{{a.nombre}}</span>
                     </div>
+
                     <!--Mp3-->
                     <div ng-show="a.ext=='mp3'" class="flexFila fNoWrap">
                         <i class="fa fa-play f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack!=a.nombre || audio.paused" title="Reproducir" ng-click="player(a.nombre,'play')"></i>
@@ -45,13 +39,13 @@
                     <!--Imágenes-->
                     <i ng-show="a.ext=='jpg'||a.ext=='png'||a.ext=='gif'" class="fa fa-eye f14 paddingIzqDer8 pointer" title="Ver" ng-click="abrirImagen(a.nombre)"></i>
 
+                    <!--Texto-->
+                    <i ng-show="a.ext=='txt'||a.ext=='html'||a.ext=='php'||a.ext=='js'" class="fa fa-pencil f14 paddingIzqDer8 pointer" title="Ver/Editar" ng-click="abrirTexto(a.nombre)"></i>
+
                     <!--Video Mp4-->
                     <i ng-show="a.ext=='mp4' && a.playingVideo===false" class="fa fa-play-circle f14 paddingDer pointer" title="Reproducir" ng-click='playVideo(a)'></i>
                     <i ng-show="a.ext=='mp4' && a.playingVideo===true" class="fa fa-stop-circle f14 paddingDer pointer" title="Parar Video" ng-click='stopVideo(a)'></i>
                     <i class="fa fa-download f14 paddingDer pointer" title="Descargar" ng-click='openFile(a.nombre)'></i>
-                    <div>
-                        <span class="noWBreak">{{a.size}}MB</span>
-                    </div>
                 </div>
             </div>
             <videogular ng-if="playingVideo" vg-theme="config.theme.url">

@@ -29,8 +29,9 @@
 }
 
 .itemUrl {
-    padding: 5px 4px;
-    margin: 2px 4px;
+    font-size: 12px;
+    padding: 2px 2px 2px 2px;
+    margin: 0px 3px 0px 3px;
     box-shadow: 0px 0px 1px 1px grey;
     border-radius: 3px;
     cursor: pointer;
@@ -47,8 +48,9 @@
     font-size: 12px;
     word-break: break-all;
 }
-.noWBreak{
-    word-break: keep-all!important;
+
+.noWBreak {
+    word-break: keep-all !important;
 }
 
 .item:hover {
@@ -63,6 +65,7 @@
 }
 
 .nube {
+    padding: 0 3px;
     color: #c7d3df;
     font-size: 30px;
     cursor: pointer
@@ -75,12 +78,47 @@
 }
 
 .imgView {
-    width: 100%; max-height: 80vh
+    width: 100%;
+    max-height: 80vh
 }
 
 
+.areaEdicionTexto {
+    width: 100%;
+    min-height: 60vh ;
+}
+
+.areaEdicion {
+    min-height: 70vh ;
+    min-width: 90%!important;
+}
+span .plus{
+    color: white;
+    margin-left: -12px;
+    font-size: 10px;
+}
+
+
+/*Mediano*/
+
+@media screen and (max-width:1024px) {
+    .areaEdicion {
+        min-height: 70vh !important;
+        width: 85% !important;
+    }
+}
+
+/*Movil*/
+
 @media screen and (max-width:640px) {
-    .imgView{
-        max-height: 75vh!important;
+    .imgView {
+        max-height: 75vh !important;
+    }
+    .areaEdicionTexto {
+        min-height: 60vh !important;
+    }
+    .areaEdicion {
+        min-height: 70vh !important;
+        width: 100% !important;
     }
 }
