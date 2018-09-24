@@ -8,16 +8,16 @@ const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jp
 
 //Crea el servidor y procesa las solicitudes de archivos o apis
 var server = http.createServer(function (req, res) {
-    try {
-        req.url = decodeURIComponent(req.url);
-        if (req.url.substring(0, 4) == "/api") {
-            procesarApi(req, res);
-        } else {
-            procesarArchivo(req, res);
-        }
-    } catch (err) {
-        return res.end("Ha ocurrido un error: " + err);
+    //    t ry {
+    req.url = decodeURIComponent(req.url);
+    if (req.url.substring(0, 4) == "/api") {
+        procesarApi(req, res);
+    } else {
+        procesarArchivo(req, res);
     }
+    /*} catch (err) {
+        return res.end("Ha ocurrido un error: " + err);
+    }*/
 });
 
 // START SERVER
@@ -56,7 +56,16 @@ function procesarApi(req, res) {
                         var rutaArchivo = data.rutaArchivo;
                         log("/getFile " + rutaArchivo);
                         if (rutaArchivo.substr(0, 15) === './filesUploaded') {
-                            return returnPlainText(req, res,rutaArchivo);
+                            return returnPlainText(req, res, rutaArchivo);
+                        } else {
+                            return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
+                        }
+                        break;
+                    case "/deleteFile":
+                        var rutaArchivo = data.rutaArchivo;
+                        log("/deleteFile " + rutaArchivo);
+                        if (rutaArchivo.substr(0, 15) === './filesUploaded') {
+                            return deleteFile(req, res, rutaArchivo);
                         } else {
                             return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
                         }
@@ -106,7 +115,7 @@ function procesarApi(req, res) {
     }
 }
 
-function returnPlainText(req, res,rutaArchivo) {
+function returnPlainText(req, res, rutaArchivo) {
     getFile(rutaArchivo, function (text) {
         res.setHeader("Content-Type", "text/plain");
         return res.end(text);
@@ -123,7 +132,7 @@ function returnFile(url, res) {
             return sendBack(res, 'ERROR', 'Error al retornar el archivo');
         } else {
             //specify Content will be an attachment
-            res.setHeader('Content-disposition', 'attachment; filename=' + getFileNameFromURL(url).replace(/,/g , "_"));
+            res.setHeader('Content-disposition', 'attachment; filename=' + getFileNameFromURL(url).replace(/,/g, "_"));
             res.setHeader('FileName', getFileNameFromURL(url));
             return res.end(content);
         }
@@ -143,63 +152,41 @@ function mkDir(path) {
 
 //Segun el tipo de archivo solicitado configura el header correspondiente y retorna el contenido del archivo
 function procesarArchivo(req, res) {
+    log("Procesando ARCHIVO : " + req.url);
     if (req.url.substring(0, 3) == "/js") {
-        getFile(req.url, function (text) {
-            res.setHeader("Content-Type", "text/javascript");
-            return res.end(text);
-        });
+        return getFile(req, res, 'text/javascript');
     } else if (req.url.substring(0, 4) == "/css") {
-        getFile(req.url, function (text) {
-            res.setHeader("Content-Type", "text/css");
-            return res.end(text);
-        });
+        getFile(req, res, 'text/css');
     } else if (req.url.substring(0, 4) == "/img") {
-        getFile(req.url, function (text, err) {
-            if (err) {
-                res.setHeader("Content-Type", "text/html");
-                return sendBack(res, 'Error', text);
-            }
-            res.setHeader("Content-Type", "image/png");
-            return res.end(text);
-        });
+        return getFile(req, res, "image/png");
     } else if (req.url.substring(0, 4) == "/inc") {
-        getFile(req.url, function (text) {
-            res.setHeader("Content-Type", "text/html");
-            return res.end(text);
-        });
+        return getFile(req, res, "text/html");
     } else if (req.url.substring(0, 4) == "/pop") {
-        getFile(req.url, function (text) {
-            res.setHeader("Content-Type", "text/html");
-            return res.end(text);
-        });
-    } else if (["mp3","mp4","avi","jpg","png"].indexOf(getExtension(req.url))>=0) {
-        log('.' + req.url);
+        return getFile(req, res, "text/html");
+    } else if (["mp3", "mp4", "avi", "jpg", "png"].indexOf(getExtension(req.url)) >= 0) {
         return returnFile('.' + req.url, res);
     } else if (req.url == "/") {
-        getFile('index.html', function (text) {
-            res.setHeader("Content-Type", "text/html");
-            return res.end(text);
-        });
+        return getFile(req, res, "text/html");
     } else {
-        getFile('/inc/404-Not-Found.html', function (text) {
-            res.setHeader("Content-Type", "text/html");
-            return res.end(text);
-        });
+        return notFound(req, res);
     }
 }
 
 //Lee un archivo y devuelve su contenido
-function getFile(url, f) {
-    url = limpiarURL(url);
-    log("URL SOLICITADA: " + url)
-    url = "./" + url;
+function getFile(req, res, header) {
+    if (req.url == "/") {
+        url = "./index.html";
+    } else {
+        url = req.url;
+        url = limpiarURL(url);
+        url = "./" + url;
+    }
     fs.readFile(url, function (err, text) {
         if (err) {
-            log("Error:  " + url);
-            f("Error:  " + url + '- ENOENT: no such file or directory', err);
-            //            throw err;
+            return notFound(req, res);
         } else {
-            f(text);
+            res.setHeader("Content-Type", header);
+            return res.end(text);
         }
     });
 }
@@ -265,6 +252,31 @@ function getFileSystem(dir, files_) {
 
 function getFileNameFromURL(fileURL) {
     return fileURL.substr(fileURL.lastIndexOf('/') + 1)
+}
+
+function deleteFile(req, res, filePath) {
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            log("FILE NOT DELETED: " + filePath);
+            return res.end("No se puede borrar el archivo");
+        };
+        log("FILE DELETED: " + filePath);
+        return res.end("OK");
+    });
+}
+
+function notFound(req, res) {
+    log("NOT FOUND:  " + req.url);
+    fs.readFile('./inc/404-Not-Found.html', function (err, text) {
+        if (err) {
+            log(text);
+            log("ERROR:  " + err);
+            return res.end("ERROR:  " + req.url);
+        } else {
+            res.setHeader("Content-Type", "text/html");
+            return res.end(text);
+        }
+    });
 }
 
 function isBlog(hostName) {

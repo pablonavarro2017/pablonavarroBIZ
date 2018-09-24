@@ -45,7 +45,11 @@
                     <!--Video Mp4-->
                     <i ng-show="a.ext=='mp4' && a.playingVideo===false" class="fa fa-play-circle f14 paddingDer pointer" title="Reproducir" ng-click='playVideo(a)'></i>
                     <i ng-show="a.ext=='mp4' && a.playingVideo===true" class="fa fa-stop-circle f14 paddingDer pointer" title="Parar Video" ng-click='stopVideo(a)'></i>
+
+                    <!--Descargar-->
                     <i class="fa fa-download f14 paddingDer pointer" title="Descargar" ng-click='openFile(a.nombre)'></i>
+                    <!--Borrar-->
+                    <i class="fa fa-trash f14 paddingDer pointer" title="Borrar" ng-click='deleteFile(a)'></i>
                 </div>
             </div>
             <videogular ng-if="playingVideo" vg-theme="config.theme.url">

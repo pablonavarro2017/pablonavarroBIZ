@@ -280,6 +280,21 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             log(res);
         });
     }
+    $scope.deleteFile = function (a) {
+        $rootScope.solicitudPost("/deleteFile", {
+            rutaArchivo: $scope.carpetaActual.urlActual + '/' + a.nombre
+        }, function (data) {
+            if(data=="OK"){
+                rs.agregarAlerta('Archivo Borrado: ' + a.nombre);
+                $scope.carpetaActual.nombresArchivosAMostrar.splice($scope.carpetaActual.nombresArchivosAMostrar.indexOf(a),1);
+            }else{
+                rs.agregarAlerta('Error Al Borrar Archivo');
+            }
+        }, function (res) {
+            rs.agregarAlerta('Error Al Borrar Archivo');
+            log(res);
+        });
+    }
     s.parseInt = function(n){
         return parseInt(n);
     }
