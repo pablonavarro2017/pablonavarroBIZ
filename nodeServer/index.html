@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/subpages.css">
 </head>
 
-<body ng-app="app" ng-controller="mainController">
+<body ng-app="app" ng-controller="mainController" ng-click="asd()">
     <input type="checkbox" id="chkShowMenu" checked>
     <label id="bgOcultarMenu" for="chkShowMenu" title="Ocultar Menú"></label>
     <nav id="navid" style="display: none">
@@ -58,8 +58,8 @@
         </header>
         <div class="main">
             <div class="popup" ng-include="popupUrl"></div>
-            <div class="view">
-                <ui-view></ui-view>
+            <div class="view"  >
+                <ui-view ></ui-view>
             </div>
 
             <!-- alerts, prompt y confirm personalizados -->

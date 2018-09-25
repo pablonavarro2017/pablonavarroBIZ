@@ -1,5 +1,5 @@
-<div class="ventana inline sombra2 aCentro">
-    <div class="title">Sistema de Archivos</div>
+<div class="ventana inline sombra2 aCentro" >
+    <div class="title" >Sistema de Archivos</div>
     <div class="fullPadding aIzq">
         <div class="paddingDer marginArriba sombra1 aDer">
             <form name="upload_form" class="formFile">
@@ -22,7 +22,7 @@
                 <i class="fa fa-folder marginIzq carpeta"></i> <span class="marginIzq">{{c.nombre}}</span>
             </div>
             <div ng-repeat="a in carpetaActual.nombresArchivosAMostrar" ng-class="a.index%2==0?'bgBlanco':''" class="item paddinIzq" ng-attr-title="{{a.size+' MB'}}">
-                <div class="flexFila">
+                <div class="flexFila relative">
                     <i class="fa fa-circle f10"></i>
                     <i class="fa marginIzq archivo" ng-class="'fa-'+a.icon"></i>
                     <div class="flexFila jcSBet fg1">
@@ -48,8 +48,12 @@
 
                     <!--Descargar-->
                     <i class="fa fa-download f14 paddingDer pointer" title="Descargar" ng-click='openFile(a.nombre)'></i>
-                    <!--Borrar-->
-                    <i class="fa fa-trash f14 paddingDer pointer" title="Borrar" ng-click='preBorrarArchivo(a)'></i>
+                    <!--Borrar y Renombrar-->
+                    <i class="fa fa-ellipsis-v f14 paddingDer pointer" ng-click='openSubOptions(a)'></i>
+                    <div ng-if="a.subOption" class="inlineFlex flexColumna moreOptions">
+                        <span ng-click='preRenameFile(a)' title="Renombrar" ><i class="fa fa-retweet f14 pointer" ></i>Renombrar</span>
+                        <span ng-click='preBorrarArchivo(a)' title="Borrar"><i class="fa fa-trash f14 pointer"></i>Borrar</span>
+                    </div>
                 </div>
             </div>
             <videogular ng-if="playingVideo" vg-theme="config.theme.url">

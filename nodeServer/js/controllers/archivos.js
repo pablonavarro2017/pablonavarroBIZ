@@ -1,4 +1,4 @@
-app.controller("archivosController", function (Upload, $sce, $window, $scope, $http, $filter, $rootScope, $interval, $location,$templateCache) {
+app.controller("archivosController", function (Upload, $sce, $window, $scope, $http, $filter, $rootScope, $interval, $location, $templateCache) {
     s = $scope;
     rs = $rootScope;
     rs.sa = s;
@@ -107,7 +107,8 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                         index: cont++,
                         ext: ext,
                         size: fileName.size,
-                        playingVideo: false
+                        playingVideo: false,
+                        subOption: false
                     }
                     $scope.carpetaActual.nombresArchivosAMostrar.push(arch);
                 }
@@ -213,7 +214,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             return false;
         }
         for (var i = 0; i < nombre.length; i++) {
-            if (!nombre.charAt(i).match(/^[a-zA-Z].*/)) {
+            if (!nombre.charAt(i)=="." && !nombre.charAt(i).match(/^[a-zA-Z].*/)) {
                 return false;
             }
         }
@@ -319,6 +320,34 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             log(res);
         });
     }
+    $scope.preRenameFile = function (f) {
+        s.renamingFile = f;
+        rs.cargarPopup('renombrar');
+        focus('newFileName');
+    }
+    $scope.renameFile = function (a, newName) {
+        if (validarNombre(newName)) {
+            $rootScope.solicitudPost("/renameFile", {
+                rutaArchivo: $scope.carpetaActual.urlActual + '/' + a.nombre,
+                nuevoNombre: newName,
+                ruta: $scope.carpetaActual.urlActual + '/'
+            }, function (data) {
+                if (data == "OK") {
+                    a.nombre = newName;
+                    $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
+                    rs.cargarPopup('');
+                    rs.agregarAlerta('Archivo Actualizado: ' + a.nombre);
+                } else {
+                    rs.agregarAlerta('Error Al Actualizar Archivo');
+                }
+            }, function (res) {
+                rs.agregarAlerta('Error Al Actualizar Archivo');
+                log(res);
+            });
+        } else {
+            rs.agregarAlerta('Nombre Inválido');
+        }
+    }
     $scope.guardar = function (e) {
         var key = e.keyCode ? e.keyCode : e.which;
         if (e.ctrlKey && key == 83) { //Ctrl + S
@@ -330,8 +359,20 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     s.parseInt = function (n) {
         return parseInt(n);
     }
+
+    s.openSubOptions = function (a) {
+        if (rs.openedOptions) { //habían subOption abiertas y se cierran primero
+            s.carpetaActual.nombresArchivosAMostrar.forEach((file) => {
+                file.subOption = false;
+            })
+        }
+        rs.openedOptions = false; // Se setea en falso para que no se cierre en la funcion asd del rootScope (funcion que se ejecuta después)
+        a.subOption = true // Se activa la subOptions del archivo
+    }
+
     /**/
     $scope.$on("$destroy", function () {
         $rootScope.controllerDestruido();
     });
+
 });

@@ -332,8 +332,16 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
     if (isBlog()) {
         $location.path("blog");
     }
+    rs.sa = {}
+    rs.asd = function () {
+        if (rs.openedOptions && rs.sa.fs) { // Habían subOptions abiertas y el scope es el de archivos
+            rs.sa.carpetaActual.nombresArchivosAMostrar.forEach((file) => {
+                file.subOption=false; // todas las subOptions se cierran
+            })
+        }
+        rs.openedOptions=true; // Se aumenta para que el próximo click cierre las subOptions
+    }
+    rs.openedOptions = false;
     document.getElementById('body').style.display = 'flex';
     document.getElementById('navid').style.display = 'flex';
-
-
 });

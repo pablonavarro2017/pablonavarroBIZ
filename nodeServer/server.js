@@ -75,7 +75,7 @@ function procesarApi(req, res) {
                         var nuevoContenido = data.nuevoContenido;
                         log("/writeFile " + rutaArchivo);
                         if (rutaArchivo.substr(0, 15) === './filesUploaded') {
-                            return writeFile(req, res, rutaArchivo,nuevoContenido);
+                            return writeFile(req, res, rutaArchivo, nuevoContenido);
                         } else {
                             return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
                         }
@@ -90,6 +90,17 @@ function procesarApi(req, res) {
                             } else {
                                 return sendBack(res, 'ERROR', s);
                             }
+                        } else {
+                            return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado');
+                        }
+                        break;
+                    case "/renameFile":
+                        var rutaArchivo = data.rutaArchivo;
+                        var nuevoNombre = data.nuevoNombre;
+                        var ruta = data.ruta;
+                        log('/renameFile ' + rutaArchivo);
+                        if (rutaArchivo.substr(0, 15) === './filesUploaded' && ruta.substr(0, 15) === './filesUploaded') {
+                            return renameFile('./'+rutaArchivo, './'+ruta, nuevoNombre,res)
                         } else {
                             return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado');
                         }
@@ -277,8 +288,21 @@ function deleteFile(req, res, rutaArchivo) {
         return res.end("OK");
     });
 }
-function writeFile(req, res, rutaArchivo,nuevoContenido) {
-    fs.writeFile(rutaArchivo,nuevoContenido, (err) => {
+
+function renameFile(rutaArchivo, ruta, newName,res) {
+    fs.rename(rutaArchivo, ruta + newName, (err) => {
+        if (err) {
+            log(err)
+            log("FILE NOT UPDATED: " + rutaArchivo);
+            return res.end("ERROR");
+        };
+        log("FILE UPDATED: " + rutaArchivo);
+        return res.end("OK");
+    });
+}
+
+function writeFile(req, res, rutaArchivo, nuevoContenido) {
+    fs.writeFile(rutaArchivo, nuevoContenido, (err) => {
         if (err) {
             log("FILE NOT UPDATED: " + rutaArchivo);
             return res.end("No se puede actualizar el archivo");

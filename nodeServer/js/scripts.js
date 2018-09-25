@@ -1,5 +1,16 @@
-// en caso de que necesitemos clonar un objeto JSON
+subOptions = false;
+window.addEventListener('click', function (e) {
+    var ele = document.getElementsByClassName('moreOptions');
+    if (ele.length > 0) {
+        if (ele[0].contains(e.target)) {
+            subOptions = true;
+        }else{
+            subOptions = false;
+        }
+    }
+});
 
+// en caso de que necesitemos clonar un objeto JSON
 JSON.clone = function (obj) {
     return JSON.parse(JSON.stringify(obj));
 };
