@@ -1,5 +1,5 @@
 Pasos para montar el sistema:
-- Crear la Intancia de Linux Server
+- Crear la Instancia de Linux Server
 - En el security Group permitir el protocolo HTTP(s) puerto 80
 - Conectarse al servidor remoto con ssh -i 'C:\Users\Pablo Navarro\Google Drive\AWS\PAIRLINUX.pem' ubuntu@34.220.227.220
 - Comandos:

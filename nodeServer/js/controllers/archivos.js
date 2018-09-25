@@ -12,7 +12,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
     $scope.upload = function (file) {
         $rootScope.requestCount++;
-        rs.agregarAlerta('Subiendo Archivo: ' + file.name+" - "+(file.size/1024/1024).toFixed(1)+" MB");
+        rs.agregarAlerta('Subiendo Archivo: ' + file.name + " - " + (file.size / 1024 / 1024).toFixed(1) + " MB");
         Upload.upload({
             url: '/api/uploadFile', //webAPI exposed to upload the file
             data: {
@@ -22,8 +22,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         }).then(function (resp) { //upload function returns a promise
             rs.agregarAlerta(resp.data.mensaje);
             $scope.file = null;
-            $scope.mostrarDirectorios();
-            $scope.urlDirecta($scope.carpetaActual.urlActual);
+            $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
         }, function (resp) { //catch error
             rs.agregarAlerta('Error status: ' + resp.status);
         }).finally(function () {
@@ -33,14 +32,17 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
 
 
     $scope.data = '';
-    $scope.mostrarDirectorios = function () {
+    $scope.mostrarDirectorios = function (url) {
         $rootScope.solicitudPost("/getDirectories", {
             carpetaActual: './filesUploaded'
         }, function (res) {
             $scope.data = res.data;
             $scope.fs = res.data;
+            if (!url) {
+                url = './filesUploaded'
+            }
             $scope.urlDirecta({
-                url: './filesUploaded'
+                url
             });
         }, function (res) {
             $scope.data = res;
@@ -67,7 +69,6 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
 
         }
         $scope.URLs = newURls;
-        //        log($scope.URLs);
         $scope.getFilesNameFromFolder(u.url);
     }
 
@@ -268,26 +269,34 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         rs.cargarPopup('verImagen');
     }
 
-    $scope.abrirTexto = function (nombreArchivo) {
+    $scope.abrirTexto = function (a) {
         $rootScope.solicitudPost("/getPlainText", {
-            rutaArchivo: $scope.carpetaActual.urlActual + '/' + nombreArchivo
+            rutaArchivo: $scope.carpetaActual.urlActual + '/' + a.nombre
         }, function (data) {
-            s.editingFile = nombreArchivo;
-            s.fileContent = data;
+            s.editingFile = a;
+            s.editingFile.fileContent = data;
             rs.cargarPopup("verEditarText");
         }, function (res) {
             rs.agregarAlerta('Error Al Crear Carpeta');
             log(res);
         });
     }
+    $scope.preBorrarArchivo = function (a) {
+        s.confirm = {};
+        s.confirm.a = a;
+        s.confirm.funcionSi = s.deleteFile;
+        s.confirm.message = "Desea eliminar el archivo: " + a.nombre;
+        rs.cargarPopup("popUpConfimar");
+    }
     $scope.deleteFile = function (a) {
         $rootScope.solicitudPost("/deleteFile", {
             rutaArchivo: $scope.carpetaActual.urlActual + '/' + a.nombre
         }, function (data) {
-            if(data=="OK"){
+            if (data == "OK") {
                 rs.agregarAlerta('Archivo Borrado: ' + a.nombre);
-                $scope.carpetaActual.nombresArchivosAMostrar.splice($scope.carpetaActual.nombresArchivosAMostrar.indexOf(a),1);
-            }else{
+                $scope.carpetaActual.nombresArchivosAMostrar.splice($scope.carpetaActual.nombresArchivosAMostrar.indexOf(a), 1);
+                rs.cargarPopup('');
+            } else {
                 rs.agregarAlerta('Error Al Borrar Archivo');
             }
         }, function (res) {
@@ -295,7 +304,31 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             log(res);
         });
     }
-    s.parseInt = function(n){
+    $scope.writeFile = function (a, salir) {
+        $rootScope.solicitudPost("/writeFile", {
+            rutaArchivo: $scope.carpetaActual.urlActual + '/' + a.nombre,
+            nuevoContenido: a.fileContent
+        }, function (data) {
+            if (data == "OK") {
+                salir ? rs.cargarPopup('') : '';
+                rs.agregarAlerta('Archivo Actualizado: ' + a.nombre);
+            } else {
+                rs.agregarAlerta('Error Al Actualizar Archivo');
+            }
+        }, function (res) {
+            rs.agregarAlerta('Error Al Actualizar Archivo');
+            log(res);
+        });
+    }
+    $scope.guardar = function (e) {
+        var key = e.keyCode ? e.keyCode : e.which;
+        if (e.ctrlKey && key == 83) { //Ctrl + S
+            e.preventDefault();
+            return true;
+        }
+        return false;
+    }
+    s.parseInt = function (n) {
         return parseInt(n);
     }
     /**/

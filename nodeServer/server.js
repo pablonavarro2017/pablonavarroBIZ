@@ -70,6 +70,16 @@ function procesarApi(req, res) {
                             return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
                         }
                         break;
+                    case "/writeFile":
+                        var rutaArchivo = data.rutaArchivo;
+                        var nuevoContenido = data.nuevoContenido;
+                        log("/writeFile " + rutaArchivo);
+                        if (rutaArchivo.substr(0, 15) === './filesUploaded') {
+                            return writeFile(req, res, rutaArchivo,nuevoContenido);
+                        } else {
+                            return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
+                        }
+                        break;
                     case "/mkDir":
                         var rutaCarpeta = data.rutaCarpeta;
                         log('/mkDir ' + rutaCarpeta);
@@ -90,7 +100,6 @@ function procesarApi(req, res) {
             });
         } else if (req.method === 'GET') {
             return res.end("API GET PROCESADA");
-
         }
     } else { //To Upload a File
         var form = new formidable.IncomingForm();
@@ -116,9 +125,13 @@ function procesarApi(req, res) {
 }
 
 function returnPlainText(req, res, rutaArchivo) {
-    getFile(rutaArchivo, function (text) {
-        res.setHeader("Content-Type", "text/plain");
-        return res.end(text);
+    fs.readFile(rutaArchivo, function (err, text) {
+        if (err) {
+            return notFound(req, res);
+        } else {
+            res.setHeader("Content-Type", "text/plain");
+            return res.end(text);
+        }
     });
 }
 
@@ -254,13 +267,23 @@ function getFileNameFromURL(fileURL) {
     return fileURL.substr(fileURL.lastIndexOf('/') + 1)
 }
 
-function deleteFile(req, res, filePath) {
-    fs.unlink(filePath, (err) => {
+function deleteFile(req, res, rutaArchivo) {
+    fs.unlink(rutaArchivo, (err) => {
         if (err) {
-            log("FILE NOT DELETED: " + filePath);
+            log("FILE NOT DELETED: " + rutaArchivo);
             return res.end("No se puede borrar el archivo");
         };
-        log("FILE DELETED: " + filePath);
+        log("FILE DELETED: " + rutaArchivo);
+        return res.end("OK");
+    });
+}
+function writeFile(req, res, rutaArchivo,nuevoContenido) {
+    fs.writeFile(rutaArchivo,nuevoContenido, (err) => {
+        if (err) {
+            log("FILE NOT UPDATED: " + rutaArchivo);
+            return res.end("No se puede actualizar el archivo");
+        };
+        log("FILE UPDATED: " + rutaArchivo);
         return res.end("OK");
     });
 }

@@ -1,0 +1,31 @@
+<!-- Popup plantilla -->
+<!--
+<style>
+    input {
+        cursor: default
+    }
+</style>
+-->
+<div class="fondoPopup"></div>
+<div class="ventana">
+    <div class="title">
+        <div ng-click="cargarPopup('')"><span>X</span></div>
+    </div>
+    <div class="contenido">
+        <div class="formContainer maxH100pc ofAuto">
+            <form ng-submit="sa.confirm.funcionSi(sa.confirm.a)">
+                <div class="flexFila jcSAr fWrap contenido">
+                    <div>
+                        <div>
+                            <span>{{sa.confirm.message}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="botones">
+                    <button type="submit">ACEPTAR</button>
+                    <button ng-click="cargarPopup('')">CANCELAR</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
