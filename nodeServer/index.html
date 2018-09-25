@@ -18,7 +18,8 @@
     <label id="bgOcultarMenu" for="chkShowMenu" title="Ocultar Menú"></label>
     <nav id="navid" style="display: none">
         <div class="encabezado">
-            <img src="img/logo.png" alt="LOGO"> <span class="paddingIzq">Pablonavarro.biz</span> <!--  -->
+            <img src="img/logo.png" alt="LOGO"> <span class="paddingIzq">Pablonavarro.biz</span>
+            <!--  -->
         </div>
         <div class="ofAuto">
             <a href="#!"><i class="fa fa-home" title="Inicio"></i> <span>Inicio</span></a>
@@ -57,28 +58,6 @@
         </header>
         <div class="main">
             <div class="popup" ng-include="popupUrl"></div>
-            <div class="popup" ng-if="mostrarPopupPreguntar">
-                <div class="fondoPopup"></div>
-                <div class="ventana">
-                    <div class="title">Confirmar Eliminación<span ng-click="panPreg.cerrar()">X</span></div>
-                    <div class="contenido">
-                        <div class="formContainer">
-                            <div class="flexFila jcSAr fWrap contenido">
-                                <div>
-                                    <div>
-                                        <span>{{panPreg.panPregMsj}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="botones">
-                                <button ng-click="panPreg.panPregFuncSi()">Sí</button>
-                                <button ng-click="panPreg.panPregFuncNo()">Cancelar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--            <div ng-view class="view"></div>-->
             <div class="view">
                 <ui-view></ui-view>
             </div>
@@ -126,7 +105,7 @@
     <!--    <script src="js/routeConfig.js"></script>-->
 
     <!-- Para Gráficos    -->
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>-->
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>-->
 
     <!-- -------------Controllers--------------- -->
     <!--    <script src="js/controllers/revisionCalidad.js"></script>-->

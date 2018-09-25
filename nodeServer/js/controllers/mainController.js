@@ -1,6 +1,6 @@
 /* CONTROLADOR PRINCIPAL */
-var app = angular.module('app', ['ngFileUpload', 'ui.router', 'ngSanitize','com.2fdevs.videogular']);
-app.controller("mainController", function (Upload, $sce,$window, $scope, $http, $filter, $rootScope, $interval, $location) {
+var app = angular.module('app', ['ngFileUpload', 'ui.router', 'ngSanitize', 'com.2fdevs.videogular']);
+app.controller("mainController", function (Upload, $sce, $window, $scope, $http, $filter, $rootScope, $interval, $location, $templateCache) {
     //app.controller("mainController", function (Upload, $window, $scope, $rootScope, $location, $http, $filter, $interval) {
     var rs = $rootScope;
     var s = $scope;
@@ -39,7 +39,6 @@ app.controller("mainController", function (Upload, $sce,$window, $scope, $http, 
 
 
     rs.requestCount = 0;
-    rs.mostrarPopupPreguntar = false;
     /* Para mostrar una alerta en la parte inferior en todas las páginas */
     //*********************************************
     // Sistema de alertas personalizados
@@ -96,14 +95,12 @@ app.controller("mainController", function (Upload, $sce,$window, $scope, $http, 
         return false;
     }
 
-    /* Popup Scope */
-    rs.ps = s;
     // include de un archivo hmtl de la carpeta inc
     rs.cargarPopup = function (nombreArchivo) {
         if (nombreArchivo != "") {
-            s.popupUrl = "pop/" + nombreArchivo + ".html";
+            rs.popupUrl = "pop/" + nombreArchivo + ".html";
         } else {
-            s.popupUrl = "";
+            rs.popupUrl = "";
         }
     };
 
@@ -332,9 +329,11 @@ app.controller("mainController", function (Upload, $sce,$window, $scope, $http, 
     rs.formatearFecha = function (fecha) {
         return $filter('date')(new Date(fecha), "dd/MM/yyyy hh:mm:ss a", "-0600")
     }
-    if (isBlog()){
+    if (isBlog()) {
         $location.path("blog");
     }
-    document.getElementById('body').style.display='flex';
-    document.getElementById('navid').style.display='flex';
+    document.getElementById('body').style.display = 'flex';
+    document.getElementById('navid').style.display = 'flex';
+
+
 });

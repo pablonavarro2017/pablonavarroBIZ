@@ -1,7 +1,8 @@
-app.controller("archivosController", function (Upload, $sce, $window, $scope, $http, $filter, $rootScope, $interval, $location) {
+app.controller("archivosController", function (Upload, $sce, $window, $scope, $http, $filter, $rootScope, $interval, $location,$templateCache) {
     s = $scope;
     rs = $rootScope;
     rs.sa = s;
+    rs.popupUrl = "";
     /**/
     $scope.subirArchivo = function () { //function to call on form submit
         if ($scope.upload_form.file.$valid && $scope.file) { //check if from is valid
@@ -58,7 +59,6 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     };
 
     $scope.urlDirecta = function (u) {
-        //        log( $scope.URLs);
         var newURls = []
         for (var i = 0; i < $scope.URLs.length; i++) {
             var obj = $scope.URLs[i]
@@ -74,7 +74,6 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
 
 
     $scope.getFilesNameFromFolder = function (currentFolderName) {
-        log(currentFolderName)
         $scope.URLs.push({
             nombreFolder: currentFolderName.substr(currentFolderName.lastIndexOf('/') + 1),
             url: currentFolderName

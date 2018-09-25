@@ -122,6 +122,8 @@ Pasos para montar el sistema:
 
     // UA-73408871-1
 </script>
+** Para Borrar todos los archivos subido al Servidor
+    sudo rm -Rf /var/www/pablonavarroBIZ/nodeServer/filesUploaded
 
 ** Para realizar el commit desde linea de comandos:
     git add .

@@ -1,4 +1,5 @@
 // en caso de que necesitemos clonar un objeto JSON
+
 JSON.clone = function (obj) {
     return JSON.parse(JSON.stringify(obj));
 };
@@ -91,11 +92,11 @@ document.oncontextmenu = function () {
     return false;
 }
 
-function isBlog(a){
-    if(location.hostname.includes('blog')){
+function isBlog(a) {
+    if (location.hostname.includes('blog')) {
         log('Its the blog')
         return true;
-    }else{
+    } else {
         log('Its NOT the blog')
         return false;
 
