@@ -347,7 +347,6 @@ nav a:hover {
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
     text-align: center;
-    padding: 20px;
     overflow: auto;
 }
 
@@ -610,9 +609,7 @@ footer *{
     #bgOcultarMenu {
         display: block;
     }
-    .popup {
-        padding: 5px;
-    }
+
     .formContainer .contenido > div > div,
     .formContainer .contenido .formElement {
         width: 300px;

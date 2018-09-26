@@ -348,6 +348,35 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             rs.agregarAlerta('Nombre Inválido');
         }
     }
+    $scope.preMKText = function (f) {
+        s.newFile = {
+            title:'',
+            content:''
+        };
+        rs.cargarPopup('nuevoText');
+        focus('newTextFile');
+    }
+    $scope.mkTextFile = function (newFile) {
+        if (validarNombre(newFile.title)) {
+            $rootScope.solicitudPost("/mkTextFile", {
+                rutaArchivo: $scope.carpetaActual.urlActual + '/' + newFile.title,
+                contenido: newFile.content
+            }, function (data) {
+                if (data == "OK") {
+                    $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
+                    rs.cargarPopup('');
+                    rs.agregarAlerta('Archivo Creado: ' + newFile.title);
+                } else {
+                    rs.agregarAlerta('Error Al Crear Archivo');
+                }
+            }, function (res) {
+                rs.agregarAlerta('Error Al Crear Archivo');
+                log(res);
+            });
+        } else {
+            rs.agregarAlerta('Nombre Inválido');
+        }
+    }
     $scope.guardar = function (e) {
         var key = e.keyCode ? e.keyCode : e.which;
         if (e.ctrlKey && key == 83) { //Ctrl + S

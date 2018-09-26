@@ -85,11 +85,12 @@
 
 .areaEdicionTexto {
     width: 100%;
-    min-height: 60vh ;
+    min-height: 55vh ;
+    border: 1px #ccc solid;
 }
 
 .areaEdicion {
-    min-height: 70vh ;
+    min-height: 60vh ;
     min-width: 90%!important;
 }
 span .plus{
@@ -103,7 +104,7 @@ span .plus{
 
 @media screen and (max-width:1024px) {
     .areaEdicion {
-        min-height: 70vh !important;
+        min-height: 60vh !important;
         width: 85% !important;
     }
 }
@@ -115,10 +116,10 @@ span .plus{
         max-height: 75vh !important;
     }
     .areaEdicionTexto {
-        min-height: 60vh !important;
+        min-height: 45vh !important;
     }
     .areaEdicion {
-        min-height: 70vh !important;
+        min-height: 60vh !important;
         width: 100% !important;
     }
 }

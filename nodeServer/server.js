@@ -105,6 +105,16 @@ function procesarApi(req, res) {
                             return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado');
                         }
                         break;
+                    case "/mkTextFile":
+                        var rutaArchivo = data.rutaArchivo;
+                        var contenido = data.contenido;
+                        log("/mkTextFile " + rutaArchivo);
+                        if (rutaArchivo.substr(0, 15) === './filesUploaded') {
+                            return writeFile(req, res, rutaArchivo, contenido);
+                        } else {
+                            return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
+                        }
+                        break;
                     default:
                         return res.end("ERROR API POST: " + JSON.stringify(data));
                 }
@@ -304,10 +314,10 @@ function renameFile(rutaArchivo, ruta, newName,res) {
 function writeFile(req, res, rutaArchivo, nuevoContenido) {
     fs.writeFile(rutaArchivo, nuevoContenido, (err) => {
         if (err) {
-            log("FILE NOT UPDATED: " + rutaArchivo);
-            return res.end("No se puede actualizar el archivo");
+            log("FILE WRITTED: " + rutaArchivo);
+            return res.end("No se puede escribir el archivo");
         };
-        log("FILE UPDATED: " + rutaArchivo);
+        log("FILE WRITTED: " + rutaArchivo);
         return res.end("OK");
     });
 }
