@@ -133,10 +133,15 @@ span .plus{
 .moreOptions {
     position: absolute;
     right: 0;
-    top: -5px;
+    top: -10px;
     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     background-color: white;
-    padding: 3px;
+    padding: 4px;
+    border-radius: 2px;
+}
+
+.subOption {
+    padding:5px;
     border-radius: 2px;
 }
