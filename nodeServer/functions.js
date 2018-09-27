@@ -24,7 +24,7 @@ function deleteFile(req, res, data) {
     var rutaArchivo = data.rutaArchivo;
     log("/deleteFile " + rutaArchivo);
     if (validarRuta(rutaArchivo)) {
-        return deleteFile(req, res, rutaArchivo);
+        return borrarArchivo(req, res, rutaArchivo);
     } else {
         return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
     }
@@ -232,7 +232,7 @@ function getFileNameFromURL(fileURL) {
     return fileURL.substr(fileURL.lastIndexOf('/') + 1)
 }
 //Borra un archivo
-function deleteFile(req, res, rutaArchivo) {
+function borrarArchivo(req, res, rutaArchivo) {
     fs.unlink(rutaArchivo, (err) => {
         if (err) {
             log("FILE NOT DELETED: " + rutaArchivo);

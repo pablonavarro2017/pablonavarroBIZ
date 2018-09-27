@@ -6,7 +6,12 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     /**/
     $scope.subirArchivo = function () { //function to call on form submit
         if ($scope.upload_form.file.$valid && $scope.file) { //check if from is valid
-            $scope.upload($scope.file); //call upload function
+//            $scope.upload($scope.file); //call upload function
+            log('SUBIENDO ARCHIVOS');
+            for(a in s.file){
+                log(s.file[a]);
+                s.upload(s.file[a]);
+            }
         } else {
             rs.agregarAlerta('Archivo Inválido');
         }
