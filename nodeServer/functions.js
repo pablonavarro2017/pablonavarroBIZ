@@ -40,7 +40,7 @@ function writeOnFile(req, res, data) {
         return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
     }
 }
-//
+//Funcion para crear una carpeta
 function mkDir(req, res, data) {
     var rutaCarpeta = data.rutaCarpeta;
     log('/mkDir ' + rutaCarpeta);
@@ -55,7 +55,7 @@ function mkDir(req, res, data) {
         return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado');
     }
 }
-
+//Funcion para renombrar un archivo
 function renameFile(req, res, data) {
     var rutaArchivo = data.rutaArchivo;
     var nuevoNombre = data.nuevoNombre;
@@ -67,7 +67,7 @@ function renameFile(req, res, data) {
         return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado');
     }
 }
-
+//Función para crear un archivo de texto
 function mkTextFile(req, res, data) {
     var rutaArchivo = data.rutaArchivo;
     var contenido = data.contenido;
@@ -78,7 +78,7 @@ function mkTextFile(req, res, data) {
         return sendBack(res, 'ERROR', 'Acceso a Archivo Denegado');
     }
 }
-
+//Función para subir un archivo binario al servidor
 function uploadFile(req, res) {
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
@@ -99,7 +99,7 @@ function uploadFile(req, res) {
         }
     });
 }
-
+//Retorna un archivo en su forma binaria
 function returnFile(url, res) {
     fs.readFile(url, function (err, content) {
         if (err) {
@@ -116,14 +116,14 @@ function returnFile(url, res) {
         }
     });
 }
-
+//Valida que la ruta del archivo o carpeta sea válida para el usuario
 function validarRuta(r) {
     if (r.substr(0, 15) === './filesUploaded') {
         return true;
     }
     return false;
 }
-
+//Retotna un archivo de texto plano
 function returnPlainText(req, res, rutaArchivo) {
     fs.readFile(rutaArchivo, function (err, text) {
         if (err) {
@@ -134,8 +134,7 @@ function returnPlainText(req, res, rutaArchivo) {
         }
     });
 }
-
-
+//Crea  una carpeta
 function createDirectory(path) {
     fs.mkdir(path, (err) => {
         if (err) {
@@ -204,7 +203,7 @@ function getExtension(filename) {
     return ext[ext.length - 1];
 }
 
-//Obtiene todos los archivos de un directorio
+//Obtiene todos los archivos de un directorio - Obtiene el file system del usuario
 function getFileSystem(dir, files_) {
     files_ = files_ || {
         files: [],
@@ -228,11 +227,11 @@ function getFileSystem(dir, files_) {
     }
     return files_;
 }
-
+//Obtiene el nombre del archivo segun la URL
 function getFileNameFromURL(fileURL) {
     return fileURL.substr(fileURL.lastIndexOf('/') + 1)
 }
-
+//Borra un archivo
 function deleteFile(req, res, rutaArchivo) {
     fs.unlink(rutaArchivo, (err) => {
         if (err) {
@@ -243,7 +242,7 @@ function deleteFile(req, res, rutaArchivo) {
         return res.end("OK");
     });
 }
-
+//Renombra un archivo
 function renombrarArchivo(rutaArchivo, ruta, newName, res) {
     fs.rename(rutaArchivo, ruta + newName, (err) => {
         if (err) {
@@ -255,7 +254,7 @@ function renombrarArchivo(rutaArchivo, ruta, newName, res) {
         return res.end("OK");
     });
 }
-
+//Funcion que crea o sobre escribe un archivo de texto
 function writeFile(req, res, rutaArchivo, nuevoContenido) {
     fs.writeFile(rutaArchivo, nuevoContenido, (err) => {
         if (err) {
@@ -266,7 +265,7 @@ function writeFile(req, res, rutaArchivo, nuevoContenido) {
         return res.end("OK");
     });
 }
-
+//Funcion que retorna el archivo de no encontrado en caso de fallo al buscar un archivo
 function notFound(req, res) {
     log("NOT FOUND:  " + req.url);
     fs.readFile('./inc/404-Not-Found.html', function (err, text) {
@@ -280,7 +279,7 @@ function notFound(req, res) {
         }
     });
 }
-
+// Funcion para saber si se esta accediendo desde el host del blog
 function isBlog(hostName) {
     if (hostName.includes('blog.')) {
         log('Its the blog')
@@ -289,12 +288,11 @@ function isBlog(hostName) {
         return false;
     }
 }
-
+//Formatea un numero a d decimales o por defecto a 2
 function formatearFloat(n, d) {
     // parsea el string n a float y lo limita a 2 decimales
     return parseFloat(parseFloat(n).toFixed(d ? d : 2));
 }
-
 //Imprime objeto
 function log(o) {
     console.log(o);
