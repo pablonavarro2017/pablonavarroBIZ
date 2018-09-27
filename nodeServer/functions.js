@@ -89,7 +89,7 @@ function uploadFile(req, res) {
             if (extensiones.indexOf(extension) >= 0) {
                 fs.rename(oldpath, newpath, function (err) {
                     if (err) throw err;
-                    return sendBack(res, 'OK', 'Archivo Subido');
+                    return sendBack(res, 'OK', 'Archivo Subido: ' + files.file.name);
                 });
             } else {
                 return sendBack(res, 'ERROR', 'Extensión de archivo no permitida: ' + extension);
