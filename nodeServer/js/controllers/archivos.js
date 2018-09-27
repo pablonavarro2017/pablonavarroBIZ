@@ -4,19 +4,25 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     rs.sa = s;
     rs.popupUrl = "";
     /**/
-    $scope.subirArchivo = function () { //function to call on form submit
+    $scope.subirArchivos = function () { //function to call on form submit
         if ($scope.upload_form.file.$valid && $scope.file) { //check if from is valid
-//            $scope.upload($scope.file); //call upload function
+            //            $scope.upload($scope.file); //call upload function
             log('SUBIENDO ARCHIVOS');
-            for(a in s.file){
-                log(s.file[a]);
-                s.upload(s.file[a]);
+            s.archivosEnCola = s.file.length;
+            multiple = (s.archivosEnCola > 1 ? true : false);
+            if (s.archivosEnCola < 50) {
+                for (a in s.file) {
+                    log(s.file[a]);
+                    s.upload(s.file[a], multiple);
+                }
+            } else {
+                rs.agregarAlerta('No más de 50 archivos a la vez');
             }
         } else {
             rs.agregarAlerta('Archivo Inválido');
         }
     }
-    $scope.upload = function (file) {
+    $scope.upload = function (file, multiple) {
         $rootScope.requestCount++;
         rs.agregarAlerta('Subiendo Archivo: ' + file.name + " - " + (file.size / 1024 / 1024).toFixed(1) + " MB");
         Upload.upload({
@@ -26,7 +32,15 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                 ruta: $scope.carpetaActual.urlActual
             } //pass file as data, should be user ng-model
         }).then(function (resp) { //upload function returns a promise
-            rs.agregarAlerta(resp.data.mensaje);
+            if (multiple == false) {
+                rs.agregarAlerta(resp.data.mensaje);
+            } else {
+                s.archivosEnCola--;
+                rs.agregarAlerta(resp.data.mensaje);
+                if (s.archivosEnCola == 0) {
+                    rs.agregarAlerta('Todos los archivos fueron subidos');
+                }
+            }
             $scope.file = null;
             $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
         }, function (resp) { //catch error
@@ -219,7 +233,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             return false;
         }
         for (var i = 0; i < nombre.length; i++) {
-            if (!nombre.charAt(i)=="." && !nombre.charAt(i).match(/^[a-zA-Z].*/)) {
+            if (!nombre.charAt(i) == "." && !nombre.charAt(i).match(/^[a-zA-Z].*/)) {
                 return false;
             }
         }
@@ -355,8 +369,8 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
     $scope.preMKText = function (f) {
         s.newFile = {
-            title:'',
-            content:''
+            title: '',
+            content: ''
         };
         rs.cargarPopup('nuevoText');
         focus('newTextFile');
