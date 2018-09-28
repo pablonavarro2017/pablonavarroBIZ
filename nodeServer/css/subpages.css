@@ -93,10 +93,12 @@
     min-height: 60vh ;
     min-width: 90%!important;
 }
-span .plus{
+.inside{
+    left: 53%;
     color: white;
-    margin-left: -12px;
     font-size: 10px;
+    top: 40%;
+    position: absolute;
 }
 
 

@@ -135,14 +135,49 @@ function returnPlainText(req, res, rutaArchivo) {
     });
 }
 //Crea  una carpeta
-function createDirectory(path) {
+function createDirectory(path, f) {
+    log(path)
     fs.mkdir(path, (err) => {
         if (err) {
             log(err);
+            if (f) f('error');
             return err.message;
         } else {
-            return 'OK'
+            if (f) f();
+            return 'OK';
         }
+    });
+}
+
+//Crea  multiples carpetas
+function makeMultDirs(req, res, data) {
+    var dirs = data.dirs;
+    var resp = 'OK';
+    for (e in dirs) {
+        try {
+            if (fs.existsSync(dirs[e]) == false) {
+                fs.mkdirSync(dirs[e]);
+            } else {
+                resp = 'DUPL';
+            }
+        } catch (err) {
+            log(err)
+            resp = 'ERROR FATAL';
+        }
+    }
+    return res.end(resp);
+}
+
+
+//Crea  multiples carpetas
+function delDir(req, res, data) {
+    var dirPath = data.dirPath;
+    rimraf(dirPath, [], (err) => {
+        if (err) {
+            log(err);
+            return res.end('ERROR');
+        }
+        return res.end('OK');
     });
 }
 

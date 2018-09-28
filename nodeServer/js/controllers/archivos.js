@@ -3,12 +3,11 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     rs = $rootScope;
     rs.sa = s;
     rs.popupUrl = "";
+    s.archivosEnCola = 0;
     /**/
     $scope.subirArchivos = function () { //function to call on form submit
         if ($scope.upload_form.file.$valid && $scope.file) { //check if from is valid
-            //            $scope.upload($scope.file); //call upload function
-            log('SUBIENDO ARCHIVOS');
-            s.archivosEnCola = s.file.length;
+            s.archivosEnCola += s.file.length;
             multiple = (s.archivosEnCola > 1 ? true : false);
             if (s.archivosEnCola < 50) {
                 for (a in s.file) {
@@ -22,14 +21,14 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             rs.agregarAlerta('Archivo Inválido');
         }
     }
-    $scope.upload = function (file, multiple) {
+    $scope.upload = function (file, multiple, url) {
         $rootScope.requestCount++;
         rs.agregarAlerta('Subiendo Archivo: ' + file.name + " - " + (file.size / 1024 / 1024).toFixed(1) + " MB");
         Upload.upload({
             url: '/api/uploadFile', //webAPI exposed to upload the file
             data: {
                 file: file,
-                ruta: $scope.carpetaActual.urlActual
+                ruta: (url ? url : $scope.carpetaActual.urlActual)
             } //pass file as data, should be user ng-model
         }).then(function (resp) { //upload function returns a promise
             if (multiple == false) {
@@ -58,9 +57,8 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         }, function (res) {
             $scope.data = res.data;
             $scope.fs = res.data;
-            if (!url) {
-                url = './filesUploaded'
-            }
+
+            url = (!url ? './filesUploaded' : url);
             $scope.urlDirecta({
                 url
             });
@@ -418,6 +416,67 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         a.subOption = true // Se activa la subOptions del archivo
     }
 
+    s.subirCarpeta = function () {
+        var carpetas = []
+        var cantArch = s.folder.length;
+        s.archivosEnCola += cantArch;
+        for (let i = 0; i < cantArch; i++) {
+            var c = $scope.carpetaActual.urlActual + '/' + getFolderURL(s.folder[i].webkitRelativePath)
+            if (carpetas.indexOf(c) < 0) {
+                carpetas.push(c)
+            }
+        };
+        $rootScope.solicitudPost("/makeMultDirs", {
+            dirs: carpetas
+        }, function (data) {
+            if (data == "OK") {
+                var multiple = cantArch > 1 ? true : false;
+                for (let i = 0; i < cantArch; i++) {
+                    var a = $scope.carpetaActual.urlActual + '/' + getFolderURL(s.folder[i].webkitRelativePath); //filePath
+                    s.upload(s.folder[i], multiple, a);
+                }
+            } else if (data == "DUPL") {
+                rs.agregarAlerta('Carpeta ya existe');
+            } else {
+                rs.agregarAlerta('Error al crear carpeta');
+
+            }
+        }, function (res) {
+            s.errorCounter++;
+            rs.agregarAlerta('Error Al Crear Carpetas');
+            log(res);
+        });
+    }
+    $scope.delDir = function (dirName) {
+        if (validarNombre(newFile.title)) {
+            $rootScope.solicitudPost("/delDir", {
+                dirPath: $scope.carpetaActual.urlActual + '/' + dirPath,
+                contenido: newFile.content
+            }, function (data) {
+                if (data == "OK") {
+                    $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
+                    rs.cargarPopup('');
+                    rs.agregarAlerta('Archivo Creado: ' + newFile.title);
+                } else {
+                    rs.agregarAlerta('Error Al Crear Archivo');
+                }
+            }, function (res) {
+                rs.agregarAlerta('Error Al Crear Archivo');
+                log(res);
+            });
+        } else {
+            rs.agregarAlerta('Nombre Inválido');
+        }
+    }
+
+    function getFolderURL(fileURL) {
+        return fileURL.substr(0, fileURL.lastIndexOf('/'))
+    }
+
+    s.log = function (e,o) {
+        log(o);
+        e.stopPropagation();
+    }
     /**/
     $scope.$on("$destroy", function () {
         $rootScope.controllerDestruido();
