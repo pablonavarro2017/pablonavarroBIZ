@@ -47,13 +47,14 @@ function mkDir(req, res, data) {
     var rutaCarpeta = data.rutaCarpeta;
     log('/mkDir ' + rutaCarpeta);
     if (validarRuta(rutaCarpeta)) {
-        var s = createDirectory(rutaCarpeta);
-        log(s);
-        if (s == 'OK') {
-            return sendBack(res, 'OK', 'Folder Created');
-        } else {
-            return sendBack(res, 'ERROR', s);
-        }
+        createDirectory(rutaCarpeta, (r) => {
+            log(r);
+            if (r == 'OK') {
+                return sendBack(res, 'OK', 'Folder Created');
+            } else {
+                return sendBack(res, 'ERROR', s);
+            }
+        });
     } else {
         return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado');
     }
@@ -142,14 +143,14 @@ function returnPlainText(req, res, rutaArchivo) {
     });
 }
 //Crea  una carpeta
-function createDirectory(path) {
+function createDirectory(path, f) {
     log(path)
     fs.mkdir(path, (err) => {
         if (err) {
             log(err);
-            return err.message;
+            return f(err);
         } else {
-            return 'OK';
+            return f('OK');
         }
     });
 }
@@ -306,8 +307,8 @@ function writeFile(req, res, rutaArchivo, nuevoContenido) {
     });
 }
 //Funcion que retorna el archivo de no encontrado en caso de fallo al buscar un archivo
-function notFound(req, res,msg) {
-    msg = msg?msg:'';
+function notFound(req, res, msg) {
+    msg = msg ? msg : '';
     log("NOT FOUND:  " + req.url);
     fs.readFile('./inc/404-Not-Found.html', function (err, text) {
         if (err) {
@@ -315,7 +316,7 @@ function notFound(req, res,msg) {
             return res.end("ERROR:  " + req.url);
         } else {
             res.setHeader("Content-Type", "text/html");
-            return res.end(text+msg);
+            return res.end(text + msg);
         }
     });
 }
