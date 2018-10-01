@@ -90,7 +90,11 @@ function uploadFile(req, res) {
             var extension = getExtension(files.file.name);
             if (extensiones.indexOf(extension) >= 0) {
                 fs.rename(oldpath, newpath, function (err) {
-                    if (err) throw err;
+                    if (err) {
+                        //throw err;
+                        log(err);
+                        return sendBack(res, 'ERROR', 'Error al subir el archivo');
+                    }
                     return sendBack(res, 'OK', 'Archivo Subido: ' + files.file.name);
                 });
             } else {
@@ -272,7 +276,7 @@ function getFileNameFromURL(fileURL) {
 function borrarArchivo(req, res, rutaArchivo) {
     fs.unlink(rutaArchivo, (err) => {
         if (err) {
-            log("FILE NOT DELETED: " + rutaArchivo+" <-> " + err);
+            log("FILE NOT DELETED: " + rutaArchivo + " <-> " + err);
             return res.end("No se puede borrar el archivo");
         };
         log("FILE DELETED: " + rutaArchivo);
@@ -303,16 +307,16 @@ function writeFile(req, res, rutaArchivo, nuevoContenido) {
     });
 }
 //Funcion que retorna el archivo de no encontrado en caso de fallo al buscar un archivo
-function notFound(req, res) {
+function notFound(req, res,msg) {
+    msg = msg?msg:'';
     log("NOT FOUND:  " + req.url);
     fs.readFile('./inc/404-Not-Found.html', function (err, text) {
         if (err) {
-            log(text);
             log("ERROR:  " + err);
             return res.end("ERROR:  " + req.url);
         } else {
             res.setHeader("Content-Type", "text/html");
-            return res.end(text);
+            return res.end(text+msg);
         }
     });
 }

@@ -3,7 +3,7 @@ var fs = require('fs'); //Acceder al file system
 eval(fs.readFileSync('functions.js') + '');
 var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
-var rimraf =  require('rimraf');
+var rimraf = require('rimraf');
 var port = 8081; // 80;
 var serverUrl = "127.0.0.1";
 
@@ -51,15 +51,16 @@ function procesarApi(req, res) {
                 case "/uploadFile":
                     return uploadFile(req, res);
                 case "/makeMultDirs":
-                    return makeMultDirs(req, res,data);
+                    return makeMultDirs(req, res, data);
                 case "/delDir":
-                    return delDir(req, res,data);
+                    return delDir(req, res, data);
                 default:
                     return res.end("ERROR API POST: " + JSON.stringify(data));
             }
         }, procesarDatosPost);
     } else if (req.method === 'GET') {
-        return res.end("API GET PROCESADA");
+        return notFound(req, res,'API NOT FOUND');
+        //return res.end("API GET PROCESADA");
     }
 }
 //Segun el tipo de archivo solicitado configura el header correspondiente y retorna el contenido del archivo
