@@ -47,7 +47,7 @@ function mkDir(req, res, data) {
     var rutaCarpeta = data.rutaCarpeta;
     log('/mkDir ' + rutaCarpeta);
     if (validarRuta(rutaCarpeta)) {
-        var s = createDirectory(rutaCarpeta, res);
+        var s = createDirectory(rutaCarpeta);
         if (s == 'OK') {
             return sendBack(res, 'OK', 'Folder Created');
         } else {
@@ -141,15 +141,13 @@ function returnPlainText(req, res, rutaArchivo) {
     });
 }
 //Crea  una carpeta
-function createDirectory(path, f) {
+function createDirectory(path) {
     log(path)
     fs.mkdir(path, (err) => {
         if (err) {
             log(err);
-            if (f) f('error');
             return err.message;
         } else {
-            if (f) f();
             return 'OK';
         }
     });
