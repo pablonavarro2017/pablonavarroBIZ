@@ -48,6 +48,7 @@ function mkDir(req, res, data) {
     log('/mkDir ' + rutaCarpeta);
     if (validarRuta(rutaCarpeta)) {
         var s = createDirectory(rutaCarpeta);
+        log(s);
         if (s == 'OK') {
             return sendBack(res, 'OK', 'Folder Created');
         } else {
