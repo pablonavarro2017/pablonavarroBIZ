@@ -272,7 +272,7 @@ function getFileNameFromURL(fileURL) {
 function borrarArchivo(req, res, rutaArchivo) {
     fs.unlink(rutaArchivo, (err) => {
         if (err) {
-            log("FILE NOT DELETED: " + rutaArchivo);
+            log("FILE NOT DELETED: " + rutaArchivo+" <-> " + err);
             return res.end("No se puede borrar el archivo");
         };
         log("FILE DELETED: " + rutaArchivo);
