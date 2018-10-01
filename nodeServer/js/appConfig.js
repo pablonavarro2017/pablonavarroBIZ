@@ -54,6 +54,12 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         templateUrl: 'inc/linkstore.html',
         controller: 'mainController'
     }
+    var gestordescarga = {
+        name: 'gestordescarga',
+        url: '/descargas',
+        templateUrl: 'inc/descargas.html',
+        controller: 'mainController'
+    }
     var login = {
         name: 'login',
         url: '/login',
@@ -73,5 +79,6 @@ app.config(function ($stateProvider, $urlRouterProvider) {
    $stateProvider.state(notas);
    $stateProvider.state(bienesraices);
    $stateProvider.state(linkstore);
+   $stateProvider.state(gestordescarga);
    $stateProvider.state(login);
 });

@@ -1,3 +1,5 @@
+const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'php', 'apk', 'conf', 'other']; //extensiones de archivos permitidos para subir
+
 //Funcion para obtener el File System
 function getDirectories(req, res, data) {
     var folder = data.carpetaActual;

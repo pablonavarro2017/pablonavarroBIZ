@@ -6,7 +6,6 @@ var formidable = require('formidable'); //Cargar archivos al servidor
 var rimraf =  require('rimraf');
 var port = 8081; // 80;
 var serverUrl = "127.0.0.1";
-const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'php', 'apk', 'conf', 'other']; //extensiones de archivos permitidos para subir
 
 //Crea el servidor y procesa las solicitudes de archivos o apis
 var server = http.createServer(function (req, res) {
