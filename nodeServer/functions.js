@@ -1,5 +1,3 @@
-const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'php', 'apk', 'conf', 'other']; //extensiones de archivos permitidos para subir
-
 //Funcion para obtener el File System
 function getDirectories(req, res, data) {
     var folder = data.carpetaActual;
@@ -65,7 +63,18 @@ function renameFile(req, res, data) {
     var ruta = data.ruta;
     log('/renameFile ' + rutaArchivo);
     if (validarRuta(rutaArchivo) && validarRuta(ruta)) {
-        return renombrarArchivo('./' + rutaArchivo, './' + ruta, nuevoNombre, res)
+        return renombrarArchivo('./' + rutaArchivo, './' + ruta, nuevoNombre, res);
+    } else {
+        return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado');
+    }
+}
+//Funcion para renombrar una carpeta
+function renameDir(req, res, data) {
+    var rutaCarpeta = data.rutaCarpeta;
+    var nuevoNombre = data.nuevoNombre;
+    log('/renameDir: ' + rutaCarpeta + "-> " + nuevoNombre);
+    if (validarRuta(rutaCarpeta) && validarRuta(nuevoNombre)) {
+        return renombrarCarpeta(rutaCarpeta, nuevoNombre, res);
     } else {
         return sendBack(res, 'ERROR', 'Acceso a Carpeta Denegado');
     }
@@ -107,7 +116,9 @@ function uploadFile(req, res) {
     });
 }
 //Retorna un archivo en su forma binaria
-function returnFile(url, res) {
+function returnFile(req, res, data) {
+    var url = data ? data.rutaArchivo : '.' + req.url;
+    log('ReturnFile:: ' + url);
     fs.readFile(url, function (err, content) {
         if (err) {
             res.writeHead(400, {
@@ -117,8 +128,9 @@ function returnFile(url, res) {
             return sendBack(res, 'ERROR', 'Error al retornar el archivo');
         } else {
             //specify Content will be an attachment
-            res.setHeader('Content-disposition', 'attachment; filename=' + getFileNameFromURL(url).replace(/,/g, "_"));
-            res.setHeader('FileName', getFileNameFromURL(url));
+            var header = asciiReplace(getFileNameFromURL(url));
+            res.setHeader('Content-disposition', 'attachment; filename=' + header.replace(/,/g, "_"));
+            res.setHeader('FileName', header);
             return res.end(content);
         }
     });
@@ -129,6 +141,31 @@ function validarRuta(r) {
         return true;
     }
     return false;
+}
+
+//Valida que los valores de un string sean ascii
+function asciiReplace(nombre) {
+    if (isASCII(nombre) == true) {
+        return nombre;
+    }
+    var nuevoNombre = '';
+    for (var i = 0; i < nombre.length; i++) {
+        if (isASCII(nombre[i])) {
+            nuevoNombre += nombre[i];
+        }
+    }
+    if (nuevoNombre === '') {
+        nuevoNombre = 'archivo';
+    }
+    log(nuevoNombre + ' <-> ' + '.' + getExtension(nombre))
+    if (nuevoNombre == '.' + getExtension(nombre)) {
+        nuevoNombre = 'archivo' + nuevoNombre;
+    }
+    return nuevoNombre;
+}
+
+function isASCII(str) {
+    return /^[\x00-\x7F]*$/.test(str);
 }
 //Retotna un archivo de texto plano
 function returnPlainText(req, res, rutaArchivo) {
@@ -174,9 +211,10 @@ function makeMultDirs(req, res, data) {
 }
 
 
-//Crea  multiples carpetas
+//Borra carpetas de manera recursiva
 function delDir(req, res, data) {
-    var dirPath = data.dirPath;
+    var dirPath = data.rutaCarpeta;
+    log(dirPath)
     rimraf(dirPath, [], (err) => {
         if (err) {
             log(err);
@@ -291,6 +329,18 @@ function renombrarArchivo(rutaArchivo, ruta, newName, res) {
             return res.end("ERROR");
         };
         log("FILE UPDATED: " + rutaArchivo);
+        return res.end("OK");
+    });
+}
+//Renombra una Carpeta
+function renombrarCarpeta(rutaCarpeta, nuevoNombre, res) {
+    fs.rename(rutaCarpeta, nuevoNombre, (err) => {
+        if (err) {
+            log(err)
+            log("FOLDER NOT UPDATED: " + rutaCarpeta);
+            return res.end("ERROR");
+        };
+        log("FOLDER UPDATED: " + nuevoNombre);
         return res.end("OK");
     });
 }

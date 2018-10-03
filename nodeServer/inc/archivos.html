@@ -6,7 +6,7 @@
                 <label for="file" title="Subir Archivos" class="pointer"><i class="fa fa-upload f16" ></i></label>
                 <input id="file" style="display: none" type="file" ngf-select ng-model="file" name="file" ngf-max-size="100MB" ng-change="subirArchivos()" multiple/>
 
-                <label for="folder" title="Subir Carpeta" class="pointer paddingIzq relative"><i class="fa fa-folder"></i><i class="fa fa-arrow-circle-o-up inside "></i></label>
+                <label for="folder" title="Subir Carpeta" class="pointer paddingIzq relative hideOnMovil"><i class="fa fa-folder"></i><i class="fa fa-arrow-circle-o-up inside "></i></label>
                 <input id="folder" style="display: none" type="file" ngf-select ng-model="folder" name="file" ngf-max-size="100MB" ng-change="subirCarpeta()" webkitdirectory multiple />
 
                 <span ng-click="preMKDir()" title="Crear Carpeta" class="pointer paddingIzq relative"><i class="fa fa-folder"></i><i class="fa fa-plus inside"></i></span>
@@ -24,23 +24,20 @@
         <div class="fullmargin flexColumna">
             <div ng-repeat="c in carpetaActual.nombresFoldersAMostrar" ng-class="c.index%2==0?'bgBlanco':''" class="item paddinIzq" ng-click="getFilesNameFromFolder(carpetaActual.urlActual+'/'+c.nombre)">
                 <div class="flexFila relative">
-                    <i class="fa fa-circle f10"></i>
                     <i class="fa fa-folder marginIzq carpeta"></i>
                     <div class="flexFila jcSBet fg1">
                         <span class="marginIzq">{{c.nombre}}</span>
                     </div>
-                    <span class="pointer flexFila paddingDer paddingIzq aiCenter"  ng-click='log($event,"asd")'><i class="fa fa-ellipsis-v f16  " ></i></span>
-                    <!--
-                    <div ng-if="a.subOption" class="inlineFlex flexColumna moreOptions">
-                        <span ng-click='preRenameFile(a)' title="Renombrar"><i class="fa fa-retweet f14 pointer subOption" ></i>Renombrar&nbsp;</span>
-                        <span ng-click='preBorrarArchivo(a)' title="Borrar"><i class="fa fa-trash f14 pointer subOption"></i>Borrar</span>
+                    <span class="pointer flexFila paddingDer paddingIzq aiCenter" ng-click='openSubOptions(c,$event)'><i class="fa fa-ellipsis-v f16" ></i></span>
+                    <div ng-if="c.subOption" class="inlineFlex flexColumna moreOptions">
+                        <span ng-click='preRenameFolder(c,$event)' title="Renombrar"><i class="fa fa-retweet f14 pointer subOption" ></i>Renombrar&nbsp;</span>
+                        <span ng-click='preBorrarCarpeta(c,$event)' title="Borrar"><i class="fa fa-trash f14 pointer subOption"></i>Borrar</span>
                     </div>
--->
+
                 </div>
             </div>
             <div ng-repeat="a in carpetaActual.nombresArchivosAMostrar" ng-class="a.index%2==0?'bgBlanco':''" class="item paddinIzq" ng-attr-title="{{a.size+' MB'}}">
                 <div class="flexFila relative">
-                    <i class="fa fa-circle f10"></i>
                     <i class="fa marginIzq archivo" ng-class="'fa-'+a.icon"></i>
                     <div class="flexFila jcSBet fg1">
                         <span class="marginIzq">{{a.nombre}}</span>
@@ -80,3 +77,11 @@
         </div>
     </div>
 </div>
+<div my-Dir style="padding: 20px; background: rgba(204, 204, 204, 0.4); cursor: pointer" >
+    Hola
+</div>
+<!--
+<div class='overlay' ng-mouseup="dropHandler($event);" ng-mouseover="dragOverHandler($event)" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+    <p class="modal">Drag one or more files to this Drop Zone ...</p>
+</div>
+-->

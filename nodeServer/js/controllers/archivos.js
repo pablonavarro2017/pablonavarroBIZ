@@ -107,7 +107,8 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             if (currentFolderName == rooFolder) {
                 var fold = {
                     nombre: actualFolderName,
-                    index: cont++
+                    index: cont++,
+                    subOption: false
                 }
                 $scope.carpetaActual.nombresFoldersAMostrar.push(fold);
             }
@@ -341,6 +342,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         s.renamingFile = f;
         rs.cargarPopup('renombrar');
         focus('newFileName');
+        s.renameF = s.renameFile;
     }
     $scope.renameFile = function (a, newName) {
         if (validarNombre(newName)) {
@@ -406,47 +408,6 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         return parseInt(n);
     }
 
-    s.openSubOptions = function (a) {
-        if (rs.openedOptions) { //habían subOption abiertas y se cierran primero
-            s.carpetaActual.nombresArchivosAMostrar.forEach((file) => {
-                file.subOption = false;
-            })
-        }
-        rs.openedOptions = false; // Se setea en falso para que no se cierre en la funcion asd del rootScope (funcion que se ejecuta después)
-        a.subOption = true // Se activa la subOptions del archivo
-    }
-
-    s.subirCarpeta = function () {
-        var carpetas = []
-        var cantArch = s.folder.length;
-        s.archivosEnCola += cantArch;
-        for (let i = 0; i < cantArch; i++) {
-            var c = $scope.carpetaActual.urlActual + '/' + getFolderURL(s.folder[i].webkitRelativePath)
-            if (carpetas.indexOf(c) < 0) {
-                carpetas.push(c)
-            }
-        };
-        $rootScope.solicitudPost("/makeMultDirs", {
-            dirs: carpetas
-        }, function (data) {
-            if (data == "OK") {
-                var multiple = cantArch > 1 ? true : false;
-                for (let i = 0; i < cantArch; i++) {
-                    var a = $scope.carpetaActual.urlActual + '/' + getFolderURL(s.folder[i].webkitRelativePath); //filePath
-                    s.upload(s.folder[i], multiple, a);
-                }
-            } else if (data == "DUPL") {
-                rs.agregarAlerta('Carpeta ya existe');
-            } else {
-                rs.agregarAlerta('Error al crear carpeta');
-
-            }
-        }, function (res) {
-            s.errorCounter++;
-            rs.agregarAlerta('Error Al Crear Carpetas');
-            log(res);
-        });
-    }
     $scope.delDir = function (dirName) {
         if (validarNombre(newFile.title)) {
             $rootScope.solicitudPost("/delDir", {
@@ -473,13 +434,241 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         return fileURL.substr(0, fileURL.lastIndexOf('/'))
     }
 
-    s.log = function (e,o) {
-        log(o);
+    s.openSubOptions = function (a, e) {
+        if (rs.openedOptions) { //habían subOption abiertas y se cierran primero
+            s.carpetaActual.nombresArchivosAMostrar.forEach((file) => {
+                file.subOption = false;
+            })
+            s.carpetaActual.nombresFoldersAMostrar.forEach((folder) => {
+                folder.subOption = false;
+            })
+        }
+        rs.openedOptions = false; // Se setea en falso para que no se cierre en la funcion asd del rootScope (funcion que se ejecuta después)
+        a.subOption = true // Se activa la subOptions del archivo
+        if (e) { // solo en carpetas se pasa este parametro
+            e.stopPropagation(); // se evita que se abra la carpeta
+            rs.asd(); // se llama la funcion asd del RootScope
+        }
+    }
+
+    $scope.preRenameFolder = function (f, e) {
+        s.renamingFile = f;
+        rs.cargarPopup('renombrar');
+        focus('newFileName');
+        s.renameF = s.renameFolder;
+        f.subOption = false;
         e.stopPropagation();
+    }
+    $scope.renameFolder = function (a, newName) {
+        if (validarNombre(newName)) {
+            $rootScope.solicitudPost("/renameDir", {
+                rutaCarpeta: $scope.carpetaActual.urlActual + '/' + a.nombre,
+                nuevoNombre: $scope.carpetaActual.urlActual + '/' + newName
+            }, function (data) {
+                if (data == "OK") {
+                    a.nombre = newName;
+                    $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
+                    rs.cargarPopup('');
+                    rs.agregarAlerta('Carpeta Actualizada: ' + a.nombre);
+                } else {
+                    rs.agregarAlerta('Error Al Actualizar Carpeta');
+                }
+            }, function (res) {
+                rs.agregarAlerta('Error Al Actualizar Carpeta');
+                log(res);
+            });
+        } else {
+            rs.agregarAlerta('Nombre Inválido');
+        }
+    }
+    $scope.preBorrarCarpeta = function (c, e) {
+        s.confirm = {};
+        s.confirm.a = c;
+        s.confirm.funcionSi = s.deleteFolder;
+        c.subOption = false;
+        e.stopPropagation();
+        s.confirm.message = "Desea eliminar la carpeta " + c.nombre;
+        rs.cargarPopup("popUpConfimar");
+    }
+    $scope.deleteFolder = function (c) {
+        $rootScope.solicitudPost("/delDir", {
+            rutaCarpeta: $scope.carpetaActual.urlActual + '/' + c.nombre
+        }, function (data) {
+            if (data == "OK") {
+                rs.agregarAlerta('Carpeta Borrada: ' + c.nombre);
+                $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
+                rs.cargarPopup('');
+            } else {
+                rs.agregarAlerta('Error Al Borrar Carpeta');
+            }
+        }, function (res) {
+            rs.agregarAlerta('Error Al Borrar Carpeta');
+            log(res);
+        });
+    }
+
+    s.log = function (e, o) {
+        log(o);
     }
     /**/
     $scope.$on("$destroy", function () {
         $rootScope.controllerDestruido();
     });
 
+
+    s.traverseFileTree = function (item, path) {
+        path = path || "";
+        if (item.isFile) {
+            // Get file
+            item.file(function (file) {
+                //                console.log("File:", path + file.name);
+            });
+        } else if (item.isDirectory) {
+            // Get folder contents
+            var dirReader = item.createReader();
+            dirReader.readEntries(function (entries) {
+                for (var i = 0; i < entries.length; i++) {
+                    log(i + ' - ' + path + item.name);
+                    s.traverseFileTree(entries[i], path + item.name + "/");
+                }
+            });
+        }
+    }
+
+    s.subirCarpeta = function () {
+        var carpetas = []
+        var cantArch = s.folder.length;
+        s.archivosEnCola += cantArch;
+        for (let i = 0; i < cantArch; i++) {
+            var c = $scope.carpetaActual.urlActual + '/' + getFolderURL(s.folder[i].webkitRelativePath)
+            if (carpetas.indexOf(c) < 0) {
+                carpetas.push(c)
+            }
+        };
+        log(carpetas);
+        $rootScope.solicitudPost("/makeMultDirs", {
+            dirs: carpetas
+        }, function (data) {
+            if (data == "OK") {
+                var multiple = cantArch > 1 ? true : false;
+                for (let i = 0; i < cantArch; i++) {
+                    var a = $scope.carpetaActual.urlActual + '/' + getFolderURL(s.folder[i].webkitRelativePath); //filePath
+                    s.upload(s.folder[i], multiple, a);
+                }
+            } else if (data == "DUPL") {
+                rs.agregarAlerta('Carpeta ya existe');
+            } else {
+                rs.agregarAlerta('Error al crear carpeta');
+
+            }
+        }, function (res) {
+            s.errorCounter++;
+            rs.agregarAlerta('Error Al Crear Carpetas');
+            log(res);
+        });
+    }
+
+    s.getCarpetas = function (items, f) {
+        var carpetas = [];
+        var archivos = [];
+        var rutasArchivos = [];
+        s.cont = 1;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i].webkitGetAsEntry();
+            s.getCarpetasAux(item, carpetas, archivos, rutasArchivos, '', f);
+        }
+    }
+    s.getCarpetasAux = function (item, carpetas, archivos, rutasArchivos, path, f) {
+        path = path || "";
+        if (item.isDirectory) {
+            // Get folder contents
+            var dirReader = item.createReader();
+            dirReader.readEntries(function (entries) {
+                s.cont += entries.length;
+                for (var i = 0; i < entries.length; i++) {
+                    var folderName = $scope.carpetaActual.urlActual + '/' + path + item.name;
+                    if (carpetas.indexOf(folderName) == -1) {
+                        carpetas.push(folderName);
+                    }
+                    s.getCarpetasAux(entries[i], carpetas, archivos, rutasArchivos, path + item.name + "/", f);
+                }
+                s.cont--;
+                if (s.cont == 0) {
+                    f(carpetas, archivos, rutasArchivos);
+                }
+            });
+        } else if (item.isFile) {
+            item.file(function (file) {
+                rutasArchivos.push($scope.carpetaActual.urlActual + '/' + path);
+                archivos.push(file);
+                s.cont--;
+                if (s.cont == 0) {
+                    f(carpetas, archivos, rutasArchivos);
+                }
+            });
+        }
+    }
+
+    s.crearCarpetas = function (items, f) {
+        s.getCarpetas(items, (carpetas, archivos, rutasArchivos) => {
+            $rootScope.solicitudPost("/makeMultDirs", {
+                dirs: carpetas
+            }, function (data) {
+                if (data == "OK") {
+                    var cantArch = archivos.length;
+                    s.archivosEnCola += cantArch;
+                    var multiple = cantArch > 1 ? true : false;
+                    for (let i = 0; i < cantArch; i++) {
+                        var ruta = rutasArchivos[i];
+                        s.upload(archivos[i], multiple, ruta);
+                    }
+                } else if (data == "DUPL") {
+                    rs.agregarAlerta('Carpeta ya existe');
+                } else {
+                    rs.agregarAlerta('Error al crear carpeta');
+
+                }
+            }, function (res) {
+                s.errorCounter++;
+                rs.agregarAlerta('Error Al Crear Carpetas');
+                log(res);
+            });
+        });
+    }
+
+
+
+});
+app.directive('myDir', function () {
+    return {
+        restrict: 'A',
+        scope: true,
+        link: function (scope, element, attrs) {
+
+            function dragOverHandler(ev) {
+                ev.preventDefault();
+            }
+
+            function dropHandler(ev) {
+                console.log('File(s) dropped');
+                // Prevent default behavior (Prevent file from being opened)
+                ev.preventDefault();
+                if (ev.dataTransfer.items) {
+                    // Use DataTransferItemList interface to access the file(s)
+
+                    var items = event.dataTransfer.items;
+                    s.crearCarpetas(items, () => {
+                        log('HOLA')
+                    });
+
+                }
+
+                // Pass event to removeDragData for cleanup
+                //                removeDragData(ev)
+            }
+
+            element.on('dragover', dragOverHandler);
+            element.on('drop', dropHandler);
+        }
+    };
 });

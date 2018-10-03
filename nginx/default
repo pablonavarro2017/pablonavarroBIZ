@@ -29,6 +29,10 @@ server {
   listen 80 default_server;
   root /usr/share/empty;
 }
+server {
+  listen 443 default_server;
+  root /usr/share/empty;
+}
 
 server {
     if ($host = www.pablonavarro.biz) {

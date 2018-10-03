@@ -85,15 +85,16 @@
 
 .areaEdicionTexto {
     width: 100%;
-    min-height: 55vh ;
+    min-height: 55vh;
     border: 1px #ccc solid;
 }
 
 .areaEdicion {
-    min-height: 60vh ;
-    min-width: 90%!important;
+    min-height: 60vh;
+    min-width: 90% !important;
 }
-.inside{
+
+.inside {
     left: 53%;
     color: white;
     font-size: 10px;
@@ -125,6 +126,7 @@
         width: 100% !important;
     }
 }
+
 .moreOptions span:hover {
     background-color: #aaa;
     cursor: pointer;
@@ -144,6 +146,10 @@
 }
 
 .subOption {
-    padding:5px;
+    padding: 5px;
     border-radius: 2px;
+}
+
+.blurred {
+    filter: blur(2px);
 }

@@ -333,15 +333,18 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
         $location.path("blog");
     }
     rs.sa = {}
+    rs.openedOptions = false;
     rs.asd = function () {
         if (rs.openedOptions && rs.sa.fs) { // Habían subOptions abiertas y el scope es el de archivos
             rs.sa.carpetaActual.nombresArchivosAMostrar.forEach((file) => {
-                file.subOption=false; // todas las subOptions se cierran
+                file.subOption = false; // todas las subOptions se cierran
+            })
+            rs.sa.carpetaActual.nombresFoldersAMostrar.forEach((folder) => {
+                folder.subOption = false; // todas las subOptions se cierran
             })
         }
-        rs.openedOptions=true; // Se aumenta para que el próximo click cierre las subOptions
+        rs.openedOptions = true; // Se aumenta para que el próximo click cierre las subOptions
     }
-    rs.openedOptions = false;
     document.getElementById('body').style.display = 'flex';
     document.getElementById('navid').style.display = 'flex';
 });

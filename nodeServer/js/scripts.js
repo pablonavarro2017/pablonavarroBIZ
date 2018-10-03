@@ -4,7 +4,7 @@ window.addEventListener('click', function (e) {
     if (ele.length > 0) {
         if (ele[0].contains(e.target)) {
             subOptions = true;
-        }else{
+        } else {
             subOptions = false;
         }
     }
@@ -73,6 +73,7 @@ function pantallaCompleta() {
 function log(o) {
     console.log(o);
 }
+l = log;
 
 /* Eventos */
 window.onkeydown = function (e) {
@@ -112,5 +113,14 @@ function isBlog(a) {
         return false;
 
     }
+}
+
+function copy(mainObj) {
+    let objCopy = {}; // objCopy will store a copy of the mainObj
+    let key;
+    for (key in mainObj) {
+        objCopy[key] = mainObj[key]; // copies each property to the objCopy object
+    }
+    return objCopy;
 }
 /* ---------------------------------------- */

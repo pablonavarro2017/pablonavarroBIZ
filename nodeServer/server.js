@@ -6,6 +6,7 @@ var formidable = require('formidable'); //Cargar archivos al servidor
 var rimraf = require('rimraf');
 var port = 8081; // 80;
 var serverUrl = "127.0.0.1";
+const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'php', 'apk', 'conf', 'other']; //extensiones de archivos permitidos para subir
 
 //Crea el servidor y procesa las solicitudes de archivos o apis
 var server = http.createServer(function (req, res) {
@@ -35,7 +36,7 @@ function procesarApi(req, res) {
                 case "/getDirectories":
                     return getDirectories(req, res, data);
                 case "/getFile":
-                    return getFile(req, res, data);
+                    return returnFile(req, res, data);
                 case "/getPlainText":
                     return getPlainText(req, res, data);
                 case "/deleteFile":
@@ -54,6 +55,8 @@ function procesarApi(req, res) {
                     return makeMultDirs(req, res, data);
                 case "/delDir":
                     return delDir(req, res, data);
+                case "/renameDir":
+                    return renameDir(req, res, data);
                 default:
                     return res.end("ERROR API POST: " + JSON.stringify(data));
             }
@@ -77,7 +80,7 @@ function procesarArchivo(req, res) {
     } else if (req.url.substring(0, 4) == "/pop") {
         return getFile(req, res, "text/html");
     } else if (["mp3", "mp4", "avi", "jpg", "png"].indexOf(getExtension(req.url)) >= 0) {
-        return returnFile('.' + req.url, res);
+        return returnFile(req, res);
     } else if (req.url == "/") {
         return getFile(req, res, "text/html");
     } else {
