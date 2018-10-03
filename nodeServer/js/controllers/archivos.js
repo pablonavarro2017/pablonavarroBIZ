@@ -609,7 +609,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         }
     }
 
-    s.crearCarpetas = function (items, f) {
+    s.subirCarpetaDragAndDrop = function (items) {
         s.getCarpetas(items, (carpetas, archivos, rutasArchivos) => {
             $rootScope.solicitudPost("/makeMultDirs", {
                 dirs: carpetas
@@ -647,28 +647,58 @@ app.directive('myDir', function () {
 
             function dragOverHandler(ev) {
                 ev.preventDefault();
+                element.addClass('dragHereOn');
             }
 
             function dropHandler(ev) {
                 console.log('File(s) dropped');
-                // Prevent default behavior (Prevent file from being opened)
                 ev.preventDefault();
                 if (ev.dataTransfer.items) {
-                    // Use DataTransferItemList interface to access the file(s)
-
                     var items = event.dataTransfer.items;
-                    s.crearCarpetas(items, () => {
-                        log('HOLA')
-                    });
-
+                    s.subirCarpetaDragAndDrop(items);
                 }
+                s.dragZone = false;
+            }
 
-                // Pass event to removeDragData for cleanup
-                //                removeDragData(ev)
+            function dragLeaveHandler(ev) {
+                ev.preventDefault();
+                log('myDir - LEAVE')
+                element.removeClass('dragHereOn');
             }
 
             element.on('dragover', dragOverHandler);
             element.on('drop', dropHandler);
+            element.on('dragleave', dragLeaveHandler);
+        }
+    };
+});
+
+app.directive('lauchDragZone', function () {
+    return {
+        restrict: 'A',
+        scope: true,
+        link: function (scope, element, attrs) {
+            function dragOverHandler(ev) {
+                ev.preventDefault();
+                log('lauchDragZone')
+                s.dragZone = true;
+            }
+            element.on('dragover', dragOverHandler);
+        }
+    };
+});
+
+app.directive('dragLayer', function () {
+    return {
+        restrict: 'A',
+        scope: true,
+        link: function (scope, element, attrs) {
+            function dragLeaveHandler(ev) {
+                ev.preventDefault();
+                log('dragLayer - LEAVE')
+                s.dragZone = false;
+            }
+            element.on('dragleave', dragLeaveHandler);
         }
     };
 });

@@ -77,11 +77,6 @@
         </div>
     </div>
 </div>
-<div my-Dir style="padding: 20px; background: rgba(204, 204, 204, 0.4); cursor: pointer" >
-    Hola
+<div ng-show="dragZone" class='dragZone' drag-layer>
+    <div class="dragHere" my-Dir><span>Suelta tus archivos aquí</span></div>
 </div>
-<!--
-<div class='overlay' ng-mouseup="dropHandler($event);" ng-mouseover="dragOverHandler($event)" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-    <p class="modal">Drag one or more files to this Drop Zone ...</p>
-</div>
--->

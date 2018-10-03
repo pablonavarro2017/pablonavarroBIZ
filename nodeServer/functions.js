@@ -96,6 +96,7 @@ function uploadFile(req, res) {
     form.parse(req, function (err, fields, files) {
         if (files['file'] && validarRuta(fields.ruta)) {
             var oldpath = files.file.path;
+            files.file.name = tolowercaseExtension(files.file.name);
             var newpath = fields.ruta + '/' + files.file.name; //'./filesUploaded/' + files.file.name;
             var extension = getExtension(files.file.name);
             if (extensiones.indexOf(extension) >= 0) {
@@ -115,6 +116,11 @@ function uploadFile(req, res) {
         }
     });
 }
+
+function tolowercaseExtension(nombreArchivo) {
+    return nombreArchivo.replace(new RegExp('\\.' + getExtension(nombreArchivo) + '$'), '.' + getExtension(nombreArchivo).toLowerCase());
+}
+
 //Retorna un archivo en su forma binaria
 function returnFile(req, res, data) {
     var url = data ? data.rutaArchivo : '.' + req.url;
@@ -157,7 +163,6 @@ function asciiReplace(nombre) {
     if (nuevoNombre === '') {
         nuevoNombre = 'archivo';
     }
-    log(nuevoNombre + ' <-> ' + '.' + getExtension(nombre))
     if (nuevoNombre == '.' + getExtension(nombre)) {
         nuevoNombre = 'archivo' + nuevoNombre;
     }

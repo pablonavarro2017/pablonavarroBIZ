@@ -345,6 +345,7 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
         }
         rs.openedOptions = true; // Se aumenta para que el próximo click cierre las subOptions
     }
+
     document.getElementById('body').style.display = 'flex';
     document.getElementById('navid').style.display = 'flex';
 });

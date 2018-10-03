@@ -150,6 +150,33 @@
     border-radius: 2px;
 }
 
-.blurred {
-    filter: blur(2px);
+.dragZone {
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    color: white;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.83);
+}
+
+.dragHere {
+    width: 60%;
+    height: 50%;
+    border: dashed #fffcb7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dragHereOn {
+    border: dashed #4eff00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

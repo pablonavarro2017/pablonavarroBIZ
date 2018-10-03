@@ -79,7 +79,7 @@ function procesarArchivo(req, res) {
         return getFile(req, res, "text/html");
     } else if (req.url.substring(0, 4) == "/pop") {
         return getFile(req, res, "text/html");
-    } else if (["mp3", "mp4", "avi", "jpg", "png"].indexOf(getExtension(req.url)) >= 0) {
+    } else if (["mp3", "mp4", "avi", "jpg", "png",'gif'].indexOf(getExtension(req.url)) >= 0) {
         return returnFile(req, res);
     } else if (req.url == "/") {
         return getFile(req, res, "text/html");
