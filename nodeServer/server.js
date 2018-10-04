@@ -57,12 +57,14 @@ function procesarApi(req, res) {
                     return delDir(req, res, data);
                 case "/renameDir":
                     return renameDir(req, res, data);
+                case "/getAudioStream":
+                    return getAudioStream(req, res, data);
                 default:
                     return res.end("ERROR API POST: " + JSON.stringify(data));
             }
         }, procesarDatosPost);
     } else if (req.method === 'GET') {
-        return notFound(req, res,'API NOT FOUND');
+        return notFound(req, res, 'API NOT FOUND');
         //return res.end("API GET PROCESADA");
     }
 }
@@ -79,7 +81,7 @@ function procesarArchivo(req, res) {
         return getFile(req, res, "text/html");
     } else if (req.url.substring(0, 4) == "/pop") {
         return getFile(req, res, "text/html");
-    } else if (["mp3", "mp4", "avi", "jpg", "png",'gif'].indexOf(getExtension(req.url)) >= 0) {
+    } else if (["mp3", "mp4", "avi", "jpg", "png", 'gif'].indexOf(getExtension(req.url)) >= 0) {
         return returnFile(req, res);
     } else if (req.url == "/") {
         return getFile(req, res, "text/html");

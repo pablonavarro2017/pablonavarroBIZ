@@ -374,6 +374,16 @@ function notFound(req, res, msg) {
         }
     });
 }
+//Funcion que retorna el audio de un video de youtube
+function getAudioStream(req, res, data) {
+    log("/getAudioStream:  " + data.url);
+    var requestUrl = 'http://youtube.com/watch?v=34aQNMvGEZQ';
+    try {
+        youtubeStream(requestUrl).pipe(res)
+    } catch (exception) {
+        res.status(500).send(exception)
+    }
+}
 // Funcion para saber si se esta accediendo desde el host del blog
 function isBlog(hostName) {
     if (hostName.includes('blog.')) {

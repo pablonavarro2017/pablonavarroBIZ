@@ -60,6 +60,12 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         templateUrl: 'inc/descargas.html',
         controller: 'mainController'
     }
+    var audioStreamer = {
+        name: 'audioStreamer',
+        url: '/audioStreamer',
+        templateUrl: 'inc/audioStreamer.html',
+        controller: 'audioStreamer'
+    }
     var login = {
         name: 'login',
         url: '/login',
@@ -80,5 +86,6 @@ app.config(function ($stateProvider, $urlRouterProvider) {
    $stateProvider.state(bienesraices);
    $stateProvider.state(linkstore);
    $stateProvider.state(gestordescarga);
+   $stateProvider.state(audioStreamer);
    $stateProvider.state(login);
 });
