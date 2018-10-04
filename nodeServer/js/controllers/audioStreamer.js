@@ -6,7 +6,7 @@ app.controller("audioStreamer", function (Upload, $sce, $window, $scope, $http, 
 
     s.getAudioStream = function (url) {
         rs.solicitudPost("/getAudioStream", {
-            url: ''
+            url: url
         }, function (data) {
             log(data);
         }, function (res) {

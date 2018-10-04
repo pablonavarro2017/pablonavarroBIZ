@@ -4,6 +4,7 @@ eval(fs.readFileSync('functions.js') + '');
 var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
 var rimraf = require('rimraf');
+var YoutubeMp3Downloader = require("youtube-mp3-downloader");
 var port = 8081; // 80;
 var serverUrl = "127.0.0.1";
 const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'php', 'apk', 'conf', 'other']; //extensiones de archivos permitidos para subir
@@ -89,3 +90,4 @@ function procesarArchivo(req, res) {
         return notFound(req, res);
     }
 }
+
