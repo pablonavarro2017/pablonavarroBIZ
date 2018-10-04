@@ -4,7 +4,7 @@ eval(fs.readFileSync('functions.js') + '');
 var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
 var rimraf = require('rimraf');
-var YoutubeMp3Downloader = require("youtube-mp3-downloader");// Descarga audio de video en youtube
+var YoutubeMp3Downloader = require("youtube-mp3-downloader"); // Descarga audio de video en youtube
 
 var port = 8081; // 80;
 var serverUrl = "127.0.0.1";
@@ -23,6 +23,7 @@ var server = http.createServer(function (req, res) {
         return res.end("Ha ocurrido un error: " + err);
     }
 });
+var io = require('socket.io')(server);
 //var io = require('socket.io')(http);
 // START SERVER
 console.log("Starting web server at " + serverUrl + ":" + port);
@@ -92,5 +93,21 @@ function procesarArchivo(req, res) {
         return notFound(req, res);
     }
 }
+//server io
+//io.on('connection', function (socket) {
+//    socket.emit('Manda SERVER', {
+//        Soy: 'el server'
+//    });
+//    socket.on('Manda Cliente', function (data) {
+//        console.log(data);
+//    });
+//});
 
-
+//cliente io
+//var socket = io();
+//socket.on('Manda SERVER', function (data) {
+//    log(data);
+//    socket.emit('Manda Cliente', {
+//        Soy: 'el Cliente'
+//    });
+//});

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/master.css">
     <link rel="stylesheet" href="css/globales.css">
     <link rel="stylesheet" href="css/subpages.css">
+    <link href="css/css-circular-prog-bar.css" rel="stylesheet" />
 </head>
 
 <body ng-app="app" ng-controller="mainController" ng-click="asd()">
@@ -72,7 +73,16 @@
             <div class="spinerContainer" ng-show="requestCount > 0">
                 <i class="fa f35 fa-spinner fa-spin" aria-hidden="true"></i>
             </div>
-            <div></div>
+            <div class="alertContainer" ng-if="progressing==true">
+                <div class="progress-circle" ng-class="classProgress">
+                    <span>{{progreso}}%</span>
+                    <div class="left-half-clipper">
+                        <div class="first50-bar"></div>
+                        <div class="value-bar"></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <footer class="flexFila jcSBet" style=""><span>Base para Sistemas <!-- pablonavarro.biz -->
            &copy;<script type="text/javascript">
@@ -101,6 +111,7 @@
     <script src="js/videoangular.js"></script>
     <script src="js/scripts.js"></script>
     <script src="js/funcionesPersonalizadas.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
 
     <!-- Para Gráficos    -->
     <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>-->

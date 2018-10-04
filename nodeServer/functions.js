@@ -402,10 +402,15 @@ function getAudioStream(req, res, data) {
     });
 
     YD.on("progress", function (progress) {
+        log('Emitting' + progress.progress.percentage);
+        io.emit('progressing', {
+            progreso: parseInt(progress.progress.percentage)
+        });
         log(formatearFloat(progress.progress.percentage, 2) + '%');
         //        console.log(JSON.stringify(progress));
     });
 }
+
 
 function youtube_parser(url) {
     var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;

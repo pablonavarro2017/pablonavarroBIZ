@@ -643,13 +643,13 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
 
     s.getAudioStream = function (url) {
+        rs.cargarPopup('');
         rs.solicitudPost("/getAudioStream", {
             url: url
         }, function (data) {
             log(data);
             if (data.estado == 'OK') {
                 $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
-                rs.cargarPopup('');
                 rs.agregarAlerta('Descarga Completa: ' + data.data.videoTitle);
             } else {
                 rs.agregarAlerta('Error al procesar URL');
@@ -659,6 +659,12 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             log(res);
         });
     }
+    var socket = io();
+    socket.on('progressing', function (data) {
+        rs.classProgress = data.progreso > 50 ? 'p' + data.progreso + ' over50' : 'p' + data.progreso;
+        rs.progressing = true;
+        rs.progreso = data.progreso;
+    });
 
 });
 app.directive('myDir', function () {
