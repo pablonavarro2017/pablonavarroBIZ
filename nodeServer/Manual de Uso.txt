@@ -58,6 +58,13 @@ Pasos para montar el sistema:
 - Ver que todo está corriendo
     sudo lsof -i -P -n | grep LISTEN
 
+- Instalar ffmpeg para las descargas de el audio de un video de youtube;
+- Asegurarse que la ruta del binario sea: '/usr/bin/ffmpeg' con [which ffmpeg]
+    sudo add-apt-repository ppa:mc3man/trusty-media
+    sudo apt-get update
+    sudo apt-get dist-upgrade
+    sudo apt-get install ffmpeg
+
 *Cambiar el tamaño máximo permitido del request body
     sudo nano /etc/nginx/nginx.conf
     Set:    client_max_body_size 50M;
