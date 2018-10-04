@@ -1,0 +1,29 @@
+<!-- Popup plantilla -->
+<!--
+<style>
+    input {
+        cursor: default
+    }
+</style>
+-->
+<div class="fondoPopup"></div>
+<div class="ventana" style="min-width: 70%">
+    <div class="title">Bajar Audio de YouTube
+        <div ng-click="cargarPopup('')"><span>X</span></div>
+    </div>
+    <div class="contenido">
+        <div class="formContainer maxH100pc ofAuto">
+            <form ng-submit='sa.getAudioStream(url)'>
+                <div class="flexFila jcSAr fWrap contenido">
+                    <div class="flexFila fullWidth aiCenter">
+                        <span>Url:&nbsp;</span><input id="idURL" onclick="this.select()" type="text" required ng-model="url" style="border: #ccc solid;" class="marginDer fg1">
+                    </div>
+                </div>
+                <div class="botones">
+                    <button type="submit">Bajar</button>
+                    <button ng-click="cargarPopup('')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

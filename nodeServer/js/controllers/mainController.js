@@ -60,29 +60,7 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
         setTimeout(alerta.ocultarAlerta, 10000);
         rs.listaAlerts.push(alerta);
     };
-    /* ↓↓ Pop Up para preguntar si o no ↓↓*/
-    rs.preguntar = function (pregunta, funcionCasoSi, funcionCasoNo) {
-        rs.panPreg = {};
-        rs.panPreg.panPregMsj = pregunta;
-        rs.panPreg.panPregFuncSi = function () {
-            rs.mostrarPopupPreguntar = false;
-            if (funcionCasoSi) {
-                funcionCasoSi();
-            };
-        }
-        rs.panPreg.panPregFuncNo = function () {
-            rs.mostrarPopupPreguntar = false;
-            if (funcionCasoNo) {
-                funcionCasoNo();
-            };
-        }
-        rs.panPreg.cerrar = function () {
-            rs.mostrarPopupPreguntar = false;
-            rs.panPreg.panPregFuncNo();
-        }
-        rs.mostrarPopupPreguntar = true;
-    };
-    /* ↑↑ Pop Up para preguntar si o no ↑↑*/
+
     // ----------------------------------------
     s.fullScreen = function () {
         var elem = document.body; // Make the body go full screen.
@@ -106,7 +84,6 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
 
     // para mostrar el nombre del panel actual
     rs.nombrePanelActual = "";
-
 
     // PARA CONTROLAR LA SESION
 
@@ -329,9 +306,9 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
     rs.formatearFecha = function (fecha) {
         return $filter('date')(new Date(fecha), "dd/MM/yyyy hh:mm:ss a", "-0600")
     }
-    if (isBlog()) {
-        $location.path("blog");
-    }
+//    if (isBlog()) {
+//        $location.path("blog");
+//    }
     rs.sa = {}
     rs.openedOptions = false;
     rs.asd = function () {

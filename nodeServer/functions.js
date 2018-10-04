@@ -379,7 +379,7 @@ function getAudioStream(req, res, data) {
     log("/getAudioStream:  " + data.url);
 
     var YD = new YoutubeMp3Downloader({
-        "ffmpegPath": process.platform=='win32'?"../../ffmpeg/bin/ffmpeg.exe":"/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
+        "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
         "outputPath": "./filesUploaded", // Where should the downloaded and encoded files be stored?
         "youtubeVideoQuality": "highest", // What video quality should be used?
         "queueParallelism": 2, // How many parallel downloads/encodes should be started?
@@ -390,8 +390,10 @@ function getAudioStream(req, res, data) {
     YD.download(youtube_parser(data.url));
 
     YD.on("finished", function (err, data) {
-        res.end('OK');
-        console.log(JSON.stringify(data));
+        return sendBack(res, 'OK', '', {
+            videoTitle: data.videoTitle
+        });
+        //console.log(JSON.stringify(data));
     });
 
     YD.on("error", function (error) {
@@ -405,10 +407,10 @@ function getAudioStream(req, res, data) {
     });
 }
 
-function youtube_parser(url){
+function youtube_parser(url) {
     var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
     var match = url.match(regExp);
-    return (match&&match[7].length==11)? match[7] : false;
+    return (match && match[7].length == 11) ? match[7] : false;
 }
 
 // Funcion para saber si se esta accediendo desde el host del blog

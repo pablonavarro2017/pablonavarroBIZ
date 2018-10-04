@@ -1,7 +1,8 @@
 <div class="ventana inline sombra2 aCentro">
     <div class="title">Sistema de Archivos</div>
     <div class="fullPadding aIzq">
-        <div class="paddingDer marginArriba sombra1 aDer">
+        <div class="paddingDer marginArriba sombra1 aDer flexFila jcSBet">
+            <div><span ng-click="preGetYT()" title="Descargar audio de Youtube Video" class="pointer relative fullPaddingMini"><i class="fa fa-youtube absolute paddingIzq"></i><i class="fa fa-headphones f10 absolute paddingArriba5"></i></span></div>
             <form name="upload_form" class="formFile">
                 <label for="file" title="Subir Archivos" class="pointer"><i class="fa fa-upload f16" ></i></label>
                 <input id="file" style="display: none" type="file" ngf-select ng-model="file" name="file" ngf-max-size="100MB" ng-change="subirArchivos()" multiple/>

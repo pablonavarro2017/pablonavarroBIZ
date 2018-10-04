@@ -636,7 +636,29 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         });
     }
 
+    $scope.preGetYT = function () {
+        s.nombreCarpeta = ""
+        rs.cargarPopup('bajarUrl');
+        focus('idURL');
+    }
 
+    s.getAudioStream = function (url) {
+        rs.solicitudPost("/getAudioStream", {
+            url: url
+        }, function (data) {
+            log(data);
+            if (data.estado == 'OK') {
+                $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
+                rs.cargarPopup('');
+                rs.agregarAlerta('Descarga Completa: ' + data.data.videoTitle);
+            } else {
+                rs.agregarAlerta('Error al procesar URL');
+            }
+        }, function (res) {
+            rs.agregarAlerta('Error Al Stream del video');
+            log(res);
+        });
+    }
 
 });
 app.directive('myDir', function () {
@@ -680,7 +702,6 @@ app.directive('lauchDragZone', function () {
         link: function (scope, element, attrs) {
             function dragOverHandler(ev) {
                 ev.preventDefault();
-                log('lauchDragZone')
                 s.dragZone = true;
             }
             element.on('dragover', dragOverHandler);
@@ -695,7 +716,6 @@ app.directive('dragLayer', function () {
         link: function (scope, element, attrs) {
             function dragLeaveHandler(ev) {
                 ev.preventDefault();
-                log('dragLayer - LEAVE')
                 s.dragZone = false;
             }
             element.on('dragleave', dragLeaveHandler);

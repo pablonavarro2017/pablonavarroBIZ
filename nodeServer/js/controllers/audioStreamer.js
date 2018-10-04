@@ -8,7 +8,11 @@ app.controller("audioStreamer", function (Upload, $sce, $window, $scope, $http, 
         rs.solicitudPost("/getAudioStream", {
             url: url
         }, function (data) {
-            log(data);
+            if(data.estado=='OK'){
+                rs.agregarAlerta('Descarga Completa: ' + data.data.videoTitle);
+            }else{
+                rs.agregarAlerta('Error al procesar URL');
+            }
         }, function (res) {
             rs.agregarAlerta('Error Al Stream del video');
             log(res);
