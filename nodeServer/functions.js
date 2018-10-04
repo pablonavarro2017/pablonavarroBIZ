@@ -379,7 +379,7 @@ function getAudioStream(req, res, data) {
     log("/getAudioStream:  " + data.url);
 
     var YD = new YoutubeMp3Downloader({
-        "ffmpegPath": "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
+        "ffmpegPath": process.platform=='win32'?"../../ffmpeg/bin/ffmpeg.exe":"/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
         "outputPath": "./filesUploaded", // Where should the downloaded and encoded files be stored?
         "youtubeVideoQuality": "highest", // What video quality should be used?
         "queueParallelism": 2, // How many parallel downloads/encodes should be started?
