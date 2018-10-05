@@ -424,10 +424,7 @@ function convertToMp4(req, res, data) {
     var videoPath = data.videoPath;
     var videoName = data.videoName;
     const spawn = require('child_process').spawn;
-
-    var line = 'ffmpeg -i /var/www/pablonavarroBIZ/nodeServer/filesUploaded/fireworks.avi -strict -2 /var/www/pablonavarroBIZ/nodeServer/filesUploaded/fireworks.mp4 -y;
-    log(line);
-    const ffmpeg = spawn(line);
+    const ffmpeg = spawn('ffmpeg', ['-i', '/var/www/pablonavarroBIZ/nodeServer/' + videoPath, '-strict', '-2', '/var/www/pablonavarroBIZ/nodeServer/filesUploaded/' + videoName, '-y']);
     ffmpeg.stderr.on('data', (data) => {
         console.log(`${data}`);
         io.emit('converting', {
