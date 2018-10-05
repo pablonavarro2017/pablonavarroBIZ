@@ -672,7 +672,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     s.convertToMp4 = function (url) {
         rs.solicitudPost("/convertToMp4", {
             videoPath: 'filesUploaded/fireworks.avi',
-            videoName: 'fireworks.avi'
+            videoName: 'fireworks.mp4'
         }, function (data) {
             if (data.estado == 'OK') {
                 $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
