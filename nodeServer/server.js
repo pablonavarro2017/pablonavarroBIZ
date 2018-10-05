@@ -64,7 +64,7 @@ function procesarApi(req, res) {
                 case "/getAudioStream":
                     return getAudioStream(req, res, data);
                 case "/convertToMp4":
-                    return getAudioStream(req, res, data);
+                    return convertToMp4(req, res, data);
                 default:
                     return res.end("ERROR API POST: " + JSON.stringify(data));
             }
