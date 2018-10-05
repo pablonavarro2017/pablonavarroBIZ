@@ -669,6 +669,26 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         rs.progreso = data.progreso;
     });
 
+    s.convertToMp4 = function (url) {
+        rs.solicitudPost("/convertToMp4", {
+            videoPath: 'filesUploaded/fireworks.avi',
+            videoName: 'fireworks.avi'
+        }, function (data) {
+            if (data.estado == 'OK') {
+                $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
+                rs.agregarAlerta('Conversion Completa Completa: ' + data.data.videoTitle);
+            } else {
+                rs.agregarAlerta('Error al procesar URL');
+            }
+        }, function (res) {
+            rs.agregarAlerta('Error Al Stream del video');
+            log(res);
+        });
+    }
+    socket.on('converting', function (data) {
+        log(data);
+    });
+
 });
 app.directive('myDir', function () {
     return {

@@ -377,45 +377,63 @@ function notFound(req, res, msg) {
 //Funcion que retorna el audio de un video de youtube
 function getAudioStream(req, res, data) {
     log("/getAudioStream:  " + data.url);
-
-    var YD = new YoutubeMp3Downloader({
-        "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
-        "outputPath": "./filesUploaded", // Where should the downloaded and encoded files be stored?
-        "youtubeVideoQuality": "highest", // What video quality should be used?
-        "queueParallelism": 2, // How many parallel downloads/encodes should be started?
-        "progressTimeout": 2000 // How long should be the interval of the progress reports
-    });
-
-    //Download video and save as MP3 file
-    YD.download(youtube_parser(data.url));
-
-    YD.on("finished", function (err, data) {
-        return sendBack(res, 'OK', '', {
-            videoTitle: data.videoTitle
+    try {
+        var YD = new YoutubeMp3Downloader({
+            "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
+            "outputPath": "./filesUploaded", // Where should the downloaded and encoded files be stored?
+            "youtubeVideoQuality": "highest", // What video quality should be used?
+            "queueParallelism": 2, // How many parallel downloads/encodes should be started?
+            "progressTimeout": 2000 // How long should be the interval of the progress reports
         });
-        //console.log(JSON.stringify(data));
-    });
 
-    YD.on("error", function (error) {
+        //Download video and save as MP3 file
+        YD.download(youtube_parser(data.url));
+
+        YD.on("finished", function (err, data) {
+            return sendBack(res, 'OK', '', {
+                videoTitle: data.videoTitle
+            });
+            //console.log(JSON.stringify(data));
+        });
+
+        YD.on("error", function (error) {
+            res.end('ERROR');
+            console.log(error);
+        });
+
+        YD.on("progress", function (progress) {
+            log('Emitting' + progress.progress.percentage);
+            io.emit('progressing', {
+                progreso: parseInt(progress.progress.percentage)
+            });
+            log(formatearFloat(progress.progress.percentage, 2) + '%');
+            //        console.log(JSON.stringify(progress));
+        });
+    } catch (err) {
         res.end('ERROR');
-        console.log(error);
-    });
-
-    YD.on("progress", function (progress) {
-        log('Emitting' + progress.progress.percentage);
-        io.emit('progressing', {
-            progreso: parseInt(progress.progress.percentage)
-        });
-        log(formatearFloat(progress.progress.percentage, 2) + '%');
-        //        console.log(JSON.stringify(progress));
-    });
+    }
 }
-
 
 function youtube_parser(url) {
     var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
     var match = url.match(regExp);
     return (match && match[7].length == 11) ? match[7] : false;
+}
+
+function convertToMp4(req, res, data) {
+    var videoPath = data.videoPath;
+    var videoName = data.videoName;
+    const spawn = require('child_process').spawn;
+    const ffmpeg = spawn('ffmpeg', ['-i', '/var/www/pablonavarroBIZ/nodeServer/' + videoPath, '-strict', '-2', '/var/www/pablonavarroBIZ/nodeServer/' + videoName, '-y']);
+    ffmpeg.stderr.on('data', (data) => {
+        console.log(`${data}`);
+        io.emit('converting', {
+            filesize: `${data}`;
+        });
+    });
+    ffmpeg.on('close', (code) => {
+        res.end('OK')
+    });
 }
 
 // Funcion para saber si se esta accediendo desde el host del blog

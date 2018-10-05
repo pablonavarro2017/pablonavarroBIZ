@@ -63,6 +63,8 @@ function procesarApi(req, res) {
                     return renameDir(req, res, data);
                 case "/getAudioStream":
                     return getAudioStream(req, res, data);
+                case "/convertToMp4":
+                    return getAudioStream(req, res, data);
                 default:
                     return res.end("ERROR API POST: " + JSON.stringify(data));
             }
@@ -93,21 +95,4 @@ function procesarArchivo(req, res) {
         return notFound(req, res);
     }
 }
-//server io
-//io.on('connection', function (socket) {
-//    socket.emit('Manda SERVER', {
-//        Soy: 'el server'
-//    });
-//    socket.on('Manda Cliente', function (data) {
-//        console.log(data);
-//    });
-//});
 
-//cliente io
-//var socket = io();
-//socket.on('Manda SERVER', function (data) {
-//    log(data);
-//    socket.emit('Manda Cliente', {
-//        Soy: 'el Cliente'
-//    });
-//});
