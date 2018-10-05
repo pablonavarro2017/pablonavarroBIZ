@@ -6,6 +6,8 @@ app.controller("audioStreamer", function (Upload, $sce, $window, $scope, $http, 
 
     s.getAudioStream = function (url) {
         rs.progreso = 0;
+        rs.classProgress = 'p0';
+        rs.progressing = true;
         rs.solicitudPost("/getAudioStream", {
             url: url
         }, function (data) {
@@ -24,9 +26,9 @@ app.controller("audioStreamer", function (Upload, $sce, $window, $scope, $http, 
     //cliente io
     var socket = io();
     socket.on('progressing', function (data) {
+        rs.progreso = data.progreso;
         rs.classProgress = data.progreso > 50 ? 'p' + data.progreso + ' over50' : 'p' + data.progreso;
         rs.progressing = true;
-        rs.progreso = data.progreso;
     });
 
 });

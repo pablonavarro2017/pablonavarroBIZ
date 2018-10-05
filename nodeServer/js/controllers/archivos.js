@@ -644,6 +644,9 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
 
     s.getAudioStream = function (url) {
         rs.cargarPopup('');
+        rs.progreso = 0;
+        rs.classProgress = 'p0';
+        rs.progressing = true;
         rs.solicitudPost("/getAudioStream", {
             url: url
         }, function (data) {

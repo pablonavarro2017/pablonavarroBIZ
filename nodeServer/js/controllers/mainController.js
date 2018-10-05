@@ -27,6 +27,7 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
             fnError(data);
         }).finally(function () {
             rs.requestCount--;
+            rs.progressing = false;
             //            log('Requests Pendientes: ' + $scope.requestCount);
         });
     }
