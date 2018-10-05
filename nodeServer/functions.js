@@ -425,7 +425,7 @@ function convertToMp4(req, res, data) {
     var videoName = data.videoName;
     const spawn = require('child_process').spawn;
 
-    var line = 'ffmpeg -i /var/www/pablonavarroBIZ/nodeServer/' + videoPath + ' -strict -2 /var/www/pablonavarroBIZ/nodeServer/filesUploaded/' + videoName + ' y';
+    var line = 'ffmpeg -i /var/www/pablonavarroBIZ/nodeServer/' + videoPath + ' -strict -2 /var/www/pablonavarroBIZ/nodeServer/filesUploaded/' + videoName + ' -y';
     log(line);
     const ffmpeg = spawn(line);
     ffmpeg.stderr.on('data', (data) => {
