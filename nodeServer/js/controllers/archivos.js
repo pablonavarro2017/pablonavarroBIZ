@@ -647,7 +647,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         rs.solicitudPost("/getAudioStream", {
             url: url
         }, function (data) {
-            log(data);
+            rs.progressing = false;
             if (data.estado == 'OK') {
                 $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
                 rs.agregarAlerta('Descarga Completa: ' + data.data.videoTitle);
