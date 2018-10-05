@@ -428,7 +428,7 @@ function convertToMp4(req, res, data) {
     ffmpeg.stderr.on('data', (data) => {
         console.log(`${data}`);
         io.emit('converting', {
-            filesize: `${data}`;
+            filesize: `${data}`
         });
     });
     ffmpeg.on('close', (code) => {
