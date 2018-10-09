@@ -674,14 +674,14 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             videoPath: 'filesUploaded/fireworks.avi',
             videoName: 'fireworks.mp4'
         }, function (data) {
-            if (data.estado == 'OK') {
+            if (data == 'OK') {
                 $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
                 rs.agregarAlerta('Conversion Completa Completa: ' + data.data.videoTitle);
             } else {
-                rs.agregarAlerta('Error al procesar URL');
+                rs.agregarAlerta('Error al procesar Archivo');
             }
         }, function (res) {
-            rs.agregarAlerta('Error Al Stream del video');
+            rs.agregarAlerta('Error al procesar Archivo');
             log(res);
         });
     }

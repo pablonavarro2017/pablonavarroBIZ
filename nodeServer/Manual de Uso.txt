@@ -81,6 +81,7 @@ Pasos para montar el sistema:
      - node server.js : inicia la página web
  
 ** Actualizar sitio principal
+    ssh -i 'C:\Users\Pablo Navarro\Google Drive\AWS\PAIRLINUX.pem' ubuntu@34.220.227.220
     sudo kill `sudo lsof -t -i:8081`
     sudo rm -Rf /var/www/pablonavarroBIZ
     cd /var/www/

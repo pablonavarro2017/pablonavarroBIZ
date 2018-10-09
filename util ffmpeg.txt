@@ -1,0 +1,6 @@
+ffmpeg - i /var/www/pablonavarroBIZ/nodeServer/filesUploaded/fireworks.avi -f mp4 -vcodec libx264 -preset fast -profile:v main -acodec aac /var/www/pablonavarroBIZ/nodeServer/filesUploaded/fireworks.mp4 -hide_banner
+
+
+ffmpeg -i /var/www/pablonavarroBIZ/nodeServer/filesUploaded/fireworks.avi -strict -2 /var/www/pablonavarroBIZ/nodeServer/filesUploaded/fireworks.mp4
+
+ ffmpeg -i /var/www/pablonavarroBIZ/nodeServer/filesUploaded/fireworks.avi -strict -2 /var/www/pablonavarroBIZ/nodeServer/filesUploaded/fireworks.mp4 -y
