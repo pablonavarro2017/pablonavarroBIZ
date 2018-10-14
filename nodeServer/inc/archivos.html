@@ -56,7 +56,7 @@
 
                     <!--Texto-->
                     <i ng-show="a.ext=='txt'||a.ext=='html'||a.ext=='php'||a.ext=='js'" class="fa fa-pencil f14 paddingIzqDer8 pointer" title="Ver/Editar" ng-click="abrirTexto(a)"></i>
-                    <i class="fa fa-clock-o" title="Ver/Editar" ng-click="convertToMp4()"></i>
+                    <i ng-show="a.ext=='avi'" class="fa fa-gavel paddingIzqDer8 pointer" title="Convertir a MP4" ng-click="convertToMp4(a)"></i>
 
                     <!--Video Mp4-->
                     <i ng-show="a.ext=='mp4' && a.playingVideo===false" class="fa fa-play-circle f14 paddingDer pointer" title="Reproducir" ng-click='playVideo(a)'></i>

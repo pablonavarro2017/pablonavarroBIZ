@@ -671,12 +671,12 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
 
     s.convertToMp4 = function (url) {
         rs.solicitudPost("/convertToMp4", {
-            videoPath: 'filesUploaded/fireworks.avi',
-            videoName: 'fireworks.mp4'
+            videoPath: ($scope.carpetaActual.urlActual + '/' +url.nombre).substring(2),
+            videoName: url.nombre
         }, function (data) {
             if (data == 'OK') {
                 $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
-                rs.agregarAlerta('Conversion Completa Completa: ' + data.data.videoTitle);
+                rs.agregarAlerta('Conversion Completa Completa');
             } else {
                 rs.agregarAlerta('Error al procesar Archivo');
             }

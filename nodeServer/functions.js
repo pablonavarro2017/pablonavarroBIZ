@@ -424,7 +424,11 @@ function convertToMp4(req, res, data) {
     var videoPath = data.videoPath;
     var videoName = data.videoName;
     const spawn = require('child_process').spawn;
-    const ffmpeg = spawn('ffmpeg', ['-i', '/var/www/pablonavarroBIZ/nodeServer/' + videoPath, '-strict', '-2', '/var/www/pablonavarroBIZ/nodeServer/filesUploaded/' + videoName, '-y']);
+    if (process.platform == 'win32') {
+        var ffmpeg = spawn('C:/xampp/htdocs/sandbox/ffmpeg/bin/ffmpeg.exe', ['-i', 'C:/xampp/htdocs/sandbox/pablonavarro.biz/nodeServer/' + videoPath, '-strict', '-2', 'C:/xampp/htdocs/sandbox/pablonavarro.biz/nodeServer/filesUploaded/' + getFileNameOnly(videoName) + '.mp4', '-y']);
+    } else {
+        var ffmpeg = spawn('ffmpeg', ['-i', '/var/www/pablonavarroBIZ/nodeServer/' + videoPath, '-strict', '-2', '/var/www/pablonavarroBIZ/nodeServer/filesUploaded/' + videoName, '-y']);
+    }
     ffmpeg.stderr.on('data', (data) => {
         console.log(`${data}`);
         io.emit('converting', {
@@ -434,6 +438,13 @@ function convertToMp4(req, res, data) {
     ffmpeg.on('close', (code) => {
         res.end('OK')
     });
+}
+
+//Get file name without extension
+function getFileNameOnly(fileNameWithExtension) {
+    var fileNameWithoutExtension = fileNameWithExtension.split('.').slice(0, -1).join('.');
+    log(fileNameWithoutExtension)
+    return fileNameWithoutExtension != '' ? fileNameWithoutExtension : fileNameWithExtension;
 }
 
 // Funcion para saber si se esta accediendo desde el host del blog
