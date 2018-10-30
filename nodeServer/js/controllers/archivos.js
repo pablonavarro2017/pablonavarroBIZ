@@ -686,7 +686,8 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         rs.cargarPopup('');
         log(url);
         rs.solicitudPost("/getPlayList", {
-            url: url
+            url: url,
+            path: $scope.carpetaActual.urlActual
         }, function (data) {
             if (data.estado == 'OK') {
                 $scope.mostrarDirectorios($scope.carpetaActual.urlActual);

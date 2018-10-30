@@ -451,6 +451,7 @@ function getFileNameOnly(fileNameWithExtension) {
 function getPlayList(req, res, data) {
     log("/getPlayList:  " + data.url);
     var playListUrl = data.url;
+    var path = data.path;
     ytlist(playListUrl, 'url').then(lista => {
         console.log(lista.data.playlist);
         lista.data.playlist.forEach((url) => {
