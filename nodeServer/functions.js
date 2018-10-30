@@ -460,38 +460,63 @@ function getPlayList(req, res, data) {
     log("/getPlayList:  " + data.url);
     var playListUrl = data.url;
     var path = data.path;
-    log(path);
-    ytlist(playListUrl, 'url').then(lista => {
-        console.log(lista.data.playlist);
 
-        lista.data.playlist.forEach((url) => {
-            try {
-                //Download video and save as MP3 file
-                YD.download(youtube_parser(url));
-//                YD.on("finished", function (err, data) {
-//                    return sendBack(res, 'OK', '', {
-//                        videoTitle: data.videoTitle
-//                    });
-//                    //console.log(JSON.stringify(data));
-//                });
-//                YD.on("error", function (error) {
-//                    res.end('ERROR');
-//                    console.log(error);
-//                });
-//                YD.on("progress", function (progress) {
-//                    log('Emitting - ' + progress.progress.percentage);
-//                    io.emit('progressing', {
-//                        progreso: parseInt(progress.progress.percentage),
-//                    });
-//                    log(formatearFloat(progress.progress.percentage, 2) + '%');
-//                    //        console.log(JSON.stringify(progress));
-//                });
-            } catch (err) {
-                res.end('ERROR');
-            }
-        })
+    ytlist(playListUrl, 'url').then(lista => {
+        var playList = lista.data.playlist;
+        console.log(playList);
+        if (popArray(playList) != undefined) {
+            return getMp3(url, playList);
+        } else {
+            return sendBack(res, 'OK', 'No hay videos en PlayList');
+        }
     });
 
+}
+
+function getMp3(url, playList) {
+    try {
+        //Download video and save as MP3 file
+        YD.download(youtube_parser(url));
+        YD.on("finished", function (err, data) {
+            var url_ = popArray(playList);
+            if (url_ != undefined) {
+                return getMp3(url_, playList);
+            } else {
+                return sendBack(res, 'OK', 'Descargas Finalizadas');
+            }
+            //console.log(JSON.stringify(data));
+        });
+        YD.on("error", function (error) {
+            //res.end('ERROR');
+            console.log(error);
+            var url_ = popArray(playList);
+            if (url_ != undefined) {
+                return getMp3(url_, playList);
+            } else {
+                return sendBack(res, 'OK', 'Descargas Finalizadas');
+            }
+        });
+        YD.on("progress", function (progress) {
+            log('Emitting - ' + progress.progress.percentage);
+            io.emit('progressing', {
+                progreso: parseInt(progress.progress.percentage),
+            });
+            log(formatearFloat(progress.progress.percentage, 2) + '%');
+            //        console.log(JSON.stringify(progress));
+        });
+    } catch (err) {
+        res.end('ERROR');
+    }
+}
+
+function popArray(array) {
+    var obj = undefined;
+    if (array[0] != undefined) {
+        obj = array[0];
+        array.splice(0, 1);
+        return obj;
+    }
+    return obj;
 }
 
 // Funcion para saber si se esta accediendo desde el host del blog
