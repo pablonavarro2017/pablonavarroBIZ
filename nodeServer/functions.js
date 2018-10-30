@@ -448,6 +448,14 @@ function getFileNameOnly(fileNameWithExtension) {
 }
 
 //Funcion para obtener canciones de una lista de reproduccion de youtube
+const YD = new YoutubeMp3Downloader({
+    "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
+    "outputPath": path, // Where should the downloaded and encoded files be stored?
+    "youtubeVideoQuality": "highest", // What video quality should be used?
+    "queueParallelism": 2, // How many parallel downloads/encodes should be started?
+    "progressTimeout": 2000 // How long should be the interval of the progress reports
+});
+
 function getPlayList(req, res, data) {
     log("/getPlayList:  " + data.url);
     var playListUrl = data.url;
@@ -455,31 +463,21 @@ function getPlayList(req, res, data) {
     log(path);
     ytlist(playListUrl, 'url').then(lista => {
         console.log(lista.data.playlist);
+
         lista.data.playlist.forEach((url) => {
             try {
-                var YD = new YoutubeMp3Downloader({
-                    "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
-                    "outputPath": path, // Where should the downloaded and encoded files be stored?
-                    "youtubeVideoQuality": "highest", // What video quality should be used?
-                    "queueParallelism": 2, // How many parallel downloads/encodes should be started?
-                    "progressTimeout": 2000 // How long should be the interval of the progress reports
-                });
-
                 //Download video and save as MP3 file
                 YD.download(youtube_parser(url));
-
                 YD.on("finished", function (err, data) {
                     return sendBack(res, 'OK', '', {
                         videoTitle: data.videoTitle
                     });
                     //console.log(JSON.stringify(data));
                 });
-
                 YD.on("error", function (error) {
                     res.end('ERROR');
                     console.log(error);
                 });
-
                 YD.on("progress", function (progress) {
                     log('Emitting - ' + progress.progress.percentage);
                     io.emit('progressing', {
