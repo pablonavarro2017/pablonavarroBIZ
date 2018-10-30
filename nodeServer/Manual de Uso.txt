@@ -82,11 +82,13 @@ Pasos para montar el sistema:
  
 ** Actualizar sitio principal
     ssh -i 'C:\Users\Pablo Navarro\Google Drive\AWS\PAIRLINUX.pem' ubuntu@34.220.227.220
+    
     sudo kill `sudo lsof -t -i:8081`
     sudo rm -Rf /var/www/pablonavarroBIZ
     cd /var/www/
     sudo git clone https://github.com/pablonavarro2017/pablonavarroBIZ.git
     cd /var/www/pablonavarroBIZ/nodeServer
+    sudo node server.js
     
     sudo nohup node server.js &
     sudo rm nohup.out 

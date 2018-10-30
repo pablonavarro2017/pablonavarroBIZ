@@ -468,24 +468,24 @@ function getPlayList(req, res, data) {
             try {
                 //Download video and save as MP3 file
                 YD.download(youtube_parser(url));
-                YD.on("finished", function (err, data) {
-                    return sendBack(res, 'OK', '', {
-                        videoTitle: data.videoTitle
-                    });
-                    //console.log(JSON.stringify(data));
-                });
-                YD.on("error", function (error) {
-                    res.end('ERROR');
-                    console.log(error);
-                });
-                YD.on("progress", function (progress) {
-                    log('Emitting - ' + progress.progress.percentage);
-                    io.emit('progressing', {
-                        progreso: parseInt(progress.progress.percentage),
-                    });
-                    log(formatearFloat(progress.progress.percentage, 2) + '%');
-                    //        console.log(JSON.stringify(progress));
-                });
+//                YD.on("finished", function (err, data) {
+//                    return sendBack(res, 'OK', '', {
+//                        videoTitle: data.videoTitle
+//                    });
+//                    //console.log(JSON.stringify(data));
+//                });
+//                YD.on("error", function (error) {
+//                    res.end('ERROR');
+//                    console.log(error);
+//                });
+//                YD.on("progress", function (progress) {
+//                    log('Emitting - ' + progress.progress.percentage);
+//                    io.emit('progressing', {
+//                        progreso: parseInt(progress.progress.percentage),
+//                    });
+//                    log(formatearFloat(progress.progress.percentage, 2) + '%');
+//                    //        console.log(JSON.stringify(progress));
+//                });
             } catch (err) {
                 res.end('ERROR');
             }

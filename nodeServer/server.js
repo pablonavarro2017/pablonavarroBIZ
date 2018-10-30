@@ -1,11 +1,11 @@
 var http = require("http"); //Crea servidor
 var fs = require('fs'); //Acceder al file system
-eval(fs.readFileSync('functions.js') + '');
 var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
 var rimraf = require('rimraf');
 var YoutubeMp3Downloader = require("youtube-mp3-downloader"); // Descarga audio de video en youtube
 const ytlist = require('youtube-playlist'); //Obtener listas de reproduccion de youtube.
+eval(fs.readFileSync('functions.js') + '');
 
 var port = 8081; // 80;
 var serverUrl = "127.0.0.1";
