@@ -2,7 +2,10 @@
     <div class="title">Sistema de Archivos</div>
     <div class="fullPadding aIzq">
         <div class="paddingDer marginArriba sombra1 aDer flexFila jcSBet">
-            <div><span ng-click="preGetYT()" title="Descargar audio de Youtube Video" class="pointer relative fullPaddingMini"><i class="fa fa-youtube absolute paddingIzq"></i><i class="fa fa-headphones f10 absolute paddingArriba5"></i></span></div>
+            <div class="inlineFlex">
+                <div class="marginDer"><span ng-click="preGetYT()" title="Descargar audio de Youtube Video" class="pointer relative fullPaddingMini"><i class="fa fa-youtube absolute paddingIzq"></i><i class="fa fa-headphones f10 absolute paddingArriba5"></i></span></div>
+                <div style="padding-left: 25px"><span ng-click="preGetListYT()" title="Descargar Lista reproducción de Youtube Video" class="pointer relative fullPaddingMini"><i class="fa fa-youtube absolute paddingIzq"></i><i class="fa fa-list f10 absolute paddingArriba5"></i></span></div>
+            </div>
             <form name="upload_form" class="formFile">
                 <label for="file" title="Subir Archivos" class="pointer"><i class="fa fa-upload f16" ></i></label>
                 <input id="file" style="display: none" type="file" ngf-select ng-model="file" name="file" ngf-max-size="100MB" ng-change="subirArchivos()" multiple/>
@@ -45,7 +48,7 @@
                     </div>
 
                     <!--Mp3-->
-                    <div ng-show="a.ext=='mp3'" class="flexFila fNoWrap">
+                    <div ng-show="a.ext=='mp3'||a.ext=='ogg'" class="flexFila fNoWrap">
                         <i class="fa fa-play f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack!=a.nombre || audio.paused" title="Reproducir" ng-click="player(a.nombre,'play')"></i>
                         <i class="fa fa-pause f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack==a.nombre && !audio.paused" title="Pausar" ng-click="player(a.nombre,'pause')"></i>
                         <i class="fa fa-stop f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack==a.nombre" title="Parar" ng-click="player(a.nombre,'stop')"></i>

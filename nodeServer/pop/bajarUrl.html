@@ -8,15 +8,15 @@
 -->
 <div class="fondoPopup"></div>
 <div class="ventana" style="min-width: 70%">
-    <div class="title">Bajar Audio de YouTube
+    <div class="title">Bajar {{mode=="mp3"?'Audio':'Lista de Reproducción'}} de YouTube
         <div ng-click="cargarPopup('')"><span>X</span></div>
     </div>
     <div class="contenido">
         <div class="formContainer maxH100pc ofAuto">
-            <form ng-submit='sa.getAudioStream(url)'>
+            <form ng-submit='mode=="mp3"?sa.getAudioStream(url):sa.getPlayList(url)'>
                 <div class="flexFila jcSAr fWrap contenido">
                     <div class="flexFila fullWidth aiCenter">
-                        <span>Url:&nbsp;</span><input id="idURL" onclick="this.select()" type="text" required ng-model="url" style="border: #ccc solid;" class="marginDer fg1">
+                        <span>Url:&nbsp;</span><input id="idURL" type="text" required ng-model="url" style="border: #ccc solid;" class="marginDer fg1">
                     </div>
                 </div>
                 <div class="botones">

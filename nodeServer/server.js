@@ -5,10 +5,11 @@ var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
 var rimraf = require('rimraf');
 var YoutubeMp3Downloader = require("youtube-mp3-downloader"); // Descarga audio de video en youtube
+const ytlist = require('youtube-playlist'); //Obtener listas de reproduccion de youtube.
 
 var port = 8081; // 80;
 var serverUrl = "127.0.0.1";
-const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'php', 'apk', 'conf', 'other']; //extensiones de archivos permitidos para subir
+const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'ogg', 'png', 'ico', 'jpg', 'jpeg', 'gif', 'pdf', 'docx', 'doc', 'xlsx', 'pptx', 'txt', 'mpp', 'html', 'css', 'js', 'php', 'apk', 'conf', 'other']; //extensiones de archivos permitidos para subir
 
 //Crea el servidor y procesa las solicitudes de archivos o apis
 var server = http.createServer(function (req, res) {
@@ -65,6 +66,8 @@ function procesarApi(req, res) {
                     return getAudioStream(req, res, data);
                 case "/convertToMp4":
                     return convertToMp4(req, res, data);
+                case "/getPlayList":
+                    return getPlayList(req, res, data);
                 default:
                     return res.end("ERROR API POST: " + JSON.stringify(data));
             }
@@ -87,7 +90,7 @@ function procesarArchivo(req, res) {
         return getFile(req, res, "text/html");
     } else if (req.url.substring(0, 4) == "/pop") {
         return getFile(req, res, "text/html");
-    } else if (["mp3", "mp4", "avi", "jpg", "png", 'gif'].indexOf(getExtension(req.url)) >= 0) {
+    } else if (["mp3", "ogg", "mp4", "avi", "jpg", "png", 'gif'].indexOf(getExtension(req.url)) >= 0) {
         return returnFile(req, res);
     } else if (req.url == "/") {
         return getFile(req, res, "text/html");
@@ -96,3 +99,7 @@ function procesarArchivo(req, res) {
     }
 }
 
+var url = 'https://www.youtube.com/playlist?list=PLTSvkCk0p8waD7MKVS5Ctje0_Sw_Y-Tnx';
+ytlist(url, 'url').then(res => {
+    console.log(res);
+});

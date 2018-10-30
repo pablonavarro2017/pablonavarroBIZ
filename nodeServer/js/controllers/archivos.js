@@ -95,6 +95,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             nombreFolder: currentFolderName.substr(currentFolderName.lastIndexOf('/') + 1),
             url: currentFolderName
         });
+        s.listaReproduccion = [];
         $scope.carpetaActual.urlActual = currentFolderName;
         $scope.carpetaActual.nombresArchivosAMostrar = [];
         $scope.carpetaActual.nombresFoldersAMostrar = [];
@@ -128,14 +129,18 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                         playingVideo: false,
                         subOption: false
                     }
+                    if (ext == 'mp3' || ext == 'ogg') {
+                        s.listaReproduccion.push(arch.nombre);
+                    }
                     $scope.carpetaActual.nombresArchivosAMostrar.push(arch);
                 }
             })
         });
+        log(s.listaReproduccion);
         setIcon();
         s.playingVideo = false;
     }
-
+    s.listaReproduccion = [];
     $scope.openFile = function (fileName) {
         $rootScope.solicitudPost("/getFile", {
             rutaArchivo: $scope.carpetaActual.urlActual + '/' + fileName
@@ -185,13 +190,19 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         } else if (mode == 'play') {
             $scope.stopVideo();
             if (!$scope.audio || $scope.audio.src.search('undefined') > 0) { // primera vez reproduciendo o se había parado(stop) la canción anterior
-                $scope.audio = new Audio('./filesUploaded/' + audioName);
+                $scope.audio = new Audio($scope.carpetaActual.urlActual + '/' + audioName);
             } else if ($scope.audio.src.search(audioName) < 0) { // Si se va a reproducir una canción en Pausa
                 $scope.audio.pause();
                 $scope.audio.currentTime = 0;
-                $scope.audio = new Audio('./filesUploaded/' + audioName);
+                $scope.audio = new Audio($scope.carpetaActual.urlActual + '/' + audioName);
             }
             $scope.audio.play();
+            $scope.audio.onended = function () {
+                var songIndex = s.listaReproduccion.indexOf(audioName);
+                if (songIndex != s.listaReproduccion.length - 1) {
+                    $scope.player(s.listaReproduccion[songIndex + 1], 'play');
+                }
+            };
             $scope.audio.currentTrack = audioName;
         }
     }
@@ -202,6 +213,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         xlsx: 'file-excel-o',
         pptx: 'file-powerpoint-o',
         mp3: 'music',
+        ogg: 'music',
         avi: 'video-camera',
         mp4: 'video-camera',
         mkv: 'video-camera',
@@ -639,6 +651,14 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     $scope.preGetYT = function () {
         s.nombreCarpeta = ""
         rs.cargarPopup('bajarUrl');
+        rs.mode = 'mp3';
+        focus('idURL');
+    }
+
+    $scope.preGetListYT = function () {
+        s.nombreCarpeta = ""
+        rs.cargarPopup('bajarUrl');
+        rs.mode = 'list';
         focus('idURL');
     }
 
@@ -662,6 +682,23 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             log(res);
         });
     }
+    s.getPlayList = function (url) {
+        rs.cargarPopup('');
+        log(url);
+        rs.solicitudPost("/getPlayList", {
+            url: url
+        }, function (data) {
+            if (data.estado == 'OK') {
+                $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
+                rs.agregarAlerta('Descarga Completa: ' + data.data.videoTitle);
+            } else {
+                rs.agregarAlerta('Error al procesar URL');
+            }
+        }, function (res) {
+            rs.agregarAlerta('Error Al Bajar PlayList');
+            log(res);
+        });
+    }
     var socket = io();
     socket.on('progressing', function (data) {
         rs.classProgress = data.progreso > 50 ? 'p' + data.progreso + ' over50' : 'p' + data.progreso;
@@ -671,7 +708,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
 
     s.convertToMp4 = function (url) {
         rs.solicitudPost("/convertToMp4", {
-            videoPath: ($scope.carpetaActual.urlActual + '/' +url.nombre).substring(2),
+            videoPath: ($scope.carpetaActual.urlActual + '/' + url.nombre).substring(2),
             videoName: url.nombre
         }, function (data) {
             if (data == 'OK') {

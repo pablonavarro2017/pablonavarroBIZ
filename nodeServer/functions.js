@@ -10,7 +10,7 @@ function getDirectories(req, res, data) {
     }
 }
 //Funcion para obtnener el contenido plano de un archivo
-function getPlainText(req, res, data) {
+function getPlainT(req, res, data) {
     var rutaArchivo = data.rutaArchivo;
     log("/getPlainText " + rutaArchivo);
     if (validarRuta(rutaArchivo)) {
@@ -445,6 +445,53 @@ function getFileNameOnly(fileNameWithExtension) {
     var fileNameWithoutExtension = fileNameWithExtension.split('.').slice(0, -1).join('.');
     log(fileNameWithoutExtension)
     return fileNameWithoutExtension != '' ? fileNameWithoutExtension : fileNameWithExtension;
+}
+
+//Funcion para obtener canciones de una lista de reproduccion de youtube
+function getPlayList(req, res, data) {
+    log("/getPlayList:  " + data.url);
+    var playListUrl = data.url;
+    ytlist(playListUrl, 'url').then(lista => {
+        console.log(lista.data.playlist);
+        lista.data.playlist.forEach((url) => {
+            try {
+                var YD = new YoutubeMp3Downloader({
+                    "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
+                    "outputPath": "./filesUploaded", // Where should the downloaded and encoded files be stored?
+                    "youtubeVideoQuality": "highest", // What video quality should be used?
+                    "queueParallelism": 50, // How many parallel downloads/encodes should be started?
+                    "progressTimeout": 2000 // How long should be the interval of the progress reports
+                });
+
+                //Download video and save as MP3 file
+                YD.download(youtube_parser(url));
+
+                YD.on("finished", function (err, data) {
+                    return sendBack(res, 'OK', '', {
+                        videoTitle: data.videoTitle
+                    });
+                    //console.log(JSON.stringify(data));
+                });
+
+                YD.on("error", function (error) {
+                    res.end('ERROR');
+                    console.log(error);
+                });
+
+                YD.on("progress", function (progress) {
+                    log('Emitting' + progress.progress.percentage);
+                    io.emit('progressing', {
+                        progreso: parseInt(progress.progress.percentage),
+                    });
+                    log(formatearFloat(progress.progress.percentage, 2) + '%');
+                    //        console.log(JSON.stringify(progress));
+                });
+            } catch (err) {
+                res.end('ERROR');
+            }
+        })
+    });
+
 }
 
 // Funcion para saber si se esta accediendo desde el host del blog
