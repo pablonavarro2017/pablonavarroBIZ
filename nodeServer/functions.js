@@ -452,15 +452,16 @@ function getPlayList(req, res, data) {
     log("/getPlayList:  " + data.url);
     var playListUrl = data.url;
     var path = data.path;
+    log(path);
     ytlist(playListUrl, 'url').then(lista => {
         console.log(lista.data.playlist);
         lista.data.playlist.forEach((url) => {
             try {
                 var YD = new YoutubeMp3Downloader({
                     "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
-                    "outputPath": "./filesUploaded", // Where should the downloaded and encoded files be stored?
+                    "outputPath": path, // Where should the downloaded and encoded files be stored?
                     "youtubeVideoQuality": "highest", // What video quality should be used?
-                    "queueParallelism": 50, // How many parallel downloads/encodes should be started?
+                    "queueParallelism": 2, // How many parallel downloads/encodes should be started?
                     "progressTimeout": 2000 // How long should be the interval of the progress reports
                 });
 
@@ -480,7 +481,7 @@ function getPlayList(req, res, data) {
                 });
 
                 YD.on("progress", function (progress) {
-                    log('Emitting' + progress.progress.percentage);
+                    log('Emitting - ' + progress.progress.percentage);
                     io.emit('progressing', {
                         progreso: parseInt(progress.progress.percentage),
                     });
