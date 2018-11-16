@@ -15,6 +15,7 @@ const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'ogg', 'png', 'ico', 'jp
 var server = http.createServer(function (req, res) {
     try {
         req.url = decodeURIComponent(req.url);
+        log('INICIO DE LA SOLICITUD ' + req.url);
         if (req.url.substring(0, 4) == "/api") {
             procesarApi(req, res);
         } else {

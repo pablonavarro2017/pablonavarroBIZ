@@ -93,6 +93,8 @@ function mkTextFile(req, res, data) {
 //Función para subir un archivo binario al servidor
 function uploadFile(req, res) {
     var form = new formidable.IncomingForm();
+    //form.maxFieldsSize = 50 * 1024 * 1024; //Limits the amount of memory all fields together
+    //form.maxFileSize = 500 * 1024 * 1024; //Limits the size of uploaded file
     form.parse(req, function (err, fields, files) {
         if (files['file'] && validarRuta(fields.ruta)) {
             var oldpath = files.file.path;
@@ -115,6 +117,7 @@ function uploadFile(req, res) {
             return sendBack(res, 'ERROR', 'Archivo no se cargó al servidor');
         }
     });
+
 }
 
 function tolowercaseExtension(nombreArchivo) {
@@ -464,8 +467,9 @@ function getPlayList(req, res, data) {
     ytlist(playListUrl, 'url').then(lista => {
         var playList = lista.data.playlist;
         console.log(playList);
-        if (popArray(playList) != undefined) {
-            return getMp3(url, playList);
+        var url_ = popArray(playList);
+        if (url_ != undefined) {
+            return getMp3(url_, playList, res);
         } else {
             return sendBack(res, 'OK', 'No hay videos en PlayList');
         }
@@ -473,7 +477,8 @@ function getPlayList(req, res, data) {
 
 }
 
-function getMp3(url, playList) {
+function getMp3(url, playList, res) {
+    log(url);
     try {
         //Download video and save as MP3 file
         YD.download(youtube_parser(url));

@@ -44,6 +44,11 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
         }, function (resp) { //catch error
             rs.agregarAlerta('Error status: ' + resp.status);
+        }, function (evt) {
+            log(evt);
+            var progressPercentage = parseInt(100.0 *
+                evt.loaded / evt.total);
+            $scope.progressf = progressPercentage + '% ';
         }).finally(function () {
             $rootScope.requestCount--;
         });
