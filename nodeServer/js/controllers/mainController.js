@@ -61,18 +61,22 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
                 rs.listaAlerts.splice(rs.listaAlerts.indexOf(alerta), 1);
             }
             rs.listaAlerts.push(alerta);
+            setTimeout(alerta.ocultarAlerta, 8000);
         }
-        setTimeout(alerta.ocultarAlerta, 8000);
 
     };
-    rs.agregarAlerta('archivoxs.lsd', "99%");
 
-    rs.pusBar = function (bar) {
+    rs.pushBar = function (bar) {
         var found = false;
         rs.bars.forEach((b) => {
             if (b.texto = bar.texto) {
                 b.progress = bar.progress;
                 found = true;
+                log('Progreso = ' + b.progress);
+                if (b.progress == "99%") {
+                    log('ocultando BARS');
+                    b.ocultarAlerta();
+                }
             }
         });
         if (found == false) {
