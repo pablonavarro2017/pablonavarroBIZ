@@ -433,7 +433,8 @@ footer * {
     z-index: 20;
 }
 
-.alertContainer .alert {
+.alertContainer .alert,
+.alertContainer .bar {
     position: relative;
     margin-bottom: 15px;
     text-align: left;
@@ -441,7 +442,15 @@ footer * {
     max-height: 100px;
 }
 
-.alertContainer .alert div {
+.alertContainer .bar {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.alertContainer .alert div,
+.alertContainer .bar .msj {
     display: inline-block;
     padding: 8px;
     background: rgb(110, 110, 110);
@@ -688,4 +697,29 @@ footer * {
     .overlay {
         height: 84vh;
     }
+}
+
+.progress {
+    height: 10px;
+    margin-bottom: 2px;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+}
+.progress-bar {
+    float: left;
+    width: 0;
+    height: 100%;
+    font-size: 10px;
+    line-height: 10px;
+    color: #fff;
+    text-align: center;
+    background-color: #337ab7;
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+    -webkit-transition: width .6s ease;
+    -o-transition: width .6s ease;
+    transition: width .6s ease;
 }

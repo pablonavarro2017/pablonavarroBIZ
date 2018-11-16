@@ -45,10 +45,13 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         }, function (resp) { //catch error
             rs.agregarAlerta('Error status: ' + resp.status);
         }, function (evt) {
-            log(evt);
+//            log(evt);
             var progressPercentage = parseInt(100.0 *
-                evt.loaded / evt.total);
-            $scope.progressf = progressPercentage + '% ';
+                evt.loaded / evt.total) + '% ';
+            rs.pusBar({
+                texto: file.name,
+                progress: progressPercentage
+            })
         }).finally(function () {
             $rootScope.requestCount--;
         });
@@ -141,7 +144,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                 }
             })
         });
-        log(s.listaReproduccion);
+//        log(s.listaReproduccion);
         setIcon();
         s.playingVideo = false;
     }
@@ -545,7 +548,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             var dirReader = item.createReader();
             dirReader.readEntries(function (entries) {
                 for (var i = 0; i < entries.length; i++) {
-                    log(i + ' - ' + path + item.name);
+//                    log(i + ' - ' + path + item.name);
                     s.traverseFileTree(entries[i], path + item.name + "/");
                 }
             });
@@ -562,7 +565,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                 carpetas.push(c)
             }
         };
-        log(carpetas);
+//        log(carpetas);
         $rootScope.solicitudPost("/makeMultDirs", {
             dirs: carpetas
         }, function (data) {
@@ -689,7 +692,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
     s.getPlayList = function (url) {
         rs.cargarPopup('');
-        log(url);
+//        log(url);
         rs.solicitudPost("/getPlayList", {
             url: url,
             path: $scope.carpetaActual.urlActual
@@ -745,7 +748,7 @@ app.directive('myDir', function () {
             }
 
             function dropHandler(ev) {
-                console.log('File(s) dropped');
+//                console.log('File(s) dropped');
                 ev.preventDefault();
                 if (ev.dataTransfer.items) {
                     var items = event.dataTransfer.items;
@@ -756,7 +759,7 @@ app.directive('myDir', function () {
 
             function dragLeaveHandler(ev) {
                 ev.preventDefault();
-                log('myDir - LEAVE')
+//                log('myDir - LEAVE')
                 element.removeClass('dragHereOn');
             }
 

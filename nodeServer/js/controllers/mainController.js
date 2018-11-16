@@ -31,36 +31,54 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
             //            log('Requests Pendientes: ' + $scope.requestCount);
         });
     }
-    // Sistema de alertas personalizados
-    rs.listaAlerts = [];
-    rs.ocultarAlerta = function (alerta) {
-        alerta.classAlert = "ocultarAlert";
-    }
-
-
-
     rs.requestCount = 0;
+
+    // Sistema de alertas personalizados
     /* Para mostrar una alerta en la parte inferior en todas las páginas */
     //*********************************************
     // Sistema de alertas personalizados
     rs.listaAlerts = [];
+    rs.bars = [];
     rs.ocultarAlerta = function (alerta) {
         alerta.classAlert = "ocultarAlert";
     }
-    rs.agregarAlerta = function (texto) {
+    rs.agregarAlerta = function (texto, progress) {
         var alerta = {
             texto: texto
         };
-        alerta.eliminarAlerta = function () {
-            rs.listaAlerts.splice(rs.listaAlerts.indexOf(alerta), 1);
-        }
         alerta.ocultarAlerta = function () {
             alerta.classAlert = "ocultarAlert";
             setTimeout(alerta.eliminarAlerta, 1500);
         }
-        setTimeout(alerta.ocultarAlerta, 10000);
-        rs.listaAlerts.push(alerta);
+        if (progress) { //progress bars
+            alerta.progress = progress;
+            alerta.eliminarAlerta = function () {
+                rs.bars.splice(rs.bars.indexOf(alerta), 1);
+            }
+            rs.bars.push(alerta);
+        } else { //alertas comunes
+            alerta.eliminarAlerta = function () {
+                rs.listaAlerts.splice(rs.listaAlerts.indexOf(alerta), 1);
+            }
+            rs.listaAlerts.push(alerta);
+        }
+        setTimeout(alerta.ocultarAlerta, 8000);
+
     };
+    rs.agregarAlerta('archivoxs.lsd', "99%");
+
+    rs.pusBar = function (bar) {
+        var found = false;
+        rs.bars.forEach((b) => {
+            if (b.texto = bar.texto) {
+                b.progress = bar.progress;
+                found = true;
+            }
+        });
+        if (found == false) {
+            rs.agregarAlerta(bar.texto, bar.progress);
+        }
+    }
 
     // ----------------------------------------
     s.fullScreen = function () {
@@ -307,9 +325,9 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
     rs.formatearFecha = function (fecha) {
         return $filter('date')(new Date(fecha), "dd/MM/yyyy hh:mm:ss a", "-0600")
     }
-//    if (isBlog()) {
-//        $location.path("blog");
-//    }
+    //    if (isBlog()) {
+    //        $location.path("blog");
+    //    }
     rs.sa = {}
     rs.openedOptions = false;
     rs.asd = function () {
