@@ -93,8 +93,6 @@ function mkTextFile(req, res, data) {
 //Función para subir un archivo binario al servidor
 function uploadFile(req, res) {
     var form = new formidable.IncomingForm();
-    //form.maxFieldsSize = 50 * 1024 * 1024; //Limits the amount of memory all fields together
-    //form.maxFileSize = 500 * 1024 * 1024; //Limits the size of uploaded file
     form.parse(req, function (err, fields, files) {
         if (files['file'] && validarRuta(fields.ruta)) {
             var oldpath = files.file.path;
@@ -140,6 +138,7 @@ function returnFile(req, res, data) {
             var header = asciiReplace(getFileNameFromURL(url));
             res.setHeader('Content-disposition', 'attachment; filename=' + header.replace(/,/g, "_"));
             res.setHeader('FileName', header);
+            res.setHeader('FileSize', sizeof(content));
             return res.end(content);
         }
     });

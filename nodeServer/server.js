@@ -6,6 +6,7 @@ var rimraf = require('rimraf');
 var YoutubeMp3Downloader = require("youtube-mp3-downloader"); // Descarga audio de video en youtube
 const ytlist = require('youtube-playlist'); //Obtener listas de reproduccion de youtube.
 eval(fs.readFileSync('functions.js') + '');
+var sizeof = require('object-sizeof');
 
 var port = 8081; // 80;
 var serverUrl = "127.0.0.1";
@@ -15,7 +16,6 @@ const extensiones = ['exe', 'mp4', 'avi', 'mkv', 'mp3', 'ogg', 'png', 'ico', 'jp
 var server = http.createServer(function (req, res) {
     try {
         req.url = decodeURIComponent(req.url);
-        log('INICIO DE LA SOLICITUD ' + req.url);
         if (req.url.substring(0, 4) == "/api") {
             procesarApi(req, res);
         } else {

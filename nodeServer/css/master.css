@@ -431,6 +431,7 @@ footer * {
     color: #fff;
     max-width: 50%;
     z-index: 20;
+    min-width: 22%;
 }
 
 .alertContainer .alert,

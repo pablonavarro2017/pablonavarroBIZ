@@ -47,7 +47,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         }, function (evt) {
 //            log(evt);
             var progressPercentage = parseInt(100.0 *
-                evt.loaded / evt.total) + '% ';
+                evt.loaded / evt.total) + '%';
             rs.pushBar({
                 texto: file.name,
                 progress: progressPercentage

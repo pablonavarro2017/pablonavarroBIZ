@@ -15,6 +15,12 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
             }
         }
         var config = {
+            eventHandlers: {
+                progress: function (event) {
+                    console.log("progress");
+                    console.log(event);
+                }
+            },
             headers: {
                 'Content-Type': 'application/json',
                 //                'Content-Type': header ? header : 'text/plain',
@@ -24,6 +30,7 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
         $http.post('/api' + url, data, config).then(function (response) {
             fnExito(response.data, response);
         }, function (data) {
+            log(data);
             fnError(data);
         }).finally(function () {
             rs.requestCount--;
@@ -63,22 +70,22 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
             rs.listaAlerts.push(alerta);
             setTimeout(alerta.ocultarAlerta, 8000);
         }
+        return alerta;
 
     };
 
     rs.pushBar = function (bar) {
-        var found = false;
-        rs.bars.forEach((b) => {
-            if (b.texto = bar.texto) {
+        var found = false
+        for (var i = 0; i < rs.bars.length; i++) {
+            var b = rs.bars[i];
+            if (b.texto == bar.texto) {
                 b.progress = bar.progress;
                 found = true;
-                log('Progreso = ' + b.progress);
-                if (b.progress == "99%") {
-                    log('ocultando BARS');
-                    b.ocultarAlerta();
+                if (b.progress == "100%") {
+                    setTimeout(b.ocultarAlerta, 1200);
                 }
             }
-        });
+        }
         if (found == false) {
             rs.agregarAlerta(bar.texto, bar.progress);
         }
