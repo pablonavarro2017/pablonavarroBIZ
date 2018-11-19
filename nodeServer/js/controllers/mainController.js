@@ -8,24 +8,43 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
     rs.requestCount = 0;
     rs.solicitudPost = function (url, data, fnExito, fnError, header) {
         rs.requestCount++;
+
+        var esBlob = header != undefined ? true : false;
+        if (esBlob == true) {
+            var size = data.size;
+            var fileName = data.fileName;
+            data.size = undefined;
+            data.fileName = undefined;
+        }
+
         var form_data = new FormData();
         if (data && !header) {
             for (var key in data) {
                 form_data.append(key, data[key]);
             }
         }
+
+
         var config = {
+            responseType: header != undefined ? 'blob' : '',
             eventHandlers: {
                 progress: function (event) {
-                    console.log("progress");
-                    console.log(event);
+                    if (esBlob == true) {
+                        rs.pushBar({
+                            texto: 'Descargando: ' + fileName,
+                            progress: parseInt(event.loaded / size * 100),
+                            bytesLoaded: event.loaded,
+                            bytesNotLoaded: 0
+                        })
+                    }
                 }
+                /*load: function (ev) {}, readystatechange: function (ev) {}*/
             },
             headers: {
                 'Content-Type': 'application/json',
                 //                'Content-Type': header ? header : 'text/plain',
-            },
-            responseType: header != undefined ? 'blob' : '',
+            }
+
         }
         $http.post('/api' + url, data, config).then(function (response) {
             fnExito(response.data, response);
@@ -49,26 +68,30 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
     rs.ocultarAlerta = function (alerta) {
         alerta.classAlert = "ocultarAlert";
     }
-    rs.agregarAlerta = function (texto, progress) {
+    rs.agregarAlerta = function (texto, bar) {
         var alerta = {
-            texto: texto
+            texto: texto,
         };
-        alerta.ocultarAlerta = function () {
-            alerta.classAlert = "ocultarAlert";
-            setTimeout(alerta.eliminarAlerta, 1500);
-        }
-        if (progress) { //progress bars
-            alerta.progress = progress;
+        if (typeof (bar) == 'object') {
+            alerta.bytesLoaded = bar.bytesLoaded;
+            alerta.bytesNotLoaded = bar.bytesNotLoaded;
+            alerta.progress = bar.progress;
+
             alerta.eliminarAlerta = function () {
                 rs.bars.splice(rs.bars.indexOf(alerta), 1);
             }
             rs.bars.push(alerta);
+
         } else { //alertas comunes
             alerta.eliminarAlerta = function () {
                 rs.listaAlerts.splice(rs.listaAlerts.indexOf(alerta), 1);
             }
             rs.listaAlerts.push(alerta);
             setTimeout(alerta.ocultarAlerta, 8000);
+        }
+        alerta.ocultarAlerta = function () {
+            alerta.classAlert = "ocultarAlert";
+            setTimeout(alerta.eliminarAlerta, 1500);
         }
         return alerta;
 
@@ -80,15 +103,42 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
             var b = rs.bars[i];
             if (b.texto == bar.texto) {
                 b.progress = bar.progress;
+                b.bytesLoaded = bar.bytesLoaded;
                 found = true;
-                if (b.progress == "100%") {
+                if (b.progress == "100") {
                     setTimeout(b.ocultarAlerta, 1200);
                 }
             }
         }
         if (found == false) {
-            rs.agregarAlerta(bar.texto, bar.progress);
+            if (measuringSpeed == false) {
+                rs.measureSpeed();
+            }
+            rs.agregarAlerta(bar.texto, bar);
         }
+    }
+
+    measuringSpeed = false;
+    rs.measureSpeed = function () {
+        log("creating Interval")
+        rs.measureSpeedInterv = setInterval(function () {
+            measuringSpeed = true;
+            for (var i = 0; i < rs.bars.length; i++) {
+                var b = rs.bars[i];
+                var diferencia = b.bytesLoaded - b.bytesNotLoaded;
+                log("ANTES: " + b.bytesNotLoaded + "  AHORA: " + b.bytesLoaded + "  Diferencia: " + diferencia + " Velocidad: " + diferencia * 10 / 1024 + "KB/Seg");
+                b.bytesNotLoaded = b.bytesLoaded;
+            }
+            if (rs.bars.length == 0) {
+                log("CLEAR INTERVAL")
+                log(typeof (rs.measureSpeedInterv));
+                log(rs.measureSpeedInterv);
+                clearInterval(rs.measureSpeedInterv);
+                measuringSpeed = false;
+            }
+            log("ITERATION ** " + rs.bars.length)
+        }, 100);
+
     }
 
     // ----------------------------------------
@@ -355,4 +405,6 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
 
     document.getElementById('body').style.display = 'flex';
     document.getElementById('navid').style.display = 'flex';
+
+
 });

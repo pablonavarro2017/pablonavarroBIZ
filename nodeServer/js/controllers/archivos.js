@@ -11,7 +11,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             multiple = (s.archivosEnCola > 1 ? true : false);
             if (s.archivosEnCola < 50) {
                 for (a in s.file) {
-                    log(s.file[a]);
+                    //                    log(s.file[a]);
                     s.upload(s.file[a], multiple);
                 }
             } else {
@@ -23,7 +23,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
     $scope.upload = function (file, multiple, url) {
         $rootScope.requestCount++;
-        rs.agregarAlerta('Subiendo Archivo: ' + file.name + " - " + (file.size / 1024 / 1024).toFixed(1) + " MB");
+        //        rs.agregarAlerta('Subiendo Archivo: ' + file.name + " - " + (file.size / 1024 / 1024).toFixed(1) + " MB");
         Upload.upload({
             url: '/api/uploadFile', //webAPI exposed to upload the file
             data: {
@@ -45,12 +45,13 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         }, function (resp) { //catch error
             rs.agregarAlerta('Error status: ' + resp.status);
         }, function (evt) {
-//            log(evt);
+            //            log(evt);
             var progressPercentage = parseInt(100.0 *
-                evt.loaded / evt.total) + '%';
+                evt.loaded / evt.total);
             rs.pushBar({
-                texto: file.name,
-                progress: progressPercentage
+                texto: "Subiendo: " + file.name + " - " + (file.size / 1024 / 1024).toFixed(1) + " MB",
+                progress: progressPercentage,
+                bytes:file.size
             })
         }).finally(function () {
             $rootScope.requestCount--;
@@ -91,7 +92,6 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                 break
             }
             newURls.push(obj);
-
         }
         $scope.URLs = newURls;
         $scope.getFilesNameFromFolder(u.url);
@@ -144,14 +144,16 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                 }
             })
         });
-//        log(s.listaReproduccion);
+        //        log(s.listaReproduccion);
         setIcon();
         s.playingVideo = false;
     }
     s.listaReproduccion = [];
-    $scope.openFile = function (fileName) {
+    $scope.openFile = function (archivo) { //Descargar as Binary
         $rootScope.solicitudPost("/getFile", {
-            rutaArchivo: $scope.carpetaActual.urlActual + '/' + fileName
+            rutaArchivo: $scope.carpetaActual.urlActual + '/' + archivo.nombre,
+            size: archivo.size,
+            fileName: archivo.nombre
         }, function (data, resp) {
             var blob = new Blob([data]);
             saveAs(blob, resp.headers('FileName'));
@@ -548,7 +550,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             var dirReader = item.createReader();
             dirReader.readEntries(function (entries) {
                 for (var i = 0; i < entries.length; i++) {
-//                    log(i + ' - ' + path + item.name);
+                    //                    log(i + ' - ' + path + item.name);
                     s.traverseFileTree(entries[i], path + item.name + "/");
                 }
             });
@@ -565,7 +567,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                 carpetas.push(c)
             }
         };
-//        log(carpetas);
+        //        log(carpetas);
         $rootScope.solicitudPost("/makeMultDirs", {
             dirs: carpetas
         }, function (data) {
@@ -692,7 +694,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
     s.getPlayList = function (url) {
         rs.cargarPopup('');
-//        log(url);
+        //        log(url);
         rs.solicitudPost("/getPlayList", {
             url: url,
             path: $scope.carpetaActual.urlActual
@@ -748,7 +750,7 @@ app.directive('myDir', function () {
             }
 
             function dropHandler(ev) {
-//                console.log('File(s) dropped');
+                //                console.log('File(s) dropped');
                 ev.preventDefault();
                 if (ev.dataTransfer.items) {
                     var items = event.dataTransfer.items;
@@ -759,7 +761,7 @@ app.directive('myDir', function () {
 
             function dragLeaveHandler(ev) {
                 ev.preventDefault();
-//                log('myDir - LEAVE')
+                //                log('myDir - LEAVE')
                 element.removeClass('dragHereOn');
             }
 

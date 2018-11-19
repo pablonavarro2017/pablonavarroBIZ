@@ -10,7 +10,7 @@ function getDirectories(req, res, data) {
     }
 }
 //Funcion para obtnener el contenido plano de un archivo
-function getPlainT(req, res, data) {
+function getPlainText(req, res, data) {
     var rutaArchivo = data.rutaArchivo;
     log("/getPlainText " + rutaArchivo);
     if (validarRuta(rutaArchivo)) {
@@ -303,7 +303,7 @@ function getFileSystem(dir, files_) {
             getFileSystem(name, files_);
         } else {
             var fileSize = elem.size;
-            fileSize /= 1048576;
+//            fileSize /= 1048576;
             files_.files.push({
                 name: name,
                 size: formatearFloat(fileSize)
