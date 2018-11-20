@@ -24,17 +24,26 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
             }
         }
 
-
         var config = {
             responseType: header != undefined ? 'blob' : '',
             eventHandlers: {
-                progress: function (event) {
+                progress: function (event) {//Cada chunk en la transferencia de datos
                     if (esBlob == true) {
                         rs.pushBar({
                             texto: 'Descargando: ' + fileName,
-                            progress: parseInt(event.loaded / size * 100),
-                            bytesLoaded: event.loaded,
-                            bytesNotLoaded: 0
+                            progress: event.loaded,
+                            total: size,
+                            percentage: parseInt(event.loaded / size * 100)
+                        })
+                    }
+                },
+                load: function (ev) { //Fin de la transferencia de datos
+                    if (esBlob == true) {
+                        rs.pushBar({
+                            texto: 'Descargando: ' + fileName,
+                            progress: size,
+                            total: size,
+                            percentage: 100
                         })
                     }
                 }
@@ -72,10 +81,11 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
         var alerta = {
             texto: texto,
         };
-        if (typeof (bar) == 'object') {
-            alerta.bytesLoaded = bar.bytesLoaded;
-            alerta.bytesNotLoaded = bar.bytesNotLoaded;
+        if (typeof (bar) == 'object') { //Progress Bar
+            //log(bar);
+            alerta.percentage = bar.percentage;
             alerta.progress = bar.progress;
+            alerta.total = bar.total;
 
             alerta.eliminarAlerta = function () {
                 rs.bars.splice(rs.bars.indexOf(alerta), 1);
@@ -103,42 +113,17 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
             var b = rs.bars[i];
             if (b.texto == bar.texto) {
                 b.progress = bar.progress;
-                b.bytesLoaded = bar.bytesLoaded;
+                b.total = bar.total;
+                b.percentage = bar.percentage;
                 found = true;
-                if (b.progress == "100") {
+                if (b.percentage == "100") {
                     setTimeout(b.ocultarAlerta, 1200);
                 }
             }
         }
         if (found == false) {
-            if (measuringSpeed == false) {
-                rs.measureSpeed();
-            }
             rs.agregarAlerta(bar.texto, bar);
         }
-    }
-
-    measuringSpeed = false;
-    rs.measureSpeed = function () {
-        log("creating Interval")
-        rs.measureSpeedInterv = setInterval(function () {
-            measuringSpeed = true;
-            for (var i = 0; i < rs.bars.length; i++) {
-                var b = rs.bars[i];
-                var diferencia = b.bytesLoaded - b.bytesNotLoaded;
-                log("ANTES: " + b.bytesNotLoaded + "  AHORA: " + b.bytesLoaded + "  Diferencia: " + diferencia + " Velocidad: " + diferencia * 10 / 1024 + "KB/Seg");
-                b.bytesNotLoaded = b.bytesLoaded;
-            }
-            if (rs.bars.length == 0) {
-                log("CLEAR INTERVAL")
-                log(typeof (rs.measureSpeedInterv));
-                log(rs.measureSpeedInterv);
-                clearInterval(rs.measureSpeedInterv);
-                measuringSpeed = false;
-            }
-            log("ITERATION ** " + rs.bars.length)
-        }, 100);
-
     }
 
     // ----------------------------------------

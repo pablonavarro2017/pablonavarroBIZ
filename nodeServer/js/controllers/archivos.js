@@ -50,8 +50,9 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                 evt.loaded / evt.total);
             rs.pushBar({
                 texto: "Subiendo: " + file.name + " - " + (file.size / 1024 / 1024).toFixed(1) + " MB",
-                progress: progressPercentage,
-                bytes:file.size
+                progress: evt.loaded,
+                total: evt.total,
+                percentage: progressPercentage
             })
         }).finally(function () {
             $rootScope.requestCount--;

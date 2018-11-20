@@ -72,8 +72,8 @@
                 <div class="bar" ng-click="b.ocultarAlerta()" ng-class="b.classAlert" ng-repeat="b in bars">
                     <div class="msj">{{b.texto}} </div>
                     <div class="progress">
-                        <div class="progress-bar" style="width:{{b.progress+'%'}}">
-                            {{b.progress}}%
+                        <div class="progress-bar" style="width:{{b.percentage+'%'}}">
+                            {{b.percentage + '%' + ' ' + (b.progress/1024/1024).toFixed(1) + '/' + (b.total/1024/1024).toFixed(1)}}
                         </div>
                     </div>
                 </div>
