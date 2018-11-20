@@ -379,42 +379,49 @@ function notFound(req, res, msg) {
 //Funcion que retorna el audio de un video de youtube
 function getAudioStream(req, res, data) {
     log("/getAudioStream:  " + data.url);
-//    log(data);
-    try {
-        var YD = new YoutubeMp3Downloader({
-            "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
-            "outputPath": data.folderPath, // Where should the downloaded and encoded files be stored?
-            "youtubeVideoQuality": "highest", // What video quality should be used?
-            "queueParallelism": 2, // How many parallel downloads/encodes should be started?
-            "progressTimeout": 2000 // How long should be the interval of the progress reports
-        });
+    //log(data);
+    getYoutubeTitle(youtube_parser(data.url), function (err, title) {
+        if (err) {
+            log("error")
+        } else {
+            try {
+                var YD = new YoutubeMp3Downloader({
+                    "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
+                    "outputPath": data.folderPath, // Where should the downloaded and encoded files be stored?
+                    "youtubeVideoQuality": "highest", // What video quality should be used?
+                    "queueParallelism": 2, // How many parallel downloads/encodes should be started?
+                    "progressTimeout": 2000 // How long should be the interval of the progress reports
+                });
 
-        //Download video and save as MP3 file
-        YD.download(youtube_parser(data.url));
+                //Download video and save as MP3 file
+                YD.download(youtube_parser(data.url));
 
-        YD.on("finished", function (err, data) {
-            return sendBack(res, 'OK', '', {
-                videoTitle: data.videoTitle
-            });
-            //console.log(JSON.stringify(data));
-        });
+                YD.on("finished", function (err, data) {
+                    return sendBack(res, 'OK', '', {
+                        videoTitle: data.videoTitle
+                    });
+                    //console.log(JSON.stringify(data));
+                });
 
-        YD.on("error", function (error) {
-            res.end('ERROR');
-            console.log(error);
-        });
+                YD.on("error", function (error) {
+                    res.end('ERROR');
+                    console.log(error);
+                });
 
-        YD.on("progress", function (progress) {
-            log('Emitting' + progress.progress.percentage);
-            io.to(data.socketId).emit('progressing', { //se lo envia al cliente que lo está pidiendo
-                progreso: parseInt(progress.progress.percentage),
-                videoName: data.videoName ? data.videoName : undefined
-            });
-            log(formatearFloat(progress.progress.percentage, 2) + '%');
-        });
-    } catch (err) {
-        res.end('ERROR');
-    }
+                YD.on("progress", function (progress) {
+                    log('Emitting' + progress.progress.percentage);
+                    io.to(data.socketId).emit('progressing', { //se lo envia al cliente que lo está pidiendo
+                        progreso: parseInt(progress.progress.percentage),
+                        videoName: data.videoName ? data.videoName : title
+                    });
+                    log(formatearFloat(progress.progress.percentage, 2) + '%');
+                });
+            } catch (err) {
+                res.end('ERROR');
+            }
+        }
+        console.log(title) // 'SLCHLD - EMOTIONS (feat. RIPELY) (prod. by GILLA)'
+    });
 }
 
 function youtube_parser(url) {

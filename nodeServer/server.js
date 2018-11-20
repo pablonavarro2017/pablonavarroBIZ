@@ -7,6 +7,7 @@ var YoutubeMp3Downloader = require("youtube-mp3-downloader"); // Descarga audio 
 const ytlist = require('youtube-playlist'); //Obtener listas de reproduccion de youtube.
 eval(fs.readFileSync('functions.js') + '');
 var sizeof = require('object-sizeof');
+var getYoutubeTitle = require('get-youtube-title');
 
 var port = 8081; // 80;
 var serverUrl = "127.0.0.1";
