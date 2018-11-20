@@ -87,8 +87,8 @@ Pasos para montar el sistema:
     sudo rm -Rf /var/www/pablonavarroBIZ
     cd /var/www/
     sudo git clone https://github.com/pablonavarro2017/pablonavarroBIZ.git
-    cd /var/www/pablonavarroBIZ/nodeServer
     sudo chmod -R 777 /var/www/pablonavarroBIZ/nodeServer
+    cd /var/www/pablonavarroBIZ/nodeServer
     sudo node server.js
     
     sudo nohup node server.js &

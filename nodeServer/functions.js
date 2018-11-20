@@ -379,7 +379,7 @@ function notFound(req, res, msg) {
 //Funcion que retorna el audio de un video de youtube
 function getAudioStream(req, res, data) {
     log("/getAudioStream:  " + data.url);
-    log(data);
+//    log(data);
     try {
         var YD = new YoutubeMp3Downloader({
             "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
@@ -406,12 +406,11 @@ function getAudioStream(req, res, data) {
 
         YD.on("progress", function (progress) {
             log('Emitting' + progress.progress.percentage);
-            io.emit('progressing', {
+            io.to(data.socketId).emit('progressing', { //se lo envia al cliente que lo está pidiendo
                 progreso: parseInt(progress.progress.percentage),
                 videoName: data.videoName ? data.videoName : undefined
             });
             log(formatearFloat(progress.progress.percentage, 2) + '%');
-            //        console.log(JSON.stringify(progress));
         });
     } catch (err) {
         res.end('ERROR');

@@ -686,7 +686,8 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         rs.solicitudPost("/getAudioStream", {
             url: url,
             folderPath: s.carpetaActual.urlActual + '/',
-            videoName: videoName ? videoName : undefined
+            videoName: videoName ? videoName : undefined,
+            socketId: rs.socket.id
         }, function (data) {
             rs.progressing = false;
             if (data.estado == 'OK') {
@@ -733,8 +734,8 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             log(res);
         });
     }
-    var socket = io();
-    socket.on('progressing', function (data) {
+    rs.socket = io();
+    rs.socket.on('progressing', function (data) {
         //        rs.classProgress = data.progreso > 50 ? 'p' + data.progreso + ' over50' : 'p' + data.progreso;
         //        rs.progressing = true;
         //        rs.progreso = data.progreso;
@@ -744,6 +745,9 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             total: 100,
             percentage: data.progreso
         })
+    });
+    rs.socket.on('HELLO', function (data) {
+        log(data)
     });
 
     s.convertToMp4 = function (url) {
@@ -762,7 +766,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             log(res);
         });
     }
-    socket.on('converting', function (data) {
+    rs.socket.on('converting', function (data) {
         log(data);
     });
 
