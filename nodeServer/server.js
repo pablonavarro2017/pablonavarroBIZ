@@ -99,8 +99,3 @@ function procesarArchivo(req, res) {
         return notFound(req, res);
     }
 }
-
-var url = 'https://www.youtube.com/playlist?list=PLCA8D9770F94F657F';
-ytlist(url, 'url').then(res => {
-    console.log(res);
-});

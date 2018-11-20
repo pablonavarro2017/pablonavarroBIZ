@@ -27,7 +27,7 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
         var config = {
             responseType: header != undefined ? 'blob' : '',
             eventHandlers: {
-                progress: function (event) {//Cada chunk en la transferencia de datos
+                progress: function (event) { //Cada chunk en la transferencia de datos
                     if (esBlob == true) {
                         rs.pushBar({
                             texto: 'Descargando: ' + fileName,
@@ -44,7 +44,7 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
                             progress: size,
                             total: size,
                             percentage: 100
-                        })
+                        });
                     }
                 }
                 /*load: function (ev) {}, readystatechange: function (ev) {}*/
@@ -81,30 +81,26 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
         var alerta = {
             texto: texto,
         };
+        alerta.ocultarAlerta = function () {
+            alerta.classAlert = "ocultarAlert";
+            setTimeout(alerta.eliminarAlerta, 1500);
+        }
         if (typeof (bar) == 'object') { //Progress Bar
-            //log(bar);
             alerta.percentage = bar.percentage;
             alerta.progress = bar.progress;
             alerta.total = bar.total;
-
             alerta.eliminarAlerta = function () {
                 rs.bars.splice(rs.bars.indexOf(alerta), 1);
             }
             rs.bars.push(alerta);
-
         } else { //alertas comunes
             alerta.eliminarAlerta = function () {
                 rs.listaAlerts.splice(rs.listaAlerts.indexOf(alerta), 1);
             }
             rs.listaAlerts.push(alerta);
-            setTimeout(alerta.ocultarAlerta, 8000);
-        }
-        alerta.ocultarAlerta = function () {
-            alerta.classAlert = "ocultarAlert";
-            setTimeout(alerta.eliminarAlerta, 1500);
+            setTimeout(alerta.ocultarAlerta, 5000);
         }
         return alerta;
-
     };
 
     rs.pushBar = function (bar) {

@@ -674,25 +674,41 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
 
     s.getAudioStream = function (url) {
+        if (typeof (url) == 'object') {
+            var videoName = url['data-title'];
+//            rs.agregarAlerta('Descargando ' + videoName);
+            url = 'https://www.youtube.com/watch?v=' + url['data-video-id'];
+        }
         rs.cargarPopup('');
         rs.progreso = 0;
         rs.classProgress = 'p0';
-        rs.progressing = true;
+//        rs.progressing = true;
         rs.solicitudPost("/getAudioStream", {
-            url: url
+            url: url,
+            folderPath: s.carpetaActual.urlActual + '/',
+            videoName: videoName ? videoName : undefined
         }, function (data) {
             rs.progressing = false;
             if (data.estado == 'OK') {
                 $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
                 rs.agregarAlerta('Descarga Completa: ' + data.data.videoTitle);
             } else {
-                rs.agregarAlerta('Error al procesar URL');
+                if (videoName != undefined) {
+                    rs.agregarAlerta('Error al descargar: ' + videoName + ', comprueba permisos del video');
+                } else {
+                    rs.agregarAlerta('Error al procesar URL del video');
+                }
+            }
+            var newURL = rs.listaEsperaPlayList.shift();
+            if (newURL != undefined) {
+                s.getAudioStream(newURL);
             }
         }, function (res) {
             rs.agregarAlerta('Error Al Stream del video');
             log(res);
         });
     }
+    rs.listaEsperaPlayList = [];
     s.getPlayList = function (url) {
         rs.cargarPopup('');
         //        log(url);
@@ -701,8 +717,12 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             path: $scope.carpetaActual.urlActual
         }, function (data) {
             if (data.estado == 'OK') {
-                $scope.mostrarDirectorios($scope.carpetaActual.urlActual);
-                rs.agregarAlerta('Descarga Completa: ' + data.data.videoTitle);
+                //                log(data.data)
+                rs.listaEsperaPlayList = data.data;
+                var newURL = rs.listaEsperaPlayList.shift();
+                if (newURL != undefined) {
+                    s.getAudioStream(newURL);
+                }
             } else {
                 rs.agregarAlerta('Error al procesar URL');
             }
@@ -713,9 +733,15 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
     var socket = io();
     socket.on('progressing', function (data) {
-        rs.classProgress = data.progreso > 50 ? 'p' + data.progreso + ' over50' : 'p' + data.progreso;
-        rs.progressing = true;
-        rs.progreso = data.progreso;
+//        rs.classProgress = data.progreso > 50 ? 'p' + data.progreso + ' over50' : 'p' + data.progreso;
+//        rs.progressing = true;
+//        rs.progreso = data.progreso;
+        rs.pushBar({
+            texto: 'Descargando: ' + data.videoName,
+            progress: data.progreso,
+            total: 100,
+            percentage: data.progreso
+        })
     });
 
     s.convertToMp4 = function (url) {

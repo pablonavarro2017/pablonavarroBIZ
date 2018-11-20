@@ -4,7 +4,7 @@
         <div class="paddingDer marginArriba sombra1 aDer flexFila jcSBet">
             <div class="inlineFlex">
                 <div class="marginDer"><span ng-click="preGetYT()" title="Descargar audio de Youtube Video" class="pointer relative fullPaddingMini"><i class="fa fa-youtube absolute paddingIzq"></i><i class="fa fa-headphones f10 absolute paddingArriba5"></i></span></div>
-                <div style="padding-left: 25px; display: none"><span ng-click="preGetListYT()" title="Descargar Lista reproducción de Youtube Video" class="pointer relative fullPaddingMini"><i class="fa fa-youtube absolute paddingIzq"></i><i class="fa fa-list f10 absolute paddingArriba5"></i></span></div>
+                <div style="padding-left: 25px;"><span ng-click="preGetListYT()" title="Descargar Lista reproducción de Youtube Video" class="pointer relative fullPaddingMini"><i class="fa fa-youtube absolute paddingIzq"></i><i class="fa fa-list f10 absolute paddingArriba5"></i></span></div>
             </div>
             <form name="upload_form" class="formFile">
                 <label for="file" title="Subir Archivos" class="pointer"><i class="fa fa-upload f16" ></i></label>
@@ -49,26 +49,26 @@
 
                     <!--Mp3-->
                     <div ng-show="a.ext=='mp3'||a.ext=='ogg'" class="flexFila fNoWrap">
-                        <i class="fa fa-play f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack!=a.nombre || audio.paused" title="Reproducir" ng-click="player(a.nombre,'play')"></i>
-                        <i class="fa fa-pause f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack==a.nombre && !audio.paused" title="Pausar" ng-click="player(a.nombre,'pause')"></i>
-                        <i class="fa fa-stop f14 paddingIzqDer8 pointer" ng-show="audio.currentTrack==a.nombre" title="Parar" ng-click="player(a.nombre,'stop')"></i>
+                        <i class="fa fa-play f14 paddingDer3 paddingIzq3 pointer" ng-show="audio.currentTrack!=a.nombre || audio.paused" title="Reproducir" ng-click="player(a.nombre,'play')"></i>
+                        <i class="fa fa-pause f14 paddingDer3 paddingIzq3 pointer" ng-show="audio.currentTrack==a.nombre && !audio.paused" title="Pausar" ng-click="player(a.nombre,'pause')"></i>
+                        <i class="fa fa-stop f14 paddingDer3 paddingIzq3 pointer" ng-show="audio.currentTrack==a.nombre" title="Parar" ng-click="player(a.nombre,'stop')"></i>
                     </div>
 
                     <!--Imágenes-->
                     <i ng-show="a.ext=='jpg'||a.ext=='png'||a.ext=='gif'" class="fa fa-eye f14 paddingIzqDer8 pointer" title="Ver" ng-click="abrirImagen(a.nombre)"></i>
 
                     <!--Texto-->
-                    <i ng-show="a.ext=='txt'||a.ext=='html'||a.ext=='php'||a.ext=='js'" class="fa fa-pencil f14 paddingIzqDer8 pointer" title="Ver/Editar" ng-click="abrirTexto(a)"></i>
-                    <i ng-show="a.ext=='avi'" class="fa fa-gavel paddingIzqDer8 pointer" title="Convertir a MP4" ng-click="convertToMp4(a)"></i>
+                    <i ng-show="a.ext=='txt'||a.ext=='html'||a.ext=='php'||a.ext=='js'" class="fa fa-pencil f14 paddingDer3 paddingIzq3 pointer" title="Ver/Editar" ng-click="abrirTexto(a)"></i>
+                    <i ng-show="a.ext=='avi'" class="fa fa-gavel paddingDer3 paddingIzq3 pointer" title="Convertir a MP4" ng-click="convertToMp4(a)"></i>
 
                     <!--Video Mp4-->
-                    <i ng-show="a.ext=='mp4' && a.playingVideo===false" class="fa fa-play-circle f14 paddingDer pointer" title="Reproducir" ng-click='playVideo(a)'></i>
-                    <i ng-show="a.ext=='mp4' && a.playingVideo===true" class="fa fa-stop-circle f14 paddingDer pointer" title="Parar Video" ng-click='stopVideo(a)'></i>
+                    <i ng-show="a.ext=='mp4' && a.playingVideo===false" class="fa fa-play-circle f14 paddingDer3 paddingIzq3 pointer" title="Reproducir" ng-click='playVideo(a)'></i>
+                    <i ng-show="a.ext=='mp4' && a.playingVideo===true" class="fa fa-stop-circle f14 paddingDer3 paddingIzq3 pointer" title="Parar Video" ng-click='stopVideo(a)'></i>
 
                     <!--Descargar-->
-                    <i class="fa fa-download f14 paddingDer pointer" title="Descargar" ng-click='openFile(a)'></i>
+                    <i class="fa fa-download f14 paddingIzq paddingIzqDer8 pointer" title="Descargar" ng-click='openFile(a)'></i>
                     <!--Borrar y Renombrar-->
-                    <i class="fa fa-ellipsis-v f14 paddingDer pointer" ng-click='openSubOptions(a)'></i>
+                    <i class="fa fa-ellipsis-v f14 paddingDer3 paddingIzq3 pointer" ng-click='openSubOptions(a)'></i>
                     <div ng-if="a.subOption" class="inlineFlex flexColumna moreOptions">
                         <span ng-click='preRenameFile(a)' title="Renombrar"><i class="fa fa-retweet f14 pointer subOption" ></i>Renombrar&nbsp;</span>
                         <span ng-click='preBorrarArchivo(a)' title="Borrar"><i class="fa fa-trash f14 pointer subOption"></i>Borrar</span>

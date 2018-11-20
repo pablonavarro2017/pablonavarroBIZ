@@ -303,7 +303,7 @@ function getFileSystem(dir, files_) {
             getFileSystem(name, files_);
         } else {
             var fileSize = elem.size;
-//            fileSize /= 1048576;
+            //            fileSize /= 1048576;
             files_.files.push({
                 name: name,
                 size: formatearFloat(fileSize)
@@ -379,10 +379,11 @@ function notFound(req, res, msg) {
 //Funcion que retorna el audio de un video de youtube
 function getAudioStream(req, res, data) {
     log("/getAudioStream:  " + data.url);
+    log(data);
     try {
         var YD = new YoutubeMp3Downloader({
             "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
-            "outputPath": "./filesUploaded", // Where should the downloaded and encoded files be stored?
+            "outputPath": data.folderPath, // Where should the downloaded and encoded files be stored?
             "youtubeVideoQuality": "highest", // What video quality should be used?
             "queueParallelism": 2, // How many parallel downloads/encodes should be started?
             "progressTimeout": 2000 // How long should be the interval of the progress reports
@@ -406,7 +407,8 @@ function getAudioStream(req, res, data) {
         YD.on("progress", function (progress) {
             log('Emitting' + progress.progress.percentage);
             io.emit('progressing', {
-                progreso: parseInt(progress.progress.percentage)
+                progreso: parseInt(progress.progress.percentage),
+                videoName: data.videoName ? data.videoName : undefined
             });
             log(formatearFloat(progress.progress.percentage, 2) + '%');
             //        console.log(JSON.stringify(progress));
@@ -449,67 +451,17 @@ function getFileNameOnly(fileNameWithExtension) {
     return fileNameWithoutExtension != '' ? fileNameWithoutExtension : fileNameWithExtension;
 }
 
-//Funcion para obtener canciones de una lista de reproduccion de youtube
-const YD = new YoutubeMp3Downloader({
-    "ffmpegPath": process.platform == 'win32' ? "../../ffmpeg/bin/ffmpeg.exe" : "/usr/bin/ffmpeg", // Where is the FFmpeg binary located?
-    "outputPath": path, // Where should the downloaded and encoded files be stored?
-    "youtubeVideoQuality": "highest", // What video quality should be used?
-    "queueParallelism": 2, // How many parallel downloads/encodes should be started?
-    "progressTimeout": 2000 // How long should be the interval of the progress reports
-});
-
 function getPlayList(req, res, data) {
     log("/getPlayList:  " + data.url);
     var playListUrl = data.url;
     var path = data.path;
-
-    ytlist(playListUrl, 'url').then(lista => {
-        var playList = lista.data.playlist;
-        console.log(playList);
-        var url_ = popArray(playList);
-        if (url_ != undefined) {
-            return getMp3(url_, playList, res);
-        } else {
-            return sendBack(res, 'OK', 'No hay videos en PlayList');
-        }
-    });
-
-}
-
-function getMp3(url, playList, res) {
-    log(url);
     try {
-        //Download video and save as MP3 file
-        YD.download(youtube_parser(url));
-        YD.on("finished", function (err, data) {
-            var url_ = popArray(playList);
-            if (url_ != undefined) {
-                return getMp3(url_, playList);
-            } else {
-                return sendBack(res, 'OK', 'Descargas Finalizadas');
-            }
-            //console.log(JSON.stringify(data));
-        });
-        YD.on("error", function (error) {
-            //res.end('ERROR');
-            console.log(error);
-            var url_ = popArray(playList);
-            if (url_ != undefined) {
-                return getMp3(url_, playList);
-            } else {
-                return sendBack(res, 'OK', 'Descargas Finalizadas');
-            }
-        });
-        YD.on("progress", function (progress) {
-            log('Emitting - ' + progress.progress.percentage);
-            io.emit('progressing', {
-                progreso: parseInt(progress.progress.percentage),
-            });
-            log(formatearFloat(progress.progress.percentage, 2) + '%');
-            //        console.log(JSON.stringify(progress));
+        ytlist(playListUrl, ['name', 'url']).then(lista => {
+            var playList = lista.data.playlist;
+            return sendBack(res, 'OK', '', playList);
         });
     } catch (err) {
-        res.end('ERROR');
+        return sendBack(res, 'ERROR', 'Ocurrió un error fatal');
     }
 }
 
