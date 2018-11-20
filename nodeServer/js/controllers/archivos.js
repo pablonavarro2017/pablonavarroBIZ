@@ -676,13 +676,13 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     s.getAudioStream = function (url) {
         if (typeof (url) == 'object') {
             var videoName = url['data-title'];
-//            rs.agregarAlerta('Descargando ' + videoName);
+            //            rs.agregarAlerta('Descargando ' + videoName);
             url = 'https://www.youtube.com/watch?v=' + url['data-video-id'];
         }
         rs.cargarPopup('');
         rs.progreso = 0;
         rs.classProgress = 'p0';
-//        rs.progressing = true;
+        //        rs.progressing = true;
         rs.solicitudPost("/getAudioStream", {
             url: url,
             folderPath: s.carpetaActual.urlActual + '/',
@@ -711,17 +711,19 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     rs.listaEsperaPlayList = [];
     s.getPlayList = function (url) {
         rs.cargarPopup('');
-        //        log(url);
         rs.solicitudPost("/getPlayList", {
             url: url,
             path: $scope.carpetaActual.urlActual
         }, function (data) {
             if (data.estado == 'OK') {
-                //                log(data.data)
                 rs.listaEsperaPlayList = data.data;
-                var newURL = rs.listaEsperaPlayList.shift();
-                if (newURL != undefined) {
-                    s.getAudioStream(newURL);
+                if (rs.listaEsperaPlayList.length > 25) {
+                    rs.agregarAlerta("No se permite descargar más de 25 canciones");
+                } else {
+                    var newURL = rs.listaEsperaPlayList.shift();
+                    if (newURL != undefined) {
+                        s.getAudioStream(newURL);
+                    }
                 }
             } else {
                 rs.agregarAlerta('Error al procesar URL');
@@ -733,9 +735,9 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
     var socket = io();
     socket.on('progressing', function (data) {
-//        rs.classProgress = data.progreso > 50 ? 'p' + data.progreso + ' over50' : 'p' + data.progreso;
-//        rs.progressing = true;
-//        rs.progreso = data.progreso;
+        //        rs.classProgress = data.progreso > 50 ? 'p' + data.progreso + ' over50' : 'p' + data.progreso;
+        //        rs.progressing = true;
+        //        rs.progreso = data.progreso;
         rs.pushBar({
             texto: 'Descargando: ' + data.videoName,
             progress: data.progreso,
