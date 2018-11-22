@@ -466,7 +466,9 @@ function getPlayList(req, res, data) {
              var playList = lista.data.playlist;
              return sendBack(res, 'OK', '', playList);
          });*/
-        ytpl(data.url, function (err, playlist) {
+        ytpl(data.url, {
+            limit : 150
+        }, function (err, playlist) {
             if (err) {
                 return sendBack(res, 'ERROR', 'Error al obtener datos de PlayList');
             } else {

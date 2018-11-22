@@ -679,7 +679,8 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         };
     }
 
-    s.getAudioStream = function (url) {
+
+    s.getAudioStream = function (url, fromPlaylist) {
         if (typeof (url) == 'object') {
             var videoName = url.title;
             //            rs.agregarAlerta('Descargando ' + videoName);
@@ -687,7 +688,9 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         } else {
             urlFinal = url;
         }
-        rs.cargarPopup('');
+        if (!fromPlaylist) {
+            rs.cargarPopup('');
+        }
         rs.solicitudPost("/getAudioStream", {
             url: urlFinal,
             folderPath: s.carpetaActual.urlActual + '/',
@@ -705,9 +708,11 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                     rs.agregarAlerta('Error al procesar URL del video');
                 }
             }
-            var newURL = rs.playList.items.shift();
-            if (newURL != undefined) {
-                s.getAudioStream(newURL);
+            if (!fromPlaylist) {
+                var newURL = rs.playList.items.shift();
+                if (newURL != undefined) {
+                    s.getAudioStream(newURL);
+                }
             }
         }, function (res) {
             rs.agregarAlerta('Error Al Stream del video');
@@ -753,12 +758,9 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     }
     rs.socket = io();
     rs.socket.on('progressing', function (data) {
-        //        rs.classProgress = data.progreso > 50 ? 'p' + data.progreso + ' over50' : 'p' + data.progreso;
-        //        rs.progressing = true;
-        //        rs.progreso = data.progreso;
         rs.pushBar({
             texto: 'Descargando: ' + data.videoName,
-            source:'YT',
+            source: 'YT',
             progress: data.progreso,
             total: 100,
             percentage: data.progreso
@@ -783,7 +785,22 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     rs.socket.on('converting', function (data) {
         log(data);
     });
-
+    s.removeVideo = function (v) {
+        rs.playList.items.splice(rs.playList.items.indexOf(v), 1);
+        if (rs.playList.items.length == 0) {
+            s.url = '';
+            rs.playList = {
+                empty: true
+            };
+        }
+    };
+    s.getAudioFromPlayList = function (v) {
+        var url = {
+            title: v.title,
+            url_simple: v.url_simple
+        }
+        s.getAudioStream(url,'fromPlayList');
+    };
 });
 app.directive('myDir', function () {
     return {

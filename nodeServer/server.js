@@ -2,12 +2,12 @@ var http = require("http"); //Crea servidor
 var fs = require('fs'); //Acceder al file system
 var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
-var rimraf = require('rimraf');// Borrar carpetas
+var rimraf = require('rimraf'); // Borrar carpetas
 var YoutubeMp3Downloader = require("youtube-mp3-downloader"); // Descarga audio de video en youtube
 var sizeof = require('object-sizeof');
 var getYoutubeTitle = require('get-youtube-title');
-var ytpl = require('ytpl');//Nuevos paquetes que prometen Obtener listas de reproduccion de youtube.
-eval(fs.readFileSync('functions.js') + '');//incluye el archivo de funciones
+var ytpl = require('ytpl'); //Nuevos paquetes que prometen Obtener listas de reproduccion de youtube.
+eval(fs.readFileSync('functions.js') + ''); //incluye el archivo de funciones
 
 //var ytsr = require('ytsr');//Nuevos paquetes que prometen
 
@@ -29,7 +29,6 @@ var server = http.createServer(function (req, res) {
     }
 });
 var io = require('socket.io')(server);
-//var io = require('socket.io')(http);
 // START SERVER
 console.log("Starting web server at " + serverUrl + ":" + port);
 server.listen(port);
@@ -102,11 +101,24 @@ function procesarArchivo(req, res) {
         return notFound(req, res);
     }
 }
+/*
+const ytsr = require('ytsr');
+let filter;
 
-
-
-//PLTSvkCk0p8waD7MKVS5Ctje0_Sw_Y-Tnx
-//ytpl('https://www.youtube.com/playlist?list=PLTSvkCk0p8waD7MKVS5Ctje0_Sw_Y-Tnx', function (err, playlist) {
-//    if (err) throw err;
-//    log(playlist);
-//});
+ytsr.getFilters('https://www.youtube.com/watch?v=uMOt1OshOJ8', function (err, filters) {
+    if (err) throw err;
+    filter = filters.get('Type').find(o => o.name === 'Video');
+    ytsr.getFilters(filter.ref, function (err, filters) {
+        if (err) throw err;
+        //        filter = filters.get('Duration').find(o => o.name.startsWith('Short'));
+        var options = {
+            limit: 5,
+            nextpageRef: filter.ref,
+        }
+        ytsr(null, options, function (err, searchResults) {
+            if (err) throw err;
+            log(searchResults);
+        });
+    });
+});
+*/

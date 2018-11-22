@@ -239,11 +239,23 @@
 .basuraIcon {
     margin-left: 6px;
     cursor: pointer;
+    white-space: nowrap;
+}
+
+.basuraIcon i {
+    padding: 2px 5px;
+}
+
+.basuraIcon .fa-download:hover {
+    color: #006cd9;
+}
+
+.basuraIcon .fa-trash:hover {
+    color: #d90000;
 }
 
 .basuraIcon *:hover {
     font-size: 19px;
-    color: #d90000;
 }
 
 .basuraIcon *:active {
@@ -257,8 +269,8 @@
 
 .noResults {
     width: 95% !important;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
     background: #f4f4f4;
     border-left: 2px solid #0075bb;
     padding: 3px 11px;
