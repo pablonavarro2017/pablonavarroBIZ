@@ -708,7 +708,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                     rs.agregarAlerta('Error al procesar URL del video');
                 }
             }
-            if (!fromPlaylist) {
+            if (!fromPlaylist && rs.playList.items) {
                 var newURL = rs.playList.items.shift();
                 if (newURL != undefined) {
                     s.getAudioStream(newURL);

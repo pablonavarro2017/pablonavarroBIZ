@@ -16,7 +16,8 @@
             <form ng-submit='mode=="mp3"?sa.getAudioStream(sa.url):sa.getPlayList(sa.url)'>
                 <div class="flexColumna jcSAr fWrap contenido">
                     <div class="flexFila fullWidth aiCenter">
-                        <span>Url:&nbsp;</span><input id="idURL" type="text" required ng-model="sa.url" style="border: #ccc solid;" class="marginDer fg1" ng-change="sa.getPlayListInfo(sa.url)">
+                        <span>Url:&nbsp;</span><input id="idURL" type="text" required ng-model="sa.url" style="border: #ccc solid;" class="marginDer fg1" >
+                        <button ng-click="sa.getPlayListInfo(sa.url)">Verificar</button>
                     </div>
                     <div class="playListName" ng-show="playList.empty==undefined">
                         <div>
@@ -41,7 +42,7 @@
                     <div class="noResults crojo marginArriba" ng-show="playList.items.length>25">No puedes decargar más de 25 audios a la vez</div>
                 </div>
                 <div class="botones">
-                    <button type="submit">Bajar</button>
+                    <button type="submit" ng-show="playList.empty==undefined">Bajar</button>
                     <button ng-click="sa.cerrarPopUpPlayList()">Cancelar</button>
                 </div>
             </form>
