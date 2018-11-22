@@ -9,19 +9,65 @@
 <div class="fondoPopup"></div>
 <div class="ventana" style="min-width: 70%">
     <div class="title">Bajar {{mode=="mp3"?'Audio':'Lista de Reproducción'}} de YouTube
-        <div ng-click="cargarPopup('')"><span>X</span></div>
+        <div ng-click="sa.cerrarPopUpPlayList()"><span>X</span></div>
     </div>
     <div class="contenido">
         <div class="formContainer maxH100pc ofAuto">
             <form ng-submit='mode=="mp3"?sa.getAudioStream(url):sa.getPlayList(url)'>
-                <div class="flexFila jcSAr fWrap contenido">
+                <div class="flexColumna jcSAr fWrap contenido">
                     <div class="flexFila fullWidth aiCenter">
-                        <span>Url:&nbsp;</span><input id="idURL" type="text" required ng-model="url" style="border: #ccc solid;" class="marginDer fg1">
+                        <span>Url:&nbsp;</span><input id="idURL" type="text" required ng-model="url" style="border: #ccc solid;" class="marginDer fg1" ng-change="sa.getPlayListInfo(url)">
+                    </div>
+                    <div class="playListName" ng-show="playList.empty==undefined">
+                        <div>
+                            <img src="{{playList.items[0].thumbnail}}">
+                            <span><i class="fa fa-list "></i> {{playList.title}}</span>
+                        </div>
+                        <span>{{playList.items.length}} videos</span>
+                    </div>
+                    <div class="songContantainer">
+                        <div class="noResults" ng-show="playList.empty == true && mode!='mp3'">No hay coincidencias con la URL</div>
+                        <div class="song" ng-repeat="s in playList.items">
+                            <span class="flexFila aiCenter">
+                                <img src="{{s.thumbnail}}">
+                                <span>{{s.title}}</span>
+                            </span>
+                            <span class="basuraIcon">
+                                <i class="fa fa-trash"></i>
+                            </span>
+                        </div>
+                        <div class="song" ng-repeat="s in playList.items">
+                            <span class="flexFila aiCenter">
+                                <img src="{{s.thumbnail}}">
+                                <span>{{s.title}}</span>
+                            </span>
+                            <span class="basuraIcon">
+                                <i class="fa fa-trash"></i>
+                            </span>
+                        </div>
+                        <div class="song" ng-repeat="s in playList.items">
+                            <span class="flexFila aiCenter">
+                                <img src="{{s.thumbnail}}">
+                                <span>{{s.title}}</span>
+                            </span>
+                            <span class="basuraIcon">
+                                <i class="fa fa-trash"></i>
+                            </span>
+                        </div>
+                        <div class="song" ng-repeat="s in playList.items">
+                            <span class="flexFila aiCenter">
+                                <img src="{{s.thumbnail}}">
+                                <span>{{s.title}}</span>
+                            </span>
+                            <span class="basuraIcon">
+                                <i class="fa fa-trash"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="botones">
                     <button type="submit">Bajar</button>
-                    <button ng-click="cargarPopup('')">Cancelar</button>
+                    <button ng-click="sa.cerrarPopUpPlayList()">Cancelar</button>
                 </div>
             </form>
         </div>

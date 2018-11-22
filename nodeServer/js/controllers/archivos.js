@@ -672,19 +672,24 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         rs.mode = 'list';
         focus('idURL');
     }
+    $scope.cerrarPopUpPlayList = function () {
+        rs.cargarPopup('');
+        rs.playList = {
+            empty: true
+        };
+    }
 
     s.getAudioStream = function (url) {
         if (typeof (url) == 'object') {
-            var videoName = url['data-title'];
+            var videoName = url.title;
             //            rs.agregarAlerta('Descargando ' + videoName);
-            url = 'https://www.youtube.com/watch?v=' + url['data-video-id'];
+            urlFinal = url.url_simple;
+        } else {
+            urlFinal = url;
         }
         rs.cargarPopup('');
-        rs.progreso = 0;
-        rs.classProgress = 'p0';
-        //        rs.progressing = true;
         rs.solicitudPost("/getAudioStream", {
-            url: url,
+            url: urlFinal,
             folderPath: s.carpetaActual.urlActual + '/',
             videoName: videoName ? videoName : undefined,
             socketId: rs.socket.id
@@ -700,7 +705,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                     rs.agregarAlerta('Error al procesar URL del video');
                 }
             }
-            var newURL = rs.listaEsperaPlayList.shift();
+            var newURL = rs.playList.items.shift();
             if (newURL != undefined) {
                 s.getAudioStream(newURL);
             }
@@ -709,30 +714,42 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
             log(res);
         });
     }
-    rs.listaEsperaPlayList = [];
+    rs.playList = {
+        empty: true
+    };
     s.getPlayList = function (url) {
         rs.cargarPopup('');
+        var newURL = rs.playList.items.shift();
+        if (newURL != undefined) {
+            s.getAudioStream(newURL);
+        }
+    }
+    s.getPlayListInfo = function (url) {
         rs.solicitudPost("/getPlayList", {
             url: url,
             path: $scope.carpetaActual.urlActual
         }, function (data) {
             if (data.estado == 'OK') {
-                rs.listaEsperaPlayList = data.data;
-                if (rs.listaEsperaPlayList.length > 25) {
-                    rs.agregarAlerta("No se permite descargar más de 25 canciones");
-                } else {
-                    var newURL = rs.listaEsperaPlayList.shift();
-                    if (newURL != undefined) {
-                        s.getAudioStream(newURL);
-                    }
-                }
+                rs.playList = data.data;
+                s.parseSongs(data.data);
             } else {
-                rs.agregarAlerta('Error al procesar URL');
+                rs.playList = {
+                    empty: true
+                };
             }
         }, function (res) {
             rs.agregarAlerta('Error Al Bajar PlayList');
             log(res);
         });
+    }
+    s.parseSongs = function (songs) {
+        var newSongs = [];
+        songs.items.forEach(function (s) {
+            if (s.duration != null) {
+                newSongs.push(s)
+            }
+        });
+        rs.playList.items = newSongs;
     }
     rs.socket = io();
     rs.socket.on('progressing', function (data) {
@@ -741,15 +758,12 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         //        rs.progreso = data.progreso;
         rs.pushBar({
             texto: 'Descargando: ' + data.videoName,
+            source:'YT',
             progress: data.progreso,
             total: 100,
             percentage: data.progreso
         })
     });
-    rs.socket.on('HELLO', function (data) {
-        log(data)
-    });
-
     s.convertToMp4 = function (url) {
         rs.solicitudPost("/convertToMp4", {
             videoPath: ($scope.carpetaActual.urlActual + '/' + url.nombre).substring(2),

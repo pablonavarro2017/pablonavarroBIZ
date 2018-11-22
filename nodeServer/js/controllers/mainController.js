@@ -86,6 +86,9 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
             setTimeout(alerta.eliminarAlerta, 1500);
         }
         if (typeof (bar) == 'object') { //Progress Bar
+            if (bar.source) {
+                alerta.source = bar.source;
+            }
             alerta.percentage = bar.percentage;
             alerta.progress = bar.progress;
             alerta.total = bar.total;
@@ -108,6 +111,9 @@ app.controller("mainController", function (Upload, $sce, $window, $scope, $http,
         for (var i = 0; i < rs.bars.length; i++) {
             var b = rs.bars[i];
             if (b.texto == bar.texto) {
+                if (bar.source) {
+                    b.source = bar.source;
+                }
                 b.progress = bar.progress;
                 b.total = bar.total;
                 b.percentage = bar.percentage;

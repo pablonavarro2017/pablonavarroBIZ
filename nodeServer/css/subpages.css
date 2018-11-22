@@ -180,3 +180,88 @@
     align-items: center;
     justify-content: center;
 }
+
+.song {
+    width: 100% !important;
+    margin: 4px 2px 3px 0 !important;
+    display: flex;
+    justify-content: space-between;
+    background: #f4f4f4;
+    border-left: 2px solid #0075bb;
+    padding: 3px 11px;
+    margin-left: 4px;
+    border-radius: 4px;
+}
+
+.songContantainer div:hover {
+    box-shadow: 1px 1px 5px grey;
+}
+
+.song img {
+    height: 30px !important;
+    width: 30px !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.song span span {
+    width: auto;
+    background: inherit;
+    border: 0 !important;
+    padding-left: 5px !important;
+    border-radius: 0;
+}
+
+.playListName > div {
+    display: flex;
+    align-items: center;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.playListName {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100% !important;
+    margin: 10px 0 3px 0 !important;
+    background: #c2e8ff;
+    padding: 3px 11px;
+    border-radius: 4px;
+}
+
+.playListName img {
+    height: 30px;
+    width: 30px;
+    padding: 2px !important;
+}
+
+.basuraIcon {
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+.basuraIcon *:hover {
+    font-size: 19px;
+    color: #d90000;
+}
+
+.basuraIcon *:active {
+    font-size: 17px
+}
+
+.songContantainer {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.noResults {
+    width: 95% !important;
+    margin-left:auto;
+    margin-right:auto;
+    background: #f4f4f4;
+    border-left: 2px solid #0075bb;
+    padding: 3px 11px;
+    margin-left: 4px;
+    border-radius: 4px;
+}

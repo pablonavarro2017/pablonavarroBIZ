@@ -462,10 +462,19 @@ function getPlayList(req, res, data) {
     var playListUrl = data.url;
     var path = data.path;
     try {
-        ytlist(playListUrl, ['name', 'url']).then(lista => {
-            var playList = lista.data.playlist;
-            return sendBack(res, 'OK', '', playList);
+        /* ytlist(playListUrl, ['name', 'url']).then(lista => {
+             var playList = lista.data.playlist;
+             return sendBack(res, 'OK', '', playList);
+         });*/
+        ytpl(data.url, function (err, playlist) {
+            if (err) {
+                return sendBack(res, 'ERROR', 'Error al obtener datos de PlayList');
+            } else {
+
+                return sendBack(res, 'OK', '', playlist);
+            }
         });
+
     } catch (err) {
         return sendBack(res, 'ERROR', 'Ocurrió un error fatal');
     }

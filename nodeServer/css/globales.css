@@ -394,7 +394,7 @@
 }
 
 .marginArriba {
-    margin-top: 10px;
+    margin-top: 10px!important;
 }
 
 
@@ -428,7 +428,7 @@
 }
 
 .paddingArriba {
-    padding-top: 10px;
+    padding-top: 10px!important;
 }
 .paddingArriba5 {
     padding-top: 5px;

@@ -2,12 +2,14 @@ var http = require("http"); //Crea servidor
 var fs = require('fs'); //Acceder al file system
 var path = require('path'); //Manejar rutas del FS
 var formidable = require('formidable'); //Cargar archivos al servidor
-var rimraf = require('rimraf');
+var rimraf = require('rimraf');// Borrar carpetas
 var YoutubeMp3Downloader = require("youtube-mp3-downloader"); // Descarga audio de video en youtube
-const ytlist = require('youtube-playlist'); //Obtener listas de reproduccion de youtube.
-eval(fs.readFileSync('functions.js') + '');
 var sizeof = require('object-sizeof');
 var getYoutubeTitle = require('get-youtube-title');
+var ytpl = require('ytpl');//Nuevos paquetes que prometen Obtener listas de reproduccion de youtube.
+eval(fs.readFileSync('functions.js') + '');//incluye el archivo de funciones
+
+//var ytsr = require('ytsr');//Nuevos paquetes que prometen
 
 var port = 8081; // 80;
 var serverUrl = "127.0.0.1";
@@ -100,3 +102,11 @@ function procesarArchivo(req, res) {
         return notFound(req, res);
     }
 }
+
+
+
+//PLTSvkCk0p8waD7MKVS5Ctje0_Sw_Y-Tnx
+//ytpl('https://www.youtube.com/playlist?list=PLTSvkCk0p8waD7MKVS5Ctje0_Sw_Y-Tnx', function (err, playlist) {
+//    if (err) throw err;
+//    log(playlist);
+//});

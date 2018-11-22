@@ -4,7 +4,7 @@
         <div class="paddingDer marginArriba sombra1 aDer flexFila jcSBet">
             <div class="inlineFlex">
                 <div class="marginDer"><span ng-click="preGetYT()" title="Descargar audio de Youtube Video" class="pointer relative fullPaddingMini"><i class="fa fa-youtube absolute paddingIzq"></i><i class="fa fa-headphones f10 absolute paddingArriba5"></i></span></div>
-                <div style="padding-left: 25px;"><span ng-click="preGetListYT()" title="Descargar Lista reproducción de Youtube Video" class="pointer relative fullPaddingMini"><i class="fa fa-youtube absolute paddingIzq"></i><i class="fa fa-list f10 absolute paddingArriba5"></i></span></div>
+                <div style="padding-left: 25px;"><span ng-disabled="playList.empty!=true;" ng-click="preGetListYT()" title="Descargar Lista reproducción de Youtube Video" class="pointer relative fullPaddingMini"><i class="fa fa-youtube absolute paddingIzq"></i><i class="fa fa-list f10 absolute paddingArriba5"></i></span></div>
             </div>
             <form name="upload_form" class="formFile">
                 <label for="file" title="Subir Archivos" class="pointer"><i class="fa fa-upload f16" ></i></label>

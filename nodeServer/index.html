@@ -73,7 +73,7 @@
                     <div class="msj">{{b.texto}} </div>
                     <div class="progress">
                         <div class="progress-bar" style="width:{{b.percentage+'%'}}">
-                            {{b.percentage + '%' + ' ' + (b.progress/1024/1024).toFixed(1) + '/' + (b.total/1024/1024).toFixed(1)}}
+                            {{b.percentage + '%' + ' ' + (b.source?'':(b.progress/1024/1024).toFixed(1) + '/' + (b.total/1024/1024).toFixed(1))}}
                         </div>
                     </div>
                 </div>
@@ -120,7 +120,9 @@
     <script src="js/videoangular.js"></script>
     <script src="js/scripts.js"></script>
     <script src="js/funcionesPersonalizadas.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script src="js/socket.io.js"></script>
+
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>-->
 
     <!-- Para Gráficos    -->
     <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>-->
