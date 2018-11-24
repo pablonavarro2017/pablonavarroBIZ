@@ -382,7 +382,8 @@ function getAudioStream(req, res, data) {
     //log(data);
     getYoutubeTitle(youtube_parser(data.url), function (err, title) {
         if (err) {
-            log("error")
+            log("error");
+            return sendBack(res, 'ERROR', 'Error al procesar Url');
         } else {
             try {
                 var YD = new YoutubeMp3Downloader({
@@ -427,7 +428,8 @@ function getAudioStream(req, res, data) {
 function youtube_parser(url) {
     var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
     var match = url.match(regExp);
-    return (match && match[7].length == 11) ? match[7] : false;
+    var res = (match && match[7].length == 11) ? match[7] : ' ';
+    return res;
 }
 
 function convertToMp4(req, res, data) {
@@ -497,7 +499,7 @@ function getYTUrlInfo(req, res, data) {
                 };
                 //        filter = filters.get('Duration').find(o => o.name.startsWith('Short'));
                 var options = {
-                    limit: 5,
+                    limit: 20,
                     nextpageRef: filter.ref,
                 }
                 ytsr(null, options, function (err, searchResults) {
