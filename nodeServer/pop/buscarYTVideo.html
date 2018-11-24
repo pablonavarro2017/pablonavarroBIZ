@@ -8,27 +8,27 @@
 -->
 <div class="fondoPopup"></div>
 <div class="ventana" style="min-width: 70%">
-    <div class="title">Bajar {{mode=="mp3"?'Audio':'Lista de Reproducción'}} de YouTube
+    <div class="title">Buscar Video en YouTube
         <div ng-click="sa.cerrarPopUpPlayList()"><span>X</span></div>
     </div>
     <div class="contenido">
         <div class="formContainer maxH100pc ofAuto">
-            <form ng-submit='mode=="mp3"?sa.getAudioStream(sa.url):sa.getPlayList(sa.url)'>
+            <form ng-submit='sa.getYTUrlInfo(sa.url)'>
                 <div class="flexColumna jcSAr fWrap contenido">
                     <div class="flexFila fullWidth aiCenter">
-                        <span>Url:&nbsp;</span><input id="idURL" type="text" required ng-model="sa.url" style="border: #ccc solid;" class="marginDer fg1" >
-                        <button ng-click="sa.getPlayListInfo(sa.url)">Verificar</button>
+                        <span>Url:&nbsp;</span><input id="idURL" type="text" required ng-model="sa.url" style="border: #ccc solid;" class="marginDer fg1">
+                        <button type="button" ng-click='sa.getYTUrlInfo(sa.url)'>Verificar</button>
                     </div>
                     <div class="playListName" ng-show="playList.empty==undefined">
                         <div>
                             <img src="{{playList.items[0].thumbnail}}">
-                            <span><i class="fa fa-list "></i> {{playList.title}}</span>
+                            <span><i class="fa fa-list "></i> Mejores Coicidencias</span>
                         </div>
                         <span>{{playList.items.length}} videos</span>
                     </div>
                     <div class="songContantainer">
-                        <div class="noResults" ng-show="playList.empty == true && mode!='mp3'">No hay coincidencias con la URL</div>
-                        <div class="song" ng-repeat="s in playList.items">
+                        <div class="noResults" ng-show="playList.empty == true">No hay coincidencias con la URL</div>
+                        <div class="song" ng-repeat="s in playList.items" ng-attr-title='{{s.views + " views - " + s.duration}}'>
                             <span class="flexFila aiCenter">
                                 <img src="{{s.thumbnail}}">
                                 <span>{{s.title}}</span>
@@ -41,11 +41,11 @@
                     </div>
                     <div class="noResults crojo marginArriba" ng-show="playList.items.length>25">No puedes decargar más de 25 audios a la vez</div>
                 </div>
-                <div class="botones">
-                    <button type="submit" ng-show="playList.empty==undefined">Bajar</button>
-                    <button ng-click="sa.cerrarPopUpPlayList()">Cancelar</button>
-                </div>
             </form>
+            <div class="botones">
+                <button type="button" ng-click='sa.getAudioStream(sa.url)' ng-show="playList.empty==undefined">Bajar</button>
+                <button ng-click="sa.cerrarPopUpPlayList()">Cancelar</button>
+            </div>
         </div>
     </div>
 </div>

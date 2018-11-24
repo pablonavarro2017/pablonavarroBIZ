@@ -7,6 +7,7 @@ var YoutubeMp3Downloader = require("youtube-mp3-downloader"); // Descarga audio 
 var sizeof = require('object-sizeof');
 var getYoutubeTitle = require('get-youtube-title');
 var ytpl = require('ytpl'); //Nuevos paquetes que prometen Obtener listas de reproduccion de youtube.
+const ytsr = require('ytsr');
 eval(fs.readFileSync('functions.js') + ''); //incluye el archivo de funciones
 
 //var ytsr = require('ytsr');//Nuevos paquetes que prometen
@@ -71,6 +72,8 @@ function procesarApi(req, res) {
                     return convertToMp4(req, res, data);
                 case "/getPlayList":
                     return getPlayList(req, res, data);
+                case "/getYTUrlInfo":
+                    return getYTUrlInfo(req, res, data);
                 default:
                     return res.end("ERROR API POST: " + JSON.stringify(data));
             }

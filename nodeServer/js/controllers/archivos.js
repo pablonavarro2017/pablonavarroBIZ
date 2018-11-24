@@ -661,18 +661,19 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
 
     $scope.preGetYT = function () {
         s.nombreCarpeta = ""
-        rs.cargarPopup('bajarUrl');
+        rs.cargarPopup('buscarYTVideo');
         rs.mode = 'mp3';
         focus('idURL');
     }
 
     $scope.preGetListYT = function () {
         s.nombreCarpeta = ""
-        rs.cargarPopup('bajarUrl');
+        rs.cargarPopup('bajarYTPlayList');
         rs.mode = 'list';
         focus('idURL');
     }
     $scope.cerrarPopUpPlayList = function () {
+        s.url = '';
         rs.cargarPopup('');
         rs.playList = {
             empty: true
@@ -681,6 +682,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
 
 
     s.getAudioStream = function (url, fromPlaylist) {
+        log(url)
         if (typeof (url) == 'object') {
             var videoName = url.title;
             //            rs.agregarAlerta('Descargando ' + videoName);
@@ -723,18 +725,40 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         empty: true
     };
     s.getPlayList = function (url) {
-        rs.cargarPopup('');
-        var newURL = rs.playList.items.shift();
-        if (newURL != undefined) {
-            s.getAudioStream(newURL);
+        if (rs.playList.items && rs.playList.items.length > 25) {
+            rs.agregarAlerta("No se puede descargar más de 25 canciones a la vez")
+        } else {
+            rs.cargarPopup('');
+            var newURL = rs.playList.items.shift();
+            if (newURL != undefined) {
+                s.getAudioStream(newURL);
+            }
         }
     }
     s.getPlayListInfo = function (url) {
         rs.solicitudPost("/getPlayList", {
-            url: url,
-            path: $scope.carpetaActual.urlActual
+            url: url
         }, function (data) {
             if (data.estado == 'OK') {
+                rs.playList = data.data;
+                s.parseSongs(data.data);
+            } else {
+                rs.agregarAlerta('Error al procesar URL del video');
+                rs.playList = {
+                    empty: true
+                };
+            }
+        }, function (res) {
+            rs.agregarAlerta('Error Al Bajar PlayList');
+            log(res);
+        });
+    }
+    s.getYTUrlInfo = function (url) {
+        rs.solicitudPost("/getYTUrlInfo", {
+            url: url
+        }, function (data) {
+            if (data.estado == 'OK') {
+                log(data.data);
                 rs.playList = data.data;
                 s.parseSongs(data.data);
             } else {
@@ -743,7 +767,7 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
                 };
             }
         }, function (res) {
-            rs.agregarAlerta('Error Al Bajar PlayList');
+            rs.agregarAlerta('Error Al Consultar por URL');
             log(res);
         });
     }
@@ -797,9 +821,9 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
     s.getAudioFromPlayList = function (v) {
         var url = {
             title: v.title,
-            url_simple: v.url_simple
+            url_simple: v.url_simple ? v.url_simple : v.link
         }
-        s.getAudioStream(url,'fromPlayList');
+        s.getAudioStream(url, 'fromPlayList');
     };
 });
 app.directive('myDir', function () {

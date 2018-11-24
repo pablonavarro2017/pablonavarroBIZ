@@ -460,23 +460,54 @@ function getFileNameOnly(fileNameWithExtension) {
 function getPlayList(req, res, data) {
     log("/getPlayList:  " + data.url);
     var playListUrl = data.url;
-    var path = data.path;
     try {
         /* ytlist(playListUrl, ['name', 'url']).then(lista => {
              var playList = lista.data.playlist;
              return sendBack(res, 'OK', '', playList);
          });*/
         ytpl(data.url, {
-            limit : 150
+            limit: 150
         }, function (err, playlist) {
             if (err) {
                 return sendBack(res, 'ERROR', 'Error al obtener datos de PlayList');
             } else {
-
                 return sendBack(res, 'OK', '', playlist);
             }
         });
 
+    } catch (err) {
+        return sendBack(res, 'ERROR', 'Ocurrió un error fatal');
+    }
+}
+
+function getYTUrlInfo(req, res, data) {
+    log("/getYTUrlInfo:  " + data.url);
+    var playListUrl = data.url;
+    try {
+        let filter;
+
+        ytsr.getFilters(data.url, function (err, filters) {
+            if (err) {
+                return sendBack(res, 'ERROR', 'Error al obtener datos del Video');
+            }
+            filter = filters.get('Type').find(o => o.name === 'Video');
+            ytsr.getFilters(filter.ref, function (err, filters) {
+                if (err) {
+                    return sendBack(res, 'ERROR', 'Error al obtener datos del Video');
+                };
+                //        filter = filters.get('Duration').find(o => o.name.startsWith('Short'));
+                var options = {
+                    limit: 5,
+                    nextpageRef: filter.ref,
+                }
+                ytsr(null, options, function (err, searchResults) {
+                    if (err) {
+                        return sendBack(res, 'ERROR', 'Error al obtener datos del Video');
+                    }
+                    return sendBack(res, 'OK', '', searchResults);
+                });
+            });
+        });
     } catch (err) {
         return sendBack(res, 'ERROR', 'Ocurrió un error fatal');
     }
