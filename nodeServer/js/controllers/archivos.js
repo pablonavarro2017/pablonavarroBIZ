@@ -775,10 +775,17 @@ app.controller("archivosController", function (Upload, $sce, $window, $scope, $h
         var newSongs = [];
         songs.items.forEach(function (s) {
             if (s.duration != null) {
+                s.views = formatNumber(s.views);
                 newSongs.push(s)
             }
         });
         rs.playList.items = newSongs;
+    }
+
+    //Agrega comas en los miles de un numero
+    function formatNumber(n) {
+        n = String(n).replace(/\D/g, "");
+        return n === '' ? n : Number(n).toLocaleString();
     }
     rs.socket = io();
     rs.socket.on('progressing', function (data) {
