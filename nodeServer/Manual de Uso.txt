@@ -1,7 +1,7 @@
 Pasos para montar el sistema:
 - Crear la Instancia de Linux Server
 - En el security Group permitir el protocolo HTTP(s) puerto 80
-- Conectarse al servidor remoto con ssh -i 'C:\Users\Pablo Navarro\Google Drive\AWS\PAIRLINUX.pem' ubuntu@34.216.170.155
+- Conectarse al servidor remoto con ssh -i 'C:\Users\Pablo Navarro\Google Drive\AWS\PAIRLINUX.pem' ubuntu@18.237.82.67
 - Comandos:
     sudo su
     sudo apt-get update
@@ -81,7 +81,7 @@ Pasos para montar el sistema:
      - node server.js : inicia la página web
  
 ** Actualizar sitio principal
-    ssh -i 'C:\Users\Pablo Navarro\Google Drive\AWS\PAIRLINUX.pem' ubuntu@34.216.170.155
+    ssh -i 'C:\Users\Pablo Navarro\Google Drive\AWS\PAIRLINUX.pem' ubuntu@18.237.82.67
     
     sudo kill `sudo lsof -t -i:8081`
     sudo rm -Rf /var/www/pablonavarroBIZ
@@ -139,5 +139,5 @@ Pasos para montar el sistema:
 
 ** Para realizar el commit desde linea de comandos:
     git add .
-    git commit -m "Descripción"
+    git commit -m "PRIMER COMMIT"
     git push origin master
